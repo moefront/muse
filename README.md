@@ -21,7 +21,7 @@ Just a Music Player : )
 
 > 引入 ymplayer.css 和 ymplayer.min.js：
 
-```
+```html
 <link rel="stylesheet" type="text/css" href="ymplayer.css">
 <script type="text/javascript" src="ymplayer.min.js"></script>
 ```
@@ -30,13 +30,13 @@ Just a Music Player : )
 
 //如果没有歌词
 
-```
+```html
 <ymplayer src="mp3 文件地址" name="标识ID，支持 0-9 A-Z a-z _" song="歌曲名" artist="歌手" cover="歌曲专辑封面" loop="是否单曲循环，yes or no"></ymplayer>
 ```
 
 //如果有歌词
 
-```
+```html
 <ymplayer src="mp3 文件地址" name="标识ID，支持 0-9 A-Z a-z _" song="歌曲名" artist="歌手" cover="歌曲专辑封面" loop="是否单曲循环，yes or no">
 	<lrc>歌词内容</lrc>
 </ymplayer>
