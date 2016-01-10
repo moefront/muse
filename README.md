@@ -11,11 +11,11 @@ Just a Music Player : )
 
 正常形态：
 
-![with no lrc][https://www.imim.pw/usr/uploads/with-no-lrc.jpg]
+![with no lrc](https://www.imim.pw/usr/uploads/with-no-lrc.jpg)
 
 贴入 LRC 的时候：
 
-![with lrc][https://www.imim.pw/usr/uploads/with-lrc.jpg]
+![with lrc](https://www.imim.pw/usr/uploads/with-lrc.jpg)
 
 ### How to use?
 
@@ -50,9 +50,9 @@ Just a Music Player : )
 
 ### To do
 
-- [] 播放进度拖拽控制（目前支持点击控制）
-- [] 响应式的优化
-- [] 多音乐播放
+- [ ] 播放进度拖拽控制（目前支持点击控制）
+- [ ] 响应式的优化
+- [ ] 多音乐播放
 
 ### License
 
