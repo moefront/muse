@@ -53,6 +53,22 @@ cover      string      专辑封面，或者你喜欢的图片
 loop      string       是否开启单曲循环，如果是填写 yes ， 否则填 no，在播放时可以通过播放器按钮改动
 ```
 
+### Color your YmPlayer!
+
+YmPlayer 内置了好多好多做配色方案（由于时间有限，目前只适配报过原版在内的 5 种配色方案）。
+
+> 浅蓝色：默认颜色
+
+> 橙色：在 <ymplayer> 标签添加： class="honoka"
+
+> （近似灰色）？：在 <ymplayer> 标签添加：  class="kotori"
+
+> 深蓝色：在 <ymplayer> 标签添加：  class="umi"
+
+> 粉色：在 <ymplayer> 标签添加：  class="nico"
+
+其他的方案日后将会完善_ (:з」∠) _
+
 ### Issues
 
 > Q:使用 PJAX 时不加载 YmPlayer 怎么办 _ (:з」∠) _
