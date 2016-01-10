@@ -42,6 +42,28 @@ Just a Music Player : )
 </ymplayer>
 ```
 
+### Argument
+
+```
+src    string    歌曲文件的地址，必填
+name     string    标识ID，用于在一个页面摆放多个 YmPlayer 时区分，*必须唯一*
+song      string     歌曲名
+artist       string     歌手
+cover      string      专辑封面，或者你喜欢的图片
+loop      string       是否开启单曲循环，如果是填写 yes ， 否则填 no，在播放时可以通过播放器按钮改动
+```
+
+### Issues
+
+> Q:使用 PJAX 时不加载 YmPlayer 怎么办 _ (:з」∠) _
+A:在 PJAX 的 end 事件中，插入 YmPlayer 的 Initer 函数，如：
+
+```
+$(document).pjax("end",function(){
+	YmplayerIniter();
+});
+```
+
 ### Other
 
 目前处于 Alpha 阶段，在不同的站点上可能出现不同程度的错位，还请自己解决。
