@@ -1,4 +1,4 @@
-# ymplayer
+# YmPlayer
 Just a Music Player : )
 
 ---
