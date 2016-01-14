@@ -162,6 +162,9 @@ ymplayer lrc{
 	border-radius: 50%;
 	background-color: rgb(206,255,255);
 	border:2px solid #fff;
+	box-sizing:content-box!important;
+	-moz-box-sizing:content-box!important;
+	-webkit-box-sizing:content-box!important;	
 }
 .looping{
 	color: rgb(83,209,223)!important;
