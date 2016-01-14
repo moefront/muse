@@ -17,6 +17,12 @@ Just a Music Player : )
 
 ![with lrc](https://www.imim.pw/usr/uploads/with-lrc.jpg)
 
+### Plugin for Typecho
+
+_ (:з」∠) _ 谢谢小伙伴的帮忙
+
+[@kokororin](https://github.com/kokororin) : [typecho-plugin-ymplayer](https://github.com/kokororin/typecho-plugin-ymplayer)
+
 ### How to use?
 
 > 引入 ymplayer.css 和 ymplayer.min.js：
@@ -25,6 +31,8 @@ Just a Music Player : )
 <link rel="stylesheet" type="text/css" href="ymplayer.css">
 <script type="text/javascript" src="ymplayer.min.js"></script>
 ```
+
+//注意：需要引入 font-awesome 图标库，可以自行引入，也可以复制 /demo/res/ 下的文件并引入 /demo/font-awesome.css 。
 
 > 构造 HTML DOM：
 
