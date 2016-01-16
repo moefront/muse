@@ -1,8 +1,11 @@
+@import url("font-awesome.css");
+
+
 ymplayer{
 	background-color: rgb(52,189,207);
 	display: block;
 	margin:10px auto;
-	width: 80%;
+	width: 100%;
 	position: relative;
 	height:120px;
 	font-family: "Microsoft Yahei";
@@ -138,8 +141,6 @@ ymplayer lrc{
 	display: inline-block;
 	position: absolute;
 	right: 4%;
-	left: 1%
-	width: 10%;
 	top: 50%;
 	transform: translate3D(0,-50%,0);
 	-webkit-transform: translate3D(0,-50%,0);
@@ -149,9 +150,9 @@ ymplayer lrc{
 	height: 100%;
 	width: 0%;
 	background-color: rgb(206,255,255);
-	-webkit-transition:0.3s all;
-	transition:0.3s all;	
-	-moz-transition:0.3s all;	
+	-webkit-transition:0.2s all;
+	transition:0.2s all;	
+	-moz-transition:0.2s all;	
 }
 .ym-circle{
 	width: 6px;
@@ -164,7 +165,17 @@ ymplayer lrc{
 	border:2px solid #fff;
 	box-sizing:content-box!important;
 	-moz-box-sizing:content-box!important;
-	-webkit-box-sizing:content-box!important;	
+	-webkit-box-sizing:content-box!important;
+	transition:0.3s all;
+	-webkit-transition:0.3s all;
+	-moz-transition:0.3s all;	
+	-o-transition:0.3s all;	
+}
+.ym-circle:hover{
+    width:12px;
+    height:12px;
+    top:-6px;
+    right:-12px;
 }
 .looping{
 	color: rgb(83,209,223)!important;
