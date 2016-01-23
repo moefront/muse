@@ -18,11 +18,26 @@ ymplayer{
 }
 
 ymplayer a{
-    color:#fff!important;
+	color:#fff!important;
 }
 
-ymplayer lrc{
+ymplayer lrc,ymplayer song{
 	display: none;
+}
+
+ymplayer loading{
+	width: 100%;
+	height: 100%;
+	line-height: 120px;
+	font-size: 24px;
+	text-align: center;
+	display: block;
+	position: absolute;
+	transition: 0.3s all ease-out;
+	-webkit-transition: 0.3s all ease-out;
+	-moz-transition: 0.3s all ease-out;
+	z-index: 233;
+	background: #000;
 }
 
 .ym-controller{
@@ -172,19 +187,53 @@ ymplayer lrc{
 	-o-transition:0.3s all;	
 }
 .ym-circle:hover{
-    width:12px;
-    height:12px;
-    top:-6px;
-    right:-12px;
+	width:12px;
+	height:12px;
+	top:-6px;
+	right:-12px;
 }
 .looping{
 	color: rgb(83,209,223)!important;
 }
 .lrc-container{
 	text-align: center;
-	transition: 0.1s all;
-	-webkit-transition: 0.1s all;
-	-moz-transition: 0.1s all;
+	transition: 0.25s all ease-out;
+	-webkit-transition: 0.25s all ease-out;
+	-moz-transition: 0.25s all ease-out;
+}
+.ym-playlist{
+	transition: 0.3s all ease-out;
+	-webkit-transition:0.3s all ease-out;
+	-moz-transition:0.3s all ease-out;
+	width: 100%;
+	height: 0px;
+	overflow: hidden;
+}
+.ym-playlist > single{
+	width: 100%;
+	font-size: 16px;
+	padding: 10px 3%;
+	display: block;
+	transition: 0.3s all ease;
+	-webkit-transition: 0.3s all ease;
+	-moz-transition: 0.3s all ease;
+}
+.ym-playlist > single > .list-number{
+	color: #dedede;
+}
+.ym-playlist > single >  .list-song{
+	padding: 0px 0px 0px 20px;
+}
+.ym-playlist  > single > .list-artist{
+	float: right;
+}
+single:hover{
+	background-color: rgba(51, 51, 51, 0.08);
+}
+.single-active{
+	background-color: rgba(51, 51, 51, 0.1);
+	position: relative;
+	border-left: 4px solid rgb(33,150,243);
 }
 .ym-lrcbox{
 	height: 0px;
@@ -195,8 +244,9 @@ ymplayer lrc{
 	color: rgb(209,253,253);
 }
 .lrc-container p{
-	margin:10px 0px;
+	margin:15px 0px;
 	font-weight: 100;
+	font-size: 16px;
 }
 .ym-active{
 	color: #fff;
@@ -216,16 +266,19 @@ ymplayer lrc{
 	-moz-transition:0.3s all;
 	position:relative;
 }
+.lyrictag-no-lrc{
+	line-height: 290px;
+}
 @media screen and (max-width: 864px){
-    .ym-songinfo{
-        width:35%;
-    }
-    .ym-play-status{
-        width:60%;
-    }
-    .ym-pgbar{
-        width:75%;
-    }
+	.ym-songinfo{
+		width:35%;
+	}
+	.ym-play-status{
+		width:60%;
+	}
+	.ym-pgbar{
+		width:75%;
+	}
 }
 @media screen and (max-width: 800px){
 	.ym-songinfo{

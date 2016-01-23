@@ -25,11 +25,11 @@ _ (:з」∠) _ 谢谢小伙伴的帮忙
 
 ### How to use?
 
-> 引入 ymplayer.css 和 ymplayer.min.js：
+> 引入 ymplayer.css 和 ymplayer.js：
 
 ```html
 <link rel="stylesheet" type="text/css" href="ymplayer.css">
-<script type="text/javascript" src="ymplayer.min.js"></script>
+<script type="text/javascript" src="ymplayer.js"></script>
 ```
 
 //注意：需要引入 font-awesome 图标库，可以自行引入，也可以复制 /demo/res/ 下的文件并引入 /demo/font-awesome.css 。
@@ -39,14 +39,24 @@ _ (:з」∠) _ 谢谢小伙伴的帮忙
 //如果没有歌词
 
 ```html
-<ymplayer src="mp3 文件地址" name="标识ID，支持 0-9 A-Z a-z _" song="歌曲名" artist="歌手" cover="歌曲专辑封面" loop="是否单曲循环，yes or no"></ymplayer>
+<ymplayer  name="标识ID，支持 0-9 A-Z a-z _" loop="是否单曲循环，yes or no">
+	<song  src="mp3 文件地址" song="歌曲名" artist="歌手" cover="歌曲专辑封面"></song>
+</ymplayer>
 ```
 
 //如果有歌词
 
 ```html
-<ymplayer src="mp3 文件地址" name="标识ID，支持 0-9 A-Z a-z _" song="歌曲名" artist="歌手" cover="歌曲专辑封面" loop="是否单曲循环，yes or no">
-	<lrc>歌词内容</lrc>
+<ymplayer  name="标识ID，支持 0-9 A-Z a-z _" loop="是否单曲循环，yes or no">
+	<song  src="mp3 文件地址" song="歌曲名" artist="歌手" cover="歌曲专辑封面">歌词内容</song>
+</ymplayer>
+```
+
+//如果有多首歌
+```html
+<ymplayer  name="标识ID，支持 0-9 A-Z a-z _" loop="是否单曲循环，yes or no">
+	<song  src="mp3 文件地址1" song="歌曲名1" artist="歌手1" cover="歌曲专辑封面1">歌词内容1</song>
+	<song  src="mp3 文件地址2" song="歌曲名2" artist="歌手2" cover="歌曲专辑封面2">歌词内容2</song>
 </ymplayer>
 ```
 
@@ -82,7 +92,7 @@ YmPlayer 内置了好多好多种配色方案（由于时间有限，目前只�
 > Q:使用 PJAX 时不加载 YmPlayer 怎么办 _ (:з」∠) _
 A:在 PJAX 的 end 事件中，插入 YmPlayer 的 Initer 函数，如：
 
-```
+```javascript
 $(document).pjax("end",function(){
 	YmplayerIniter();
 });
@@ -90,7 +100,7 @@ $(document).pjax("end",function(){
 
 ### Other
 
-目前处于 Alpha 阶段，在不同的站点上可能出现不同程度的错位，还请自己解决。
+目前处于 Beta 阶段，在不同的站点上可能出现不同程度的错位，还请自己解决。
 
 欢迎开 issues 报告问题。
 
@@ -98,7 +108,7 @@ $(document).pjax("end",function(){
 
 - [x] 播放进度拖拽控制（目前支持点击控制）
 - [x] 响应式的优化
-- [ ] 多音乐播放（播放列表）
+- [x] 多音乐播放（播放列表） 注：目前处于 Alpha 阶段！
 - [ ] 更多种形态和颜色
 
 ### License
