@@ -17,6 +17,10 @@ Just a Music Player : )
 
 ![with lrc](https://www.imim.pw/usr/uploads/with-lrc.jpg)
 
+播放列表：
+
+![with list](https://www.imim.pw/usr/uploads/with-playlist.jpg)
+
 ### Plugin for Typecho
 
 _ (:з」∠) _ 谢谢小伙伴的帮忙
