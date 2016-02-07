@@ -68,6 +68,15 @@ _ (:з」∠) _ 谢谢小伙伴的帮忙
 </ymplayer>
 ```
 
+> 最后别忘了初始化 YmPlayer：
+```html
+
+<script type="text/javascript">
+	Ymplayer.Init();
+</script>
+
+```
+
 ### Argument
 
 ```
