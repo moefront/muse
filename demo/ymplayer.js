@@ -400,7 +400,7 @@ var Ymplayer = {
 			lrcContent = Array();
 
 			for (var x in lyric) {
-				if (lyric[x].match(/(ti:|ar:|by:)/)) {
+				if (lyric[x].match(/(ti:|ar:|by:|al:|offset:)/)) {
 					continue;
 				}
 				else if(lyric[x] == "")
