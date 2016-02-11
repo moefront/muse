@@ -1,4 +1,3 @@
-var docElm = document.documentElement, fullscreenElement = document.fullscreenEnabled || document.mozFullscreenElement || document.webkitFullscreenElement;
 var Ymplayer = {
 	than : 3,
 	/** Init YmPlayer */
@@ -9,7 +8,7 @@ var Ymplayer = {
 			for(var i = 0; i < ymplayer.length; i ++){
 				tempID = ymplayer[i].getAttribute("name");
 				songTag = ymplayer[i].getElementsByTagName("song");
-				if(songTag.length == 0){
+				if(songTag.length === 0){
 					remove(ymplayer[i]);
 					return false;
 				}
@@ -27,9 +26,9 @@ var Ymplayer = {
 					single.innerHTML = "<span class=\"list-number\">"+(t+1)+"</span>"
 					+"<span class=\"list-song\">"+songTag[t].attributes.song.value+"</span>"
 					+"<span class=\"list-artist\">"+songTag[t].attributes.artist.value+"</span>";
-					t == 0 ? single.setAttribute("class","single-active") : "";
+					t === 0 ? single.setAttribute("class","single-active") : "";
 					listEle.appendChild(single);
-					if(t == 0){
+					if(t === 0){
 						tempSrc = songTag[0].attributes.src.value, song = songTag[0].attributes.song.value, artist =  songTag[0].attributes.artist.value, cover =  songTag[0].attributes.cover.value;
 					}
 				}
@@ -163,8 +162,7 @@ var Ymplayer = {
 	Change : function(obj){
 		ae = typeof(obj) == "object" ? obj : document.getElementById(obj);
 		obj = typeof(obj) == "object" ? obj.id : obj;
-		if(ae.buffered.end(ae.buffered.length - 1) <= ae.duration)
-			ae.parentNode.getElementsByClassName("ym-buffed")[0].style.width = (ae.buffered.end(ae.buffered.length - 1) / ae.duration)*100+"%";
+		if (typeof ae == 'undefined' || ae == null)	return;	
 		if(ae.currentTime == ae.duration)	{
 			if(ae.parentNode.getAttribute("loop") == "yes"){
 				ae.currentTime = 0;
@@ -250,7 +248,7 @@ var Ymplayer = {
 	/** No volume event */
 	Novol : function(obj){
 		obj = document.getElementById(obj);
-		if(obj.volume == 0){
+		if(obj.volume === 0){
 			obj.volume = 1;
 			btn = obj.parentNode.getElementsByClassName("vol-button");
 			btn[0].innerHTML = "<i class=\"fa fa-volume-down\"></i>";				
@@ -302,6 +300,7 @@ var Ymplayer = {
 	/** Lrc sync */
 	Lrc : function(obj){
 		audioElement = document.getElementById(obj);
+		if (typeof audioElement == 'undefined' || audioElement == null)	return;
 		parent = audioElement.parentNode;
 		if(audioElement.paused != false)	return;
 		time = audioElement.currentTime;
