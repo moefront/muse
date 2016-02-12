@@ -185,6 +185,7 @@ ymplayer loading{
 	-webkit-transition:0.3s all;
 	-moz-transition:0.3s all;	
 	-o-transition:0.3s all;	
+	cursor: w-resize;
 }
 .ym-circle:hover{
 	width:12px;
@@ -196,10 +197,11 @@ ymplayer loading{
 	color: rgb(83,209,223)!important;
 }
 .lrc-container{
+	min-height: 100%;
 	text-align: center;
-	transition: 0.25s all ease-out;
-	-webkit-transition: 0.25s all ease-out;
-	-moz-transition: 0.25s all ease-out;
+	transition: 1s all ease-out;
+	-webkit-transition: 1s all ease-out;
+	-moz-transition: 1s all ease-out;
 }
 .ym-playlist{
 	transition: 0.3s all ease-out;
@@ -207,7 +209,8 @@ ymplayer loading{
 	-moz-transition:0.3s all ease-out;
 	width: 100%;
 	height: 0px;
-	overflow: hidden;
+	overflow-x: hidden;
+	overflow-y: auto;
 }
 .ym-playlist > single{
 	width: 100%;
@@ -217,6 +220,7 @@ ymplayer loading{
 	transition: 0.3s all ease;
 	-webkit-transition: 0.3s all ease;
 	-moz-transition: 0.3s all ease;
+	position: relative;
 }
 .ym-playlist > single > .list-number{
 	color: #dedede;
@@ -225,7 +229,8 @@ ymplayer loading{
 	padding: 0px 0px 0px 20px;
 }
 .ym-playlist  > single > .list-artist{
-	float: right;
+	position: absolute;
+	right: 5%;
 }
 single:hover{
 	background-color: rgba(51, 51, 51, 0.08);
@@ -242,11 +247,13 @@ single:hover{
 	-webkit-transition:0.3s all;
 	-moz-transition:0.3s all;
 	color: rgb(209,253,253);
+	position: relative;
 }
 .lrc-container p{
 	margin:15px 0px;
 	font-weight: 100;
-	font-size: 16px;
+	font-size: 18px;
+	line-height: 2;
 }
 .ym-active{
 	color: #fff;
@@ -268,6 +275,28 @@ single:hover{
 }
 .lyrictag-no-lrc{
 	line-height: 290px;
+	height: 100%;
+}
+.lyrictag-no-lrc p {
+	line-height: 290px;
+}
+.lrc-fixer{
+	background-color: rgba(51, 51, 51, 0.08);
+	opacity: 0;
+	position: absolute;
+	left: 0%;
+	top: 50%;
+	padding: 0% 1% 0% 1%;
+	transition: 0.75s all;
+	-webkit-transition: 0.75s all;
+	-moz-transition: 0.75s all;
+	transform: translate3D(0,-50%,0);
+	-webkit-transform: translate3D(0,-50%,0);
+}
+.ym-fix-btn{
+	display: block;
+	font-size: 24px;
+	margin:5px 0px 5px 0px;
 }
 @media screen and (max-width: 864px){
 	.ym-songinfo{
