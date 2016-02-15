@@ -5,7 +5,6 @@ Just a Music Player : )
 
 一个简单的音乐播放器（颜值不高 _ (:з」∠) _），全 CSS/Javascript 完成，需要 Font-Awesome 图标库，无需 jQuery。
 
------
 
 ### Screenshot
 
@@ -142,4 +141,4 @@ $(document).pjax("end",function(){
 
 ### License
 
-遵循 GPL v2 开源。
+遵循 The MIT License (MIT) 开源。
