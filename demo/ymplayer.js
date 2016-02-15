@@ -301,14 +301,14 @@ var Ymplayer = {
 	Lrc : function(obj){
 		audioElement = document.getElementById(obj);
 		if (typeof audioElement == 'undefined' || audioElement == null)	return;
-		parent = audioElement.parentNode;
+		par = audioElement.parentNode;
 		if(audioElement.paused != false)	return;
 		time = audioElement.currentTime;
 		all = audioElement.duration;
-		lrcEle = parent.getElementsByTagName("lyric");
+		lrcEle = par.getElementsByTagName("lyric");
 		long = lrcEle.length;
-		currentLrc = parseInt(parent.getAttribute("currentLrc"));
-		lrccontainer = parent.getElementsByClassName("lrc-container")[0];
+		currentLrc = parseInt(par.getAttribute("currentLrc"));
+		lrccontainer = par.getElementsByClassName("lrc-container")[0];
 
 		if(time > lrcEle[long-1].getAttribute("timeline"))		return false;
 
@@ -331,7 +331,7 @@ var Ymplayer = {
 						} else {
 							marginHeight = lrcEle[this.than - 1].offsetTop - lrcEle[currentLrc].offsetTop;
 							lrccontainer.style.transform = "transformY("+marginHeight+"px)";							
-							parent.setAttribute("currentLrc",i);
+							par.setAttribute("currentLrc",i);
 							Ymplayer.Lrc(obj);
 						}
 					}			
@@ -343,7 +343,7 @@ var Ymplayer = {
 				marginHeight = lrcEle[this.than - 1].offsetTop - lrcEle[currentLrc].offsetTop;
 				lrccontainer.style.marginTop = marginHeight+"px";
 			}
-			parent.setAttribute("currentLrc",currentLrc+1);
+			par.setAttribute("currentLrc",currentLrc+1);
 		} else if (currentLrc != 0 && time < lrcEle[currentLrc-1].getAttribute("timeline")) {
 			active = lrccontainer.getElementsByClassName("ym-active");
 			if(typeof active != "null"){
@@ -368,7 +368,7 @@ var Ymplayer = {
 						lrccontainer.style.marginTop = marginHeight+"px";		
 					}
 					addClass(lrcEle[s], "ym-active");				
-					parent.setAttribute("currentLrc",s);
+					par.setAttribute("currentLrc",s);
 					Ymplayer.Lrc(obj);		
 
 					break;
