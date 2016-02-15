@@ -1,4 +1,3 @@
-var docElm = document.documentElement, fullscreenElement = document.fullscreenEnabled || document.mozFullscreenElement || document.webkitFullscreenElement;
 var Ymplayer = {
 	than : 3,
 	/** Init YmPlayer */
@@ -9,7 +8,7 @@ var Ymplayer = {
 			for(var i = 0; i < ymplayer.length; i ++){
 				tempID = ymplayer[i].getAttribute("name");
 				songTag = ymplayer[i].getElementsByTagName("song");
-				if(songTag.length == 0){
+				if(songTag.length === 0){
 					remove(ymplayer[i]);
 					return false;
 				}
@@ -27,9 +26,9 @@ var Ymplayer = {
 					single.innerHTML = "<span class=\"list-number\">"+(t+1)+"</span>"
 					+"<span class=\"list-song\">"+songTag[t].attributes.song.value+"</span>"
 					+"<span class=\"list-artist\">"+songTag[t].attributes.artist.value+"</span>";
-					t == 0 ? single.setAttribute("class","single-active") : "";
+					t === 0 ? single.setAttribute("class","single-active") : "";
 					listEle.appendChild(single);
-					if(t == 0){
+					if(t === 0){
 						tempSrc = songTag[0].attributes.src.value, song = songTag[0].attributes.song.value, artist =  songTag[0].attributes.artist.value, cover =  songTag[0].attributes.cover.value;
 					}
 				}
@@ -163,8 +162,7 @@ var Ymplayer = {
 	Change : function(obj){
 		ae = typeof(obj) == "object" ? obj : document.getElementById(obj);
 		obj = typeof(obj) == "object" ? obj.id : obj;
-		if(ae.buffered.end(ae.buffered.length - 1) <= ae.duration)
-			ae.parentNode.getElementsByClassName("ym-buffed")[0].style.width = (ae.buffered.end(ae.buffered.length - 1) / ae.duration)*100+"%";
+		if (typeof ae == 'undefined' || ae == null)	return;	
 		if(ae.currentTime == ae.duration)	{
 			if(ae.parentNode.getAttribute("loop") == "yes"){
 				ae.currentTime = 0;
@@ -250,7 +248,7 @@ var Ymplayer = {
 	/** No volume event */
 	Novol : function(obj){
 		obj = document.getElementById(obj);
-		if(obj.volume == 0){
+		if(obj.volume === 0){
 			obj.volume = 1;
 			btn = obj.parentNode.getElementsByClassName("vol-button");
 			btn[0].innerHTML = "<i class=\"fa fa-volume-down\"></i>";				
@@ -302,14 +300,15 @@ var Ymplayer = {
 	/** Lrc sync */
 	Lrc : function(obj){
 		audioElement = document.getElementById(obj);
-		parent = audioElement.parentNode;
+		if (typeof audioElement == 'undefined' || audioElement == null)	return;
+		par = audioElement.parentNode;
 		if(audioElement.paused != false)	return;
 		time = audioElement.currentTime;
 		all = audioElement.duration;
-		lrcEle = parent.getElementsByTagName("lyric");
+		lrcEle = par.getElementsByTagName("lyric");
 		long = lrcEle.length;
-		currentLrc = parseInt(parent.getAttribute("currentLrc"));
-		lrccontainer = parent.getElementsByClassName("lrc-container")[0];
+		currentLrc = parseInt(par.getAttribute("currentLrc"));
+		lrccontainer = par.getElementsByClassName("lrc-container")[0];
 
 		if(time > lrcEle[long-1].getAttribute("timeline"))		return false;
 
@@ -332,7 +331,7 @@ var Ymplayer = {
 						} else {
 							marginHeight = lrcEle[this.than - 1].offsetTop - lrcEle[currentLrc].offsetTop;
 							lrccontainer.style.transform = "transformY("+marginHeight+"px)";							
-							parent.setAttribute("currentLrc",i);
+							par.setAttribute("currentLrc",i);
 							Ymplayer.Lrc(obj);
 						}
 					}			
@@ -344,7 +343,7 @@ var Ymplayer = {
 				marginHeight = lrcEle[this.than - 1].offsetTop - lrcEle[currentLrc].offsetTop;
 				lrccontainer.style.marginTop = marginHeight+"px";
 			}
-			parent.setAttribute("currentLrc",currentLrc+1);
+			par.setAttribute("currentLrc",currentLrc+1);
 		} else if (currentLrc != 0 && time < lrcEle[currentLrc-1].getAttribute("timeline")) {
 			active = lrccontainer.getElementsByClassName("ym-active");
 			if(typeof active != "null"){
@@ -369,7 +368,7 @@ var Ymplayer = {
 						lrccontainer.style.marginTop = marginHeight+"px";		
 					}
 					addClass(lrcEle[s], "ym-active");				
-					parent.setAttribute("currentLrc",s);
+					par.setAttribute("currentLrc",s);
 					Ymplayer.Lrc(obj);		
 
 					break;
