@@ -482,17 +482,25 @@ var Ymplayer = {
 }
 
 function hasClass(ele,cls) {
-	return ele.className.match(new RegExp('(\\s|^)'+cls+'(\\s|$)'));
+	return ele.className.match(new RegExp('(\\s|^)'+cls+'(\\s|$)')) ? true : false;
 }
-
 function addClass(ele,cls) {
-	if (!this.hasClass(ele,cls)) ele.className += " "+cls;
+	if (!cls || hasClass(ele,cls)) {
+		return;
+	}
+	if (ele.className) {
+		ele.className += ' ' + cls;
+	} else {
+		ele.className = cls;
+	}
 }
-
 function removeClass(ele,cls) {
-	if (hasClass(ele,cls)) {
-		var reg = new RegExp('(\\s|^)'+cls+'(\\s|$)');
-		ele.className=ele.className.replace(reg,' ');
+	if (!cls) {
+		return;
+	}
+	ele.className = ele.className.replace(new RegExp('(\\s|^)'+cls+'(\\s|$)', 'g'), ' ').replace(/\s+/g, ' ').replace(/(^\s*)|(\s*$)/g, '');
+	if (!ele.className) {
+		ele.removeAttribute('class');
 	}
 }
 function getRect( elements ){ 
