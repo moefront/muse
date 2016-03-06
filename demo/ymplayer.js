@@ -327,7 +327,7 @@ var Ymplayer = {
 						}
 					}
 
-					for (var i = 0 in lrcEle) {
+					for (var i = 0; i < long; i++) {
 						if (time > lrcEle[currentLrc].getAttribute("timeline")) {
 							i++;
 						} else {
@@ -356,7 +356,7 @@ var Ymplayer = {
 					o++;
 				}
 			}
-			for (var s = 0 in lrcEle) {
+			for (var s = 0; s < lrcEle.length; s++) {
 				if(time < lrcEle[0].getAttribute("timeline")){
 					lrccontainer.style.marginTop = 0+"px";
 					break;
