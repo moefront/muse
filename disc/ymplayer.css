@@ -221,6 +221,7 @@ ymplayer loading{
 	-webkit-transition: 0.3s all ease;
 	-moz-transition: 0.3s all ease;
 	position: relative;
+	cursor:pointer;
 }
 .ym-playlist > single > .list-number{
 	color: #dedede;
