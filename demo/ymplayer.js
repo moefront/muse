@@ -22,7 +22,9 @@ var Ymplayer = {
 					single.setAttribute("artist", songTag[t].attributes.artist.value);
 					single.setAttribute("song", songTag[t].attributes.song.value);
 					single.setAttribute("cover", songTag[t].attributes.cover.value);
-					single.setAttribute("ondblclick", "Ymplayer.changeAudio("+tempID+")");
+					single.addEventListener('dblclick', function(e){
+						Ymplayer.changeAudio(tempID, e||event);
+					});
 					single.innerHTML = "<span class=\"list-number\">"+(t+1)+"</span>"
 					+"<span class=\"list-song\">"+songTag[t].attributes.song.value+"</span>"
 					+"<span class=\"list-artist\">"+songTag[t].attributes.artist.value+"</span>";
@@ -325,7 +327,7 @@ var Ymplayer = {
 						}
 					}
 
-					for (var i = 0 in lrcEle) {
+					for (var i = 0; i < long; i++) {
 						if (time > lrcEle[currentLrc].getAttribute("timeline")) {
 							i++;
 						} else {
@@ -354,7 +356,7 @@ var Ymplayer = {
 					o++;
 				}
 			}
-			for (var s = 0 in lrcEle) {
+			for (var s = 0; s < lrcEle.length; s++) {
 				if(time < lrcEle[0].getAttribute("timeline")){
 					lrccontainer.style.marginTop = 0+"px";
 					break;
@@ -434,7 +436,7 @@ var Ymplayer = {
 	changeAudio : function(obj,event){
 		obj = typeof obj == "object" ? obj : document.getElementById(obj);
 		par = obj.parentNode;
-		response = window.event.srcElement || window.event.target;
+		response = event.srcElement || event.target;
 		num = parseInt(response.getElementsByClassName("list-number")[0].innerHTML)-1;
 		obj.pause();
 		obj.currentTime = 0;
