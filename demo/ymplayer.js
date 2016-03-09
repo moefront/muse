@@ -22,7 +22,7 @@ var Ymplayer = {
 					single.setAttribute("artist", songTag[t].attributes.artist.value);
 					single.setAttribute("song", songTag[t].attributes.song.value);
 					single.setAttribute("cover", songTag[t].attributes.cover.value);
-					single.addEventListener('dblclick', function(e){
+					single.addEventListener('click', function(e){
 						Ymplayer.changeAudio(tempID, e||event);
 					});
 					single.innerHTML = "<span class=\"list-number\">"+(t+1)+"</span>"
@@ -185,38 +185,10 @@ var Ymplayer = {
 	},
 	/** Show or hide lrcbox */
 	LrcBox : function(obj){
-
 		audioElement = typeof(obj) == "object" ? obj : document.getElementById(obj);
-		player = audioElement.parentNode;
-		lrcbox = player.getElementsByClassName("ym-lrcbox")[0];
-		if(player.getAttribute("inited") != "showed"){
-			if(!document.fullscreen || !document.webkitIsFullScreen || !document.mozFullScreen){
-				player.getAttribute("inited") == "list" ? player.getElementsByClassName("ym-playlist")[0].style.height = "0px" : "";
-				player.style.height = "400px";
-				lrcbox.style.height = "290px";
-				player.setAttribute("inited","showed");
-			}
-			else{
-				player.getAttribute("inited") == "list" ? player.getElementsByClassName("ym-playlist")[0].style.height = "0px" : "";
-				player.style.height = "100%";
-				lrcbox.style.height = "84%";
-				player.setAttribute("inited","showed");	
-			}
-		}
-		else{
-			if(!document.fullscreen || !document.webkitIsFullScreen || !document.mozFullScreen){
-				player.style.height = "120px";
-				lrcbox.style.height = "0px";
-				player.setAttribute("inited","hidden");					
-			}
-			else{
-				player.style.height = "100%";
-				lrcbox.style.height = "0px";
-				player.setAttribute("inited","hidden");		
-			}
-
-		}
-
+		var player = audioElement.parentNode;
+		removeClass(player.querySelector(".ym-playlist"), 'ym-active');
+		toggleClass(player.querySelector(".ym-lrcbox"), 'ym-active');
 	},
 	/** Click to skip progress */
 	Skip : function(obj,event){
@@ -285,19 +257,8 @@ var Ymplayer = {
 	List : function(obj){
 		obj = typeof obj == "object" ? obj : document.getElementById(obj);
 		player = obj.parentNode;
-		list = player.getElementsByClassName("ym-playlist")[0];
-		if(player.getAttribute("inited") != "list"){
-			if(player.getAttribute("inited") == "showed")
-				player.getElementsByClassName("ym-lrcbox")[0].style.height = "0px";
-			player.style.height = "400px";
-			list.style.height = "290px";
-			player.setAttribute("inited","list");
-		}
-		else{
-			player.style.height = "120px";
-			list.style.height = "0px";
-			player.setAttribute("inited","hidden");		
-		}	
+		removeClass(player.querySelector(".ym-lrcbox"), 'ym-active');
+		toggleClass(player.querySelector(".ym-playlist"), 'ym-active');
 	},
 	/** Lrc sync */
 	Lrc : function(obj){
@@ -437,7 +398,7 @@ var Ymplayer = {
 		obj = typeof obj == "object" ? obj : document.getElementById(obj);
 		par = obj.parentNode;
 		response = event.srcElement || event.target;
-		num = parseInt(response.getElementsByClassName("list-number")[0].innerHTML)-1;
+		num = parseInt(response.querySelector(".list-number").innerHTML)-1;
 		obj.pause();
 		obj.currentTime = 0;
 		obj.attributes.src.value = response.attributes.src.value;
@@ -503,6 +464,13 @@ function removeClass(ele,cls) {
 	ele.className = ele.className.replace(new RegExp('(\\s|^)'+cls+'(\\s|$)', 'g'), ' ').replace(/\s+/g, ' ').replace(/(^\s*)|(\s*$)/g, '');
 	if (!ele.className) {
 		ele.removeAttribute('class');
+	}
+}
+function toggleClass(ele,cls) {
+	if (hasClass(ele,cls)) {
+		removeClass(ele,cls);
+	} else {
+		addClass(ele,cls);
 	}
 }
 function getRect( elements ){ 
