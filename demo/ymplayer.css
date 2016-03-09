@@ -208,7 +208,7 @@ ymplayer loading{
 	overflow-x: hidden;
 	overflow-y: hidden;
 }
-.ym-playlist.ym-active{
+.ym-playlist.ym-show{
 	height: 400px;
 	overflow-y: auto;
 }
@@ -250,7 +250,7 @@ single:hover{
 	color: rgb(209,253,253);
 	position: relative;
 }
-.ym-lrcbox.ym-active{
+.ym-lrcbox.ym-show{
 	height:290px;
 }
 .lrc-container p{

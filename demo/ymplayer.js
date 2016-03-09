@@ -23,7 +23,7 @@ var Ymplayer = {
 					single.setAttribute("song", songTag[t].attributes.song.value);
 					single.setAttribute("cover", songTag[t].attributes.cover.value);
 					single.addEventListener('click', function(e){
-						Ymplayer.changeAudio(tempID, e||event);
+						Ymplayer.changeAudio(tempID, this);
 					});
 					single.innerHTML = "<span class=\"list-number\">"+(t+1)+"</span>"
 					+"<span class=\"list-song\">"+songTag[t].attributes.song.value+"</span>"
@@ -187,8 +187,8 @@ var Ymplayer = {
 	LrcBox : function(obj){
 		audioElement = typeof(obj) == "object" ? obj : document.getElementById(obj);
 		var player = audioElement.parentNode;
-		removeClass(player.querySelector(".ym-playlist"), 'ym-active');
-		toggleClass(player.querySelector(".ym-lrcbox"), 'ym-active');
+		removeClass(player.querySelector(".ym-playlist"), 'ym-show');
+		toggleClass(player.querySelector(".ym-lrcbox"), 'ym-show');
 	},
 	/** Click to skip progress */
 	Skip : function(obj,event){
@@ -257,8 +257,8 @@ var Ymplayer = {
 	List : function(obj){
 		obj = typeof obj == "object" ? obj : document.getElementById(obj);
 		player = obj.parentNode;
-		removeClass(player.querySelector(".ym-lrcbox"), 'ym-active');
-		toggleClass(player.querySelector(".ym-playlist"), 'ym-active');
+		removeClass(player.querySelector(".ym-lrcbox"), 'ym-show');
+		toggleClass(player.querySelector(".ym-playlist"), 'ym-show');
 	},
 	/** Lrc sync */
 	Lrc : function(obj){
@@ -394,22 +394,19 @@ var Ymplayer = {
 		}
 	},
 	/** Change Audio */
-	changeAudio : function(obj,event){
-		obj = typeof obj == "object" ? obj : document.getElementById(obj);
-		par = obj.parentNode;
-		response = event.srcElement || event.target;
-		num = parseInt(response.querySelector(".list-number").innerHTML)-1;
-		obj.pause();
-		obj.currentTime = 0;
-		obj.attributes.src.value = response.attributes.src.value;
-		par.querySelector(".ym-song").innerHTML = response.attributes.song.value;
-		par.querySelector(".ym-artist").innerHTML = response.attributes.artist.value;
-		par.querySelector(".ym-cover-image").style.backgroundImage = "url("+response.attributes.cover.value+")";
-		active = par.querySelector(".single-active");	removeClass(active,"single-active");
-		response.setAttribute("class","single-active");
-		par.querySelector(".lrc-container").style.marginTop = "0px";
-		this.lrcParse(obj,num);
-		this.Play(obj);
+	changeAudio : function(player,list_item){
+		var num = Number(list_item.querySelector('.list-number').innerHTML) - 1;
+		par.querySelector(".ym-song").innerHTML = list_item.getAttribute('song');
+		par.querySelector(".ym-artist").innerHTML = list_item.getAttribute('artist');
+		par.querySelector(".ym-cover-image").style.backgroundImage = "url("+list_item.getAttribute('cover')+")";
+		removeClass(par.querySelector(".single-active"), "single-active");
+		addClass(list_item, "single-active");
+		var player = (typeof player == "object" ? player : document.getElementById(player));
+		player.pause();
+		player.currentTime = 0;
+		player.setAttribute('src', list_item.getAttribute('src'));
+		this.lrcParse(player, num);
+		this.Play(player);
 	},
 	/** Show LRC Fixer Box */
 	showFixer : function(obj){
