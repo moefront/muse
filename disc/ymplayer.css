@@ -40,32 +40,32 @@ ymplayer loading{
 }
 
 .ym-controller{
-	display: inline-block;
+	overflow:hidden;
+	float:right;
 	transition: color .25s ease, background-color .25s ease, opacity .5s ease;
-	float: right;
-	position: absolute;
-	right: 2%;
-	top:50%;
-	transform: translate3D(0,-50%,0);
-	-webkit-transform: translate3D(0,-50%,0);	
-	width: 50%;
-
+	width: 60%;
+	height: 50px;
+	line-height: 48px;
+	text-align: right;
 }
 .ym-songinfo{
-	position: absolute;
-	left: 2%;
-	top:50%;
-	transform: translate3D(0,-50%,0);
-	-webkit-transform: translate3D(0,-50%,0);	
-	width: 50%;
+	overflow:hidden;
+	float:left;
+	width: 40%;
 }
 .ym-songinfo p{
 	margin:2px;
+	white-space: nowrap;
+	word-wrap: normal;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 .player-container{
 	position:relative;
 	height:60px;
 	width: 100%;
+	padding:5px 2%;
+	box-sizing:border-box;
 }
 .ymbtn{
 	color:#fff;
@@ -76,24 +76,18 @@ ymplayer loading{
 	-moz-transition:0.3s all;		
 }
 .volume-bar{
-	width: 36%;
+	display:inline-block;
+	width: 30%;
 	height: 4px;
-	display: inline-block;
 	background-color: #fff;
-	float:right;
-	position: absolute;
-	top: 50%;
 	transform: translate3D(0,-50%,0);
 	-webkit-transform: translate3D(0,-50%,0);	
-	margin-left: 10px;
+	margin: 0 8px 2px 10px;
 	cursor: pointer;
 }
 .ym-play-status{
-	width: auto;
-	display: inline-block;
-	float: left;
-	width: 59%;
-	text-align: right;
+	display:inline-block;
+	/*width: 250px;*/
 }
 .ym-cover-image{
 	display: inline-block;
@@ -303,22 +297,18 @@ single:hover{
 	margin:5px 0px 5px 0px;
 }
 @media screen and (max-width: 864px){
-	.ym-songinfo{
-		width:35%;
-	}
-	.ym-play-status{
-		width:60%;
-	}
 	.ym-pgbar{
 		width:75%;
 	}
 }
-@media screen and (max-width: 800px){
+@media screen and (max-width: 810px){
 	.ym-songinfo{
 		display: none;
 	}
 	.ym-controller{
 		width: 100%;
+		text-align:center;
+		float:none;
 	}
 }
 @media screen and (max-width: 700px){
@@ -331,7 +321,7 @@ single:hover{
 		right: 3%;
 	}
 }
-@media screen and (max-width: 480px){
+@media screen and (max-width: 500px){
 	.volume-bar{
 		display: none;
 	}
