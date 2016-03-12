@@ -90,6 +90,30 @@ var Ymplayer = {
 			}
 		}
 	},
+	/** Automatically specify which style to use based on player's width */
+	StyleByWidth: function(){
+		var classes_max_width = [
+			{maxWidth:686, className:'max-width-686'},
+			{maxWidth:644, className:'max-width-644'},
+			{maxWidth:560, className:'max-width-560'},
+			{maxWidth:400, className:'max-width-400'},
+		]
+		var _StyleByWidth = function(player) {
+			var width = player.offsetWidth;
+			for (var i = 0; i < classes_max_width.length; i++) {
+				removeClass(player, classes_max_width[i].className);
+				if (width <= classes_max_width[i].maxWidth) {
+					addClass(player, classes_max_width[i].className);
+				}
+			}
+		}
+		var ymplayer = document.getElementsByTagName("ymplayer");	/** 获取 Tagname 为 ymplayer 的元素 */
+		if(ymplayer.length != 0){
+			for(var i = 0; i < ymplayer.length; i ++){
+				_StyleByWidth(ymplayer[i]);
+			}
+		}
+	},
 	/** Play and Pause Event */
 	Play : function(obj){
 
@@ -440,6 +464,8 @@ var Ymplayer = {
 		}
 	}
 }
+window.addEventListener('resize', Ymplayer.StyleByWidth);
+Ymplayer.StyleByWidth();
 
 function hasClass(ele,cls) {
 	return ele.className.match(new RegExp('(\\s|^)'+cls+'(\\s|$)')) ? true : false;

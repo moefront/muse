@@ -296,40 +296,36 @@ single:hover{
 	font-size: 24px;
 	margin:5px 0px 5px 0px;
 }
-@media screen and (max-width: 864px){
-	.ym-pgbar{
-		width:75%;
-	}
+
+/* Responsive Design */
+ymplayer.max-width-686 .ym-pgbar{
+	width:75%;
 }
-@media screen and (max-width: 810px){
-	.ym-songinfo{
+ymplayer.max-width-644 .ym-songinfo{
+	display: none;
+}
+ymplayer.max-width-644 .ym-controller{
+	width: 100%;
+	text-align:center;
+	float:none;
+}
+ymplayer.max-width-560 .current-time,
+ymplayer.max-width-560 .duration-time{
 		display: none;
 	}
-	.ym-controller{
-		width: 100%;
-		text-align:center;
-		float:none;
-	}
+ymplayer.max-width-560 .ym-pgbar{
+	width: 94%;
+	left: 3%;
+	right: 3%;
 }
-@media screen and (max-width: 700px){
-	.current-time,.duration-time{
-		display: none;
-	}
-	.ym-pgbar{
-		width: 94%;
-		left: 3%;
-		right: 3%;
-	}
+ymplayer.max-width-400 .volume-bar{
+	display: none;
 }
-@media screen and (max-width: 500px){
-	.volume-bar{
-		display: none;
-	}
-	.ym-play-status{
-		text-align: center;
-		width: 100%;
-	}
+ymplayer.max-width-400 .ym-play-status{
+	text-align: center;
+	width: 100%;
 }
+
 /** Other Color */
 
 /* nico : Pink */
