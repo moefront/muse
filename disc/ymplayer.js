@@ -42,6 +42,15 @@ var Ymplayer = {
 				audioEle.setAttribute("id",tempID);
 				audioEle.setAttribute("src",tempSrc);
 				audioEle.setAttribute("preload","no");
+				audioEle.addEventListener('ended', function(){
+					var ymplayer = document.getElementsByName(tempID)[0];
+					var next_single = ymplayer.querySelector('.single-active').nextSibling;
+					if (ymplayer.getAttribute('loop') == 'yes') {
+						Ymplayer.changeAudio(tempID, ymplayer.querySelector('.single-active'));
+					} else if (next_single){
+						Ymplayer.changeAudio(tempID, ymplayer.querySelector('.single-active').nextSibling);
+					}
+				});
 
 				/** 创建进度条元素 */
 				proEle = document.createElement("div");
@@ -299,7 +308,7 @@ var Ymplayer = {
 
 		if(time > lrcEle[long-1].getAttribute("timeline"))		return false;
 
-		if (time >= lrcEle[currentLrc].getAttribute("timeline")) {
+		if (lrcEle[currentLrc] && time >= lrcEle[currentLrc].getAttribute("timeline")) {
 			if (currentLrc < long-1) {
 				if(time > lrcEle[parseInt(currentLrc)+1].getAttribute("timeline")){
 					active = lrccontainer.getElementsByClassName("ym-active");
@@ -423,7 +432,10 @@ var Ymplayer = {
 		par.querySelector(".ym-song").innerHTML = list_item.getAttribute('song');
 		par.querySelector(".ym-artist").innerHTML = list_item.getAttribute('artist');
 		par.querySelector(".ym-cover-image").style.backgroundImage = "url("+list_item.getAttribute('cover')+")";
-		removeClass(par.querySelector(".single-active"), "single-active");
+		var elem_active_all = par.querySelectorAll(".single-active");
+		for (var i = 0; i < elem_active_all.length; i++) {
+			removeClass(elem_active_all[i], "single-active");
+		}
 		addClass(list_item, "single-active");
 		var player = (typeof player == "object" ? player : document.getElementById(player));
 		player.pause();

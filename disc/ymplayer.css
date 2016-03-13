@@ -297,6 +297,14 @@ single:hover{
 	margin:5px 0px 5px 0px;
 }
 
+.ym-progress, .ym-controller{
+	user-select:none;
+	-moz-user-select:none;
+	-webkit-user-select:none;
+	-ms-user-select:none;
+	-o-user-select:none;
+}
+
 /* Responsive Design */
 ymplayer.max-width-686 .ym-pgbar{
 	width:75%;
