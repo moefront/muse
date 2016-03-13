@@ -146,7 +146,11 @@ var Ymplayer = {
 					inter =  parseInt(audioElement.duration - (parseInt(audioElement.duration/60)*60));
 					if(inter < 10) inter = "0"+inter;
 					duration = duration + inter;
-					par.getElementsByClassName("duration-time")[0].innerHTML = duration;				
+					if(isNaN(audioElement.duration)){
+						par.getElementsByClassName("duration-time")[0].innerHTML = '00:00';
+					} else {
+						par.getElementsByClassName("duration-time")[0].innerHTML = duration;
+					}
 				}
 				getTotal();
 			}
