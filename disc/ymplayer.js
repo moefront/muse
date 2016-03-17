@@ -22,8 +22,8 @@ var Ymplayer = {
 					single.setAttribute("artist", songTag[t].attributes.artist.value);
 					single.setAttribute("song", songTag[t].attributes.song.value);
 					single.setAttribute("cover", songTag[t].attributes.cover.value);
-					single.addEventListener('dblclick', function(e){
-						Ymplayer.changeAudio(tempID, e||event);
+					single.addEventListener('click', function(e){
+						Ymplayer.changeAudio(tempID, this);
 					});
 					single.innerHTML = "<span class=\"list-number\">"+(t+1)+"</span>"
 					+"<span class=\"list-song\">"+songTag[t].attributes.song.value+"</span>"
@@ -42,6 +42,15 @@ var Ymplayer = {
 				audioEle.setAttribute("id",tempID);
 				audioEle.setAttribute("src",tempSrc);
 				audioEle.setAttribute("preload","no");
+				audioEle.addEventListener('ended', function(){
+					var ymplayer = document.getElementsByName(tempID)[0];
+					var next_single = ymplayer.querySelector('.single-active').nextSibling;
+					if (ymplayer.getAttribute('loop') == 'yes') {
+						Ymplayer.changeAudio(tempID, ymplayer.querySelector('.single-active'));
+					} else if (next_single){
+						Ymplayer.changeAudio(tempID, ymplayer.querySelector('.single-active').nextSibling);
+					}
+				});
 
 				/** 创建进度条元素 */
 				proEle = document.createElement("div");
@@ -90,6 +99,30 @@ var Ymplayer = {
 			}
 		}
 	},
+	/** Automatically specify which style to use based on player's width */
+	StyleByWidth: function(){
+		var classes_max_width = [
+			{maxWidth:686, className:'max-width-686'},
+			{maxWidth:644, className:'max-width-644'},
+			{maxWidth:560, className:'max-width-560'},
+			{maxWidth:400, className:'max-width-400'},
+		]
+		var _StyleByWidth = function(player) {
+			var width = player.offsetWidth;
+			for (var i = 0; i < classes_max_width.length; i++) {
+				removeClass(player, classes_max_width[i].className);
+				if (width <= classes_max_width[i].maxWidth) {
+					addClass(player, classes_max_width[i].className);
+				}
+			}
+		}
+		var ymplayer = document.getElementsByTagName("ymplayer");	/** 获取 Tagname 为 ymplayer 的元素 */
+		if(ymplayer.length != 0){
+			for(var i = 0; i < ymplayer.length; i ++){
+				_StyleByWidth(ymplayer[i]);
+			}
+		}
+	},
 	/** Play and Pause Event */
 	Play : function(obj){
 
@@ -113,7 +146,11 @@ var Ymplayer = {
 					inter =  parseInt(audioElement.duration - (parseInt(audioElement.duration/60)*60));
 					if(inter < 10) inter = "0"+inter;
 					duration = duration + inter;
-					par.getElementsByClassName("duration-time")[0].innerHTML = duration;				
+					if(isNaN(audioElement.duration)){
+						par.getElementsByClassName("duration-time")[0].innerHTML = '00:00';
+					} else {
+						par.getElementsByClassName("duration-time")[0].innerHTML = duration;
+					}
 				}
 				getTotal();
 			}
@@ -185,38 +222,10 @@ var Ymplayer = {
 	},
 	/** Show or hide lrcbox */
 	LrcBox : function(obj){
-
 		audioElement = typeof(obj) == "object" ? obj : document.getElementById(obj);
-		player = audioElement.parentNode;
-		lrcbox = player.getElementsByClassName("ym-lrcbox")[0];
-		if(player.getAttribute("inited") != "showed"){
-			if(!document.fullscreen || !document.webkitIsFullScreen || !document.mozFullScreen){
-				player.getAttribute("inited") == "list" ? player.getElementsByClassName("ym-playlist")[0].style.height = "0px" : "";
-				player.style.height = "400px";
-				lrcbox.style.height = "290px";
-				player.setAttribute("inited","showed");
-			}
-			else{
-				player.getAttribute("inited") == "list" ? player.getElementsByClassName("ym-playlist")[0].style.height = "0px" : "";
-				player.style.height = "100%";
-				lrcbox.style.height = "84%";
-				player.setAttribute("inited","showed");	
-			}
-		}
-		else{
-			if(!document.fullscreen || !document.webkitIsFullScreen || !document.mozFullScreen){
-				player.style.height = "120px";
-				lrcbox.style.height = "0px";
-				player.setAttribute("inited","hidden");					
-			}
-			else{
-				player.style.height = "100%";
-				lrcbox.style.height = "0px";
-				player.setAttribute("inited","hidden");		
-			}
-
-		}
-
+		var player = audioElement.parentNode;
+		removeClass(player.querySelector(".ym-playlist"), 'ym-show');
+		toggleClass(player.querySelector(".ym-lrcbox"), 'ym-show');
 	},
 	/** Click to skip progress */
 	Skip : function(obj,event){
@@ -285,19 +294,8 @@ var Ymplayer = {
 	List : function(obj){
 		obj = typeof obj == "object" ? obj : document.getElementById(obj);
 		player = obj.parentNode;
-		list = player.getElementsByClassName("ym-playlist")[0];
-		if(player.getAttribute("inited") != "list"){
-			if(player.getAttribute("inited") == "showed")
-				player.getElementsByClassName("ym-lrcbox")[0].style.height = "0px";
-			player.style.height = "400px";
-			list.style.height = "290px";
-			player.setAttribute("inited","list");
-		}
-		else{
-			player.style.height = "120px";
-			list.style.height = "0px";
-			player.setAttribute("inited","hidden");		
-		}	
+		removeClass(player.querySelector(".ym-lrcbox"), 'ym-show');
+		toggleClass(player.querySelector(".ym-playlist"), 'ym-show');
 	},
 	/** Lrc sync */
 	Lrc : function(obj){
@@ -314,7 +312,7 @@ var Ymplayer = {
 
 		if(time > lrcEle[long-1].getAttribute("timeline"))		return false;
 
-		if (time >= lrcEle[currentLrc].getAttribute("timeline")) {
+		if (lrcEle[currentLrc] && time >= lrcEle[currentLrc].getAttribute("timeline")) {
 			if (currentLrc < long-1) {
 				if(time > lrcEle[parseInt(currentLrc)+1].getAttribute("timeline")){
 					active = lrccontainer.getElementsByClassName("ym-active");
@@ -433,22 +431,22 @@ var Ymplayer = {
 		}
 	},
 	/** Change Audio */
-	changeAudio : function(obj,event){
-		obj = typeof obj == "object" ? obj : document.getElementById(obj);
-		par = obj.parentNode;
-		response = event.srcElement || event.target;
-		num = parseInt(response.getElementsByClassName("list-number")[0].innerHTML)-1;
-		obj.pause();
-		obj.currentTime = 0;
-		obj.attributes.src.value = response.attributes.src.value;
-		par.querySelector(".ym-song").innerHTML = response.attributes.song.value;
-		par.querySelector(".ym-artist").innerHTML = response.attributes.artist.value;
-		par.querySelector(".ym-cover-image").style.backgroundImage = "url("+response.attributes.cover.value+")";
-		active = par.querySelector(".single-active");	removeClass(active,"single-active");
-		response.setAttribute("class","single-active");
-		par.querySelector(".lrc-container").style.marginTop = "0px";
-		this.lrcParse(obj,num);
-		this.Play(obj);
+	changeAudio : function(player,list_item){
+		var num = Number(list_item.querySelector('.list-number').innerHTML) - 1;
+		par.querySelector(".ym-song").innerHTML = list_item.getAttribute('song');
+		par.querySelector(".ym-artist").innerHTML = list_item.getAttribute('artist');
+		par.querySelector(".ym-cover-image").style.backgroundImage = "url("+list_item.getAttribute('cover')+")";
+		var elem_active_all = par.querySelectorAll(".single-active");
+		for (var i = 0; i < elem_active_all.length; i++) {
+			removeClass(elem_active_all[i], "single-active");
+		}
+		addClass(list_item, "single-active");
+		var player = (typeof player == "object" ? player : document.getElementById(player));
+		player.pause();
+		player.currentTime = 0;
+		player.setAttribute('src', list_item.getAttribute('src'));
+		this.lrcParse(player, num);
+		this.Play(player);
 	},
 	/** Show LRC Fixer Box */
 	showFixer : function(obj){
@@ -482,6 +480,8 @@ var Ymplayer = {
 		}
 	}
 }
+window.addEventListener('resize', Ymplayer.StyleByWidth);
+Ymplayer.StyleByWidth();
 
 function hasClass(ele,cls) {
 	return ele.className.match(new RegExp('(\\s|^)'+cls+'(\\s|$)')) ? true : false;
@@ -503,6 +503,13 @@ function removeClass(ele,cls) {
 	ele.className = ele.className.replace(new RegExp('(\\s|^)'+cls+'(\\s|$)', 'g'), ' ').replace(/\s+/g, ' ').replace(/(^\s*)|(\s*$)/g, '');
 	if (!ele.className) {
 		ele.removeAttribute('class');
+	}
+}
+function toggleClass(ele,cls) {
+	if (hasClass(ele,cls)) {
+		removeClass(ele,cls);
+	} else {
+		addClass(ele,cls);
 	}
 }
 function getRect( elements ){ 
