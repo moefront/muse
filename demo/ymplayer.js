@@ -1,104 +1,140 @@
 var Ymplayer = {
 	than : 3,
-	/** Init YmPlayer */
-	Init : function(){
-		ymplayer = document.getElementsByTagName("ymplayer");	/** 获取 Tagname 为 ymplayer 的元素 */
-
-		if(ymplayer.length != 0){
-			for(var i = 0; i < ymplayer.length; i ++){
-				tempID = ymplayer[i].getAttribute("name");
-				songTag = ymplayer[i].getElementsByTagName("song");
-				if(songTag.length === 0){
-					remove(ymplayer[i]);
-					return false;
-				}
-				ymplayer[i].setAttribute("init","no");
-				listEle = document.createElement("div");
-				listEle.id = tempID+"-list";
-				listEle.setAttribute("class","ym-playlist");
-				for(var t = 0; t < songTag.length; t ++){
-					single = document.createElement("single");
-					single.setAttribute("src", songTag[t].attributes.src.value);
-					single.setAttribute("artist", songTag[t].attributes.artist.value);
-					single.setAttribute("song", songTag[t].attributes.song.value);
-					single.setAttribute("cover", songTag[t].attributes.cover.value);
-					single.addEventListener('click', function(e){
-						Ymplayer.changeAudio(tempID, this);
-					});
-					single.innerHTML = "<span class=\"list-number\">"+(t+1)+"</span>"
-					+"<span class=\"list-song\">"+songTag[t].attributes.song.value+"</span>"
-					+"<span class=\"list-artist\">"+songTag[t].attributes.artist.value+"</span>";
-					t === 0 ? single.setAttribute("class","single-active") : "";
-					listEle.appendChild(single);
-					if(t === 0){
-						tempSrc = songTag[0].attributes.src.value, song = songTag[0].attributes.song.value, artist =  songTag[0].attributes.artist.value, cover =  songTag[0].attributes.cover.value;
-					}
-				}
-				listHTML = songTag.length > 0 ? "<a class=\"list-button ymbtn\" href=\"javascript:;\" onclick=\"Ymplayer.List("+tempID+")\"><i class=\"fa fa-list\"></i></a> " : "" 
-				ymplayer[i].appendChild(listEle);
-
-				audioEle = document.createElement("audio");
-				/** 设置 Audio 元素属性 */
-				audioEle.setAttribute("id",tempID);
-				audioEle.setAttribute("src",tempSrc);
-				audioEle.setAttribute("preload","no");
-				audioEle.addEventListener('ended', function(){
-					var ymplayer = document.getElementsByName(tempID)[0];
-					var next_single = ymplayer.querySelector('.single-active').nextSibling;
-					if (ymplayer.getAttribute('loop') == 'yes') {
-						Ymplayer.changeAudio(tempID, ymplayer.querySelector('.single-active'));
-					} else if (next_single){
-						Ymplayer.changeAudio(tempID, ymplayer.querySelector('.single-active').nextSibling);
-					}
-				});
-
-				/** 创建进度条元素 */
-				proEle = document.createElement("div");
-				proEle.setAttribute("class","ym-progress");
-				proEle.id = tempID+"-progress";
-				proEle.innerHTML = "<div class=\"ym-progress-handler\"><span class=\"current-time\">00:00</span>"
-				+"<div class=\"ym-pgbar\"  onclick=\"Ymplayer.Skip("+tempID+",event)\"><div class=\"ym-buffed\"></div><div class=\"ym-played\"><span onmousedown=\"Ymplayer.Move("+tempID+",event);\" class=\"ym-circle\" ></span></div></div>"
-				+"<span class=\"duration-time\">00:00</span></div>";
-
-				/** 创建控制器元素 */
-				conEle = document.createElement("div");
-				conEle.setAttribute("class","player-container");
-
-				coverEle = document.createElement("div");
-				coverEle.setAttribute("class","ym-songinfo");
-				coverEle.innerHTML = "<div class=\"ym-cover-image\"></div><div class=\"ym-song-detail\"><p class=\"ym-song\">"+song+"</p><p class=\"ym-artist\">"+artist+"</p></div>";
-				coverEle.getElementsByClassName("ym-cover-image")[0].style.backgroundImage = "url("+cover+")";
-
-				ctEle = document.createElement("div");
-				ctEle.setAttribute("class","ym-controller");
-				ctEle.id = tempID + "-controller";
-				ctEle.innerHTML = "<div class=\"ym-play-status\"><a class=\"play-button ymbtn\" href=\"javascript:;\" onclick=\"Ymplayer.Play('"+tempID+"')\"><i class='fa fa-play'></i></a>\n"
-				+"<a class=\"stop-button ymbtn\"  href=\"javascript:;\" onclick=\"Ymplayer.Stop('"+tempID+"')\"><i class=\"fa fa-stop\"></i></a>\n"
-				+"<a class=\"loop-button ymbtn\"  href=\"javascript:;\" onclick=\"Ymplayer.Loop('"+tempID+"')\"><i class=\"fa fa-refresh\"></i></a>\n"
-				+listHTML
-				+"<a class=\"lyric-button ymbtn\"  href=\"javascript:;\" onclick=\"Ymplayer.LrcBox('"+tempID+"')\"><i class=\"fa fa-file-text\"></i></a>\n"
-				+"<a class=\"vol-button ymbtn\"  href=\"javascript:;\" onclick=\"Ymplayer.Novol('"+tempID+"')\"><i class=\"fa fa-volume-down\"></i></a></div>\n"
-				+"<div class=\"volume-bar\" onclick=\"Ymplayer.ChangeVol("+tempID+",event)\"><div class=\"volume-current\"><span class=\"ym-circle\"></span></div></div>";
-
-				conEle.appendChild(coverEle);
-				conEle.appendChild(ctEle);
-
-				ymplayer[i].appendChild(audioEle);
-
-				lrcbox = document.createElement("div");
-				lrcbox.id = tempID + "lrcbox";
-				lrcbox.setAttribute("class","ym-lrcbox");
-				lrcbox.innerHTML = "<div class=\"lrc-container\" onclick=\"Ymplayer.showFixer("+tempID+");\"></div>\n<div class=\"lrc-fixer\">\n"
-				+"<a href=\"javascript:;\" title=\"将歌词延后0.5s\" onclick=\"Ymplayer.Fixer("+tempID+",'next')\" class=\"ym-fix-btn\"><i class=\"fa fa-angle-up\"></i></a>\n"
-				+"<a href=\"javascript:;\" title=\"将歌词提前0.5s\" onclick=\"Ymplayer.Fixer("+tempID+",'prev')\" class=\"ym-fix-btn\"><i class=\"fa fa-angle-down\"></i></a>\n"				
-				+"</div>\n";
-				ymplayer[i].appendChild(lrcbox);
-				ymplayer[i].appendChild(proEle);			
-				ymplayer[i].appendChild(conEle);
-				Ymplayer.lrcParse(tempID,0);
-			}
+	/** Init player for given element */
+	InitPlayer : function(ymplayer){
+		var songTag = ymplayer.getElementsByTagName("song");
+		if(songTag.length === 0){
+			remove(ymplayer);
+			return false;
 		}
+		//ymplayer.setAttribute("init","no");
+
+		/** Init Playlist */
+		var listEle = document.createElement("div");
+		listEle.setAttribute("class","ym-playlist");
+		for(var t = 0; t < songTag.length; t ++){
+			single = document.createElement("single");
+			single.setAttribute("idx", t);
+			single.setAttribute("src", songTag[t].attributes.src.value);
+			single.setAttribute("artist", songTag[t].attributes.artist.value);
+			single.setAttribute("song", songTag[t].attributes.song.value);
+			single.setAttribute("cover", songTag[t].attributes.cover.value);
+			single.addEventListener('click', function(e){
+				Ymplayer.ChangeAudio(ymplayer, this);
+			});
+			single.innerHTML = "<span class='list-number'>" + String(t + 1) + "</span>"
+				+ "<span class='list-song'>" + songTag[t].getAttribute('song') + "</span>"
+				+ "<span class='list-artist'>" + songTag[t].getAttribute('artist') + "</span>";
+			listEle.appendChild(single);
+		}
+
+		/** Init audio element */
+		var audioEle = document.createElement("audio");
+		audioEle.setAttribute("preload","yes");
+		audioEle.setAttribute("autoplay","autoplay");
+		audioEle.addEventListener('ended', function(){
+			var single_active = ymplayer.querySelector('.single-active');
+			if (ymplayer.getAttribute('loop') == 'yes') {
+				Ymplayer.ChangeAudio(ymplayer, single_active);
+			} else if (next_single){
+				Ymplayer.ChangeAudio(ymplayer, single_active.nextSibling);
+			}
+		});
+		audioEle.addEventListener('loadeddata', function(){
+			var time = parseInt(Math.round(this.duration));
+			ymplayer.querySelector(".duration-time").innerHTML = padZero(Math.floor(time / 60), 2) + ':' + padZero(time % 60, 2);
+		});
+		audioEle.addEventListener('timeupdate', function(){
+			var percent = this.currentTime / this.duration;
+			var time = parseInt(Math.round(this.currentTime));
+			ymplayer.querySelector(".ym-played").style.width = percent * 100 + '%';
+			ymplayer.querySelector(".current-time").innerHTML = padZero(Math.floor(time / 60), 2) + ':' + padZero(time % 60, 2);
+		});
+		audioEle.addEventListener('volumechange', function(){
+			ymplayer.querySelector('.volume-current').style.width = String(this.volume * 100) + '%';
+			if (this.volume == 0) {
+				addClass(ymplayer.querySelector('.vol-button'), 'muted');
+			} else {
+				removeClass(ymplayer.querySelector('.vol-button'), 'muted');
+			}
+		});
+		audioEle.addEventListener('play', function(){
+			ymplayer.setAttribute('playing', 'playing');
+		});
+		audioEle.addEventListener('pause', function(){
+			ymplayer.removeAttribute('playing');
+		});
+
+		/** 创建进度条元素 */
+		progressBarEle = document.createElement("div");
+		progressBarEle.setAttribute("class","ym-progress");
+		progressBarEle.innerHTML = "<span class='current-time'>00:00</span>"
+			+"<div class='ym-pgbar'><div class='ym-buffed'></div><div class='ym-played'><span class='ym-circle'></span></div></div>"
+			+"<span class=\"duration-time\">00:00</span>";
+		progressBarEle.querySelector('.ym-pgbar').addEventListener('click', function(e){
+			Ymplayer.Skip(ymplayer,e);
+		});
+		progressBarEle.querySelector('.ym-circle').addEventListener('click', function(e){
+			Ymplayer.Move(ymplayer,e);
+		});
+
+		/** 创建控制器元素 */
+		conEle = document.createElement("div");
+		addClass(conEle, "player-container");
+
+		coverEle = document.createElement("div");
+		addClass(coverEle, "ym-songinfo");
+		coverEle.innerHTML = "<div class='ym-cover-image'></div><div class='ym-song-detail'><p class='ym-song'></p><p class='ym-artist'></p></div>";
+		conEle.appendChild(coverEle);
+
+		ctEle = document.createElement("div");
+		addClass(ctEle, "ym-controller");
+		ctEle.innerHTML = "<span class='play-button ymbtn'><i class='fa fa-play'></i><i class='fa fa-pause'></i></span>"
+			+ "<i class='stop-button ymbtn fa fa-stop'></i>"
+			+ "<i class='loop-button ymbtn fa fa-refresh'></i>"
+			+ (songTag.length > 0 ? "<i class='list-button ymbtn fa fa-list'></i>" : '')
+			+ "<i class='lyric-button ymbtn fa fa-file-text'></i></a>"
+			+ "<span class='vol-button ymbtn'><i class='fa fa-volume-down'></i><i class='fa fa-volume-off'></i></span>"
+			+ "<div class='volume-bar'><div class='volume-current'><span class='ym-circle'></span></div></div>";
+		if (songTag.length > 0) {
+			ctEle.querySelector('.list-button').addEventListener('click', function(e){
+				Ymplayer.List(ymplayer);
+			});
+		}
+		ctEle.querySelector('.play-button').addEventListener('click', function(e){
+			Ymplayer.TogglePlay(ymplayer);
+		});
+		ctEle.querySelector('.stop-button').addEventListener('click', function(e){
+			Ymplayer.Stop(ymplayer);
+		});
+		ctEle.querySelector('.loop-button').addEventListener('click', function(e){
+			Ymplayer.ToggleLoop(ymplayer);
+		});
+		ctEle.querySelector('.vol-button').addEventListener('click', function(e){
+			var audioElement = ymplayer.getElementsByTagName('audio')[0];
+			audioElement.volume = (audioElement.volume > 0 ? 0 : 1);
+		});
+
+		conEle.appendChild(coverEle);
+		conEle.appendChild(ctEle);
+
+		/*
+		lrcbox = document.createElement("div");
+		lrcbox.id = tempID + "lrcbox";
+		lrcbox.setAttribute("class","ym-lrcbox");
+		lrcbox.innerHTML = "<div class=\"lrc-container\" onclick=\"Ymplayer.showFixer("+tempID+");\"></div>\n<div class=\"lrc-fixer\">\n"
+		+"<a href=\"javascript:;\" title=\"将歌词延后0.5s\" onclick=\"Ymplayer.Fixer("+tempID+",'next')\" class=\"ym-fix-btn\"><i class=\"fa fa-angle-up\"></i></a>\n"
+		+"<a href=\"javascript:;\" title=\"将歌词提前0.5s\" onclick=\"Ymplayer.Fixer("+tempID+",'prev')\" class=\"ym-fix-btn\"><i class=\"fa fa-angle-down\"></i></a>\n"				
+		+"</div>\n";
+		*/
+
+		/** Add list, lrcbox, audio and other stuffs into Ymplayer */
+		ymplayer.appendChild(listEle);
+		ymplayer.appendChild(audioEle);
+		ymplayer.appendChild(progressBarEle);
+		ymplayer.appendChild(conEle);
 	},
+
 	/** Automatically specify which style to use based on player's width */
 	StyleByWidth: function(){
 		var classes_max_width = [
@@ -124,81 +160,27 @@ var Ymplayer = {
 		}
 	},
 	/** Play and Pause Event */
-	Play : function(obj){
-
-		audioElement = typeof(obj) == "object" ? obj : document.getElementById(obj);
-		obj = typeof(obj) == "object" ? obj.id : obj;
+	TogglePlay : function(ymplayer){
+		var audioElement = ymplayer.getElementsByTagName('audio')[0];
 		if(audioElement.paused != false){
 			audioElement.play();	
-			btn = document.getElementById(obj+"-controller").getElementsByClassName("play-button");
-			btn[0].innerHTML = "<i class=\"fa fa-pause\"></i>";
-
-			par = audioElement.parentNode;
-			if(par.getAttribute("init") == "no"){
-				eval(obj+"Timeupdater = setInterval('Ymplayer.Change("+obj+")',1000);")
-				currentTime = audioElement.currentTime;
-				/** 获取歌曲时间 */
-				function getTotal(){
-					if(isNaN(audioElement.duration)){
-						setTimeout(function(){getTotal();},200);
-					}
-					duration = "0"+parseInt(audioElement.duration/60) + ":";
-					inter =  parseInt(audioElement.duration - (parseInt(audioElement.duration/60)*60));
-					if(inter < 10) inter = "0"+inter;
-					duration = duration + inter;
-					if(isNaN(audioElement.duration)){
-						par.getElementsByClassName("duration-time")[0].innerHTML = '00:00';
-					} else {
-						par.getElementsByClassName("duration-time")[0].innerHTML = duration;
-					}
-				}
-				getTotal();
-			}
-			if(par.getAttribute("currentLrc") != null){
-				setInterval(function(){
-					Ymplayer.Lrc(obj);
-				},20);
-			}
-
-		}
-		else{
+		} else {
 			audioElement.pause();
-			btn = document.getElementById(obj+"-controller").getElementsByClassName("play-button");
-			btn[0].innerHTML = "<i class=\"fa fa-play\"></i>";
 		}
-
 	},
 	/** Stop event */
-	Stop : function(obj){
-
-		audioElement = document.getElementById(obj);
-		parent = audioElement.parentNode;
+	Stop : function(ymplayer) {
+		ymplayer.removeAttribute('playing');
+		var audioElement = ymplayer.getElementsByTagName('audio')[0];
 		audioElement.pause();
 		audioElement.currentTime = 0;
-		btn = document.getElementById(obj+"-controller").getElementsByClassName("play-button");
-		btn[0].innerHTML = "<i class=\"fa fa-play\"></i>";		
-		parent.getElementsByClassName("ym-played")[0].style.width = "0%";
-
 	},
-	/** Loop or unloop event */
-	Loop : function(obj){
-
-		audioElement = document.getElementById(obj);
-		ymParent = audioElement.parentNode;
-		loopbtn = document.getElementById(obj+"-controller").getElementsByClassName("loop-button")[0];
-
-		if(ymParent.getAttribute("loop") == 'no'){
-			ymParent.setAttribute("loop","yes");
-			addClass(loopbtn, "looping");
-		}
-		else{
-			ymParent.setAttribute("loop","no");
-			removeClass(loopbtn, "looping");
-		}
-
+	/** Toggle Loop or unloop mode */
+	ToggleLoop : function(ymplayer){
+		ymplayer.setAttribute("loop", (ymplayer.getAttribute("loop") == 'no' ? 'yes' : 'no'));
 	},
-	/** Progress changer */
-	Change : function(obj){
+	/** Progress related functions */
+	/*Change : function(obj){
 		ae = typeof(obj) == "object" ? obj : document.getElementById(obj);
 		obj = typeof(obj) == "object" ? obj.id : obj;
 		if (typeof ae == 'undefined' || ae == null)	return;	
@@ -219,6 +201,9 @@ var Ymplayer = {
 		current = current + inter;
 		ae.parentNode.getElementsByClassName("ym-played")[0].style.width = percent;
 		ae.parentNode.getElementsByClassName("current-time")[0].innerHTML = current;	
+	},*/
+	Seek:function(ymplayer,pos) {
+		var audioElement = ymplayer.getElementsByTagName('audio')[0];
 	},
 	/** Show or hide lrcbox */
 	LrcBox : function(obj){
@@ -228,8 +213,8 @@ var Ymplayer = {
 		toggleClass(player.querySelector(".ym-lrcbox"), 'ym-show');
 	},
 	/** Click to skip progress */
-	Skip : function(obj,event){
-		obj = audioElement = typeof(obj) == "object" ? obj : document.getElementById(obj);
+	Skip : function(ymplayer,event){
+		/*obj = audioElement = typeof(obj) == "object" ? obj : document.getElementById(obj);
 		pbarEle = audioElement.parentNode.getElementsByClassName("ym-pgbar")[0];
 		playedEle = audioElement.parentNode.getElementsByClassName("ym-played")[0];
 		clickarea = event.clientX;
@@ -239,10 +224,10 @@ var Ymplayer = {
 		pro = clickwidth / divwidth;
 		obj.currentTime = obj.duration * pro;
 		propercent = pro*100 + "%";
-		playedEle.style.width = propercent;
+		playedEle.style.width = propercent;*/
 	},
 	/** Click to change volume */
-	ChangeVol : function(obj , event){
+	/*ChangeVol : function(obj , event){
 		obj = audioElement = typeof(obj) == "object" ? obj : document.getElementById(obj);
 		barEle = audioElement.parentNode.getElementsByClassName("volume-bar")[0];
 		currentEle = audioElement.parentNode.getElementsByClassName("volume-current")[0];
@@ -255,9 +240,13 @@ var Ymplayer = {
 		obj.volume =  pro;
 		propercent = pro*100 + "%";
 		currentEle.style.width = propercent;
+	},*/
+	UpdateVol : function(ymplayer) {
+		var audioElement = ymplayer.getElementsByTagName('audio')[0];
+		ymplayer.querySelector('.volume-current');
 	},
 	/** No volume event */
-	Novol : function(obj){
+	/*Novol : function(obj){
 		obj = document.getElementById(obj);
 		if(obj.volume === 0){
 			obj.volume = 1;
@@ -269,7 +258,7 @@ var Ymplayer = {
 			btn = obj.parentNode.getElementsByClassName("vol-button");
 			btn[0].innerHTML = "<i class=\"fa fa-volume-off\"></i>";				
 		}
-	},
+	},*/
 	/** Move mouse to change progress */
 	Move : function(a,event){
 		a = typeof a == 'object' ? a : document.getElementById(a);
@@ -291,11 +280,9 @@ var Ymplayer = {
 		}
 	},
 	/** Show play list */
-	List : function(obj){
-		obj = typeof obj == "object" ? obj : document.getElementById(obj);
-		player = obj.parentNode;
-		removeClass(player.querySelector(".ym-lrcbox"), 'ym-show');
-		toggleClass(player.querySelector(".ym-playlist"), 'ym-show');
+	List : function(ymplayer){
+		//removeClass(ymplayer.querySelector(".ym-lrcbox"), 'ym-show');
+		toggleClass(ymplayer.querySelector(".ym-playlist"), 'ym-show');
 	},
 	/** Lrc sync */
 	Lrc : function(obj){
@@ -431,25 +418,28 @@ var Ymplayer = {
 		}
 	},
 	/** Change Audio */
-	changeAudio : function(player,list_item){
-		var num = Number(list_item.querySelector('.list-number').innerHTML) - 1;
-		par.querySelector(".ym-song").innerHTML = list_item.getAttribute('song');
-		par.querySelector(".ym-artist").innerHTML = list_item.getAttribute('artist');
-		par.querySelector(".ym-cover-image").style.backgroundImage = "url("+list_item.getAttribute('cover')+")";
-		var elem_active_all = par.querySelectorAll(".single-active");
+	ChangeAudio : function(ymplayer,list_item){
+		var num = Number(list_item.getAttribute('idx'));
+		ymplayer.querySelector(".ym-song").innerHTML = list_item.getAttribute('song');
+		ymplayer.querySelector(".ym-artist").innerHTML = list_item.getAttribute('artist');
+		ymplayer.querySelector(".ym-cover-image").style.backgroundImage = "url("+list_item.getAttribute('cover')+")";
+		var elem_active_all = ymplayer.querySelectorAll("single.single-active");
 		for (var i = 0; i < elem_active_all.length; i++) {
 			removeClass(elem_active_all[i], "single-active");
 		}
 		addClass(list_item, "single-active");
-		var player = (typeof player == "object" ? player : document.getElementById(player));
-		player.pause();
+
+		var player = ymplayer.getElementsByTagName('audio')[0];
 		player.currentTime = 0;
 		player.setAttribute('src', list_item.getAttribute('src'));
-		this.lrcParse(player, num);
-		this.Play(player);
+		ymplayer.removeAttribute('playing');
+		ymplayer.querySelector(".current-time").innerHTML = '00:00';
+		ymplayer.querySelector(".duration-time").innerHTML = '00:00';
+		ymplayer.querySelector(".ym-played").style.width = '0%';
+		player.play();
 	},
 	/** Show LRC Fixer Box */
-	showFixer : function(obj){
+	ShowFixer : function(obj){
 		obj = typeof obj == "object" ? obj : document.getElementById(obj);
 		par = obj.parentNode;
 		fixer = par.querySelector(".lrc-fixer");
@@ -478,41 +468,43 @@ var Ymplayer = {
 				lrcList[i].attributes.timeline.value = parseFloat(nowline) + 0.5;
 			}
 		}
-	}
+	},
+	/** Init YmPlayer */
+	Init : function(){
+		ymplayer = document.getElementsByTagName("ymplayer");	/** 获取 Tagname 为 ymplayer 的元素 */
+		if(ymplayer.length != 0){
+			for(var i = 0; i < ymplayer.length; i ++){
+				Ymplayer.InitPlayer(ymplayer[i]);
+			}
+		}
+	},
 }
 window.addEventListener('resize', Ymplayer.StyleByWidth);
 Ymplayer.StyleByWidth();
 
-function hasClass(ele,cls) {
-	return ele.className.match(new RegExp('(\\s|^)'+cls+'(\\s|$)')) ? true : false;
+function hasClass(e,c){
+	return e.className.match(new RegExp('(\\s|^)'+c+'(\\s|$)'))?true:false;
 }
-function addClass(ele,cls) {
-	if (!cls || hasClass(ele,cls)) {
-		return;
-	}
-	if (ele.className) {
-		ele.className += ' ' + cls;
-	} else {
-		ele.className = cls;
-	}
+function addClass(e,c){
+	if(!c||hasClass(e,c)){return}
+	if(e.className){e.className+=' '+c}else{e.className=c}
 }
-function removeClass(ele,cls) {
-	if (!cls) {
-		return;
-	}
-	ele.className = ele.className.replace(new RegExp('(\\s|^)'+cls+'(\\s|$)', 'g'), ' ').replace(/\s+/g, ' ').replace(/(^\s*)|(\s*$)/g, '');
-	if (!ele.className) {
-		ele.removeAttribute('class');
-	}
+function removeClass(e,c){
+	if(!c){return}
+	e.className=e.className.replace(new RegExp('(\\s|^)'+c+'(\\s|$)','g'),' ').replace(/\s+/g,' ').replace(/(^\s*)|(\s*$)/g,'');
+	if(!e.className){e.removeAttribute('class')}
 }
-function toggleClass(ele,cls) {
-	if (hasClass(ele,cls)) {
-		removeClass(ele,cls);
-	} else {
-		addClass(ele,cls);
-	}
+function toggleClass(e,c){
+	if(hasClass(e,c)){removeClass(e,c)}else{addClass(e,c)}
 }
-function getRect( elements ){ 
+function padZero(n,l){
+	if(isNaN(n)){throw'Invalid Number'}
+	if(isNaN(l)){throw'Invalid Length'}
+	var s=(Number(n)<0?1:0),r=String(Math.abs(n)),t=Number(l)-r.length-s;
+	if(t>0){while(t){r='0'+r;t--}}
+	return (s?'-':'')+r;
+}
+function getRect(elements){ 
 	var rect = elements.getBoundingClientRect(); 
 	var clientTop = document.documentElement.clientTop; 
 	var clientLeft = document.documentElement.clientLeft; 
@@ -526,3 +518,4 @@ function getRect( elements ){
 function remove(element) {
 	element.parentNode.removeChild(element);
 }
+
