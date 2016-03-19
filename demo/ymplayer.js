@@ -7,11 +7,28 @@ var Ymplayer = {
 			remove(ymplayer);
 			return false;
 		}
-		//ymplayer.setAttribute("init","no");
+
+		/* Responsive design use */
+		window.addEventListener('resize', function(){
+			var classes_max_width = [
+				{maxWidth:686, className:'max-width-686'},
+				{maxWidth:644, className:'max-width-644'},
+				{maxWidth:560, className:'max-width-560'},
+				{maxWidth:400, className:'max-width-400'},
+			]
+			var width = ymplayer.offsetWidth;
+			for (var i = 0; i < classes_max_width.length; i++) {
+				removeClass(ymplayer, classes_max_width[i].className);
+				if (width <= classes_max_width[i].maxWidth) {
+					addClass(ymplayer, classes_max_width[i].className);
+				}
+			}
+		});
 
 		/** Init Playlist */
 		var listEle = document.createElement("div");
 		listEle.setAttribute("class","ym-playlist");
+		var firstSingle = undefined;
 		for(var t = 0; t < songTag.length; t ++){
 			single = document.createElement("single");
 			single.setAttribute("idx", t);
@@ -26,17 +43,19 @@ var Ymplayer = {
 				+ "<span class='list-song'>" + songTag[t].getAttribute('song') + "</span>"
 				+ "<span class='list-artist'>" + songTag[t].getAttribute('artist') + "</span>";
 			listEle.appendChild(single);
+			if (t === 0) {
+				firstSingle = single;
+			}
 		}
 
 		/** Init audio element */
 		var audioEle = document.createElement("audio");
 		audioEle.setAttribute("preload","yes");
-		audioEle.setAttribute("autoplay","autoplay");
 		audioEle.addEventListener('ended', function(){
 			var single_active = ymplayer.querySelector('.single-active');
 			if (ymplayer.getAttribute('loop') == 'yes') {
 				Ymplayer.ChangeAudio(ymplayer, single_active);
-			} else if (next_single){
+			} else if (single_active.nextSibling){
 				Ymplayer.ChangeAudio(ymplayer, single_active.nextSibling);
 			}
 		});
@@ -118,47 +137,23 @@ var Ymplayer = {
 		conEle.appendChild(coverEle);
 		conEle.appendChild(ctEle);
 
-		/*
 		lrcbox = document.createElement("div");
-		lrcbox.id = tempID + "lrcbox";
 		lrcbox.setAttribute("class","ym-lrcbox");
-		lrcbox.innerHTML = "<div class=\"lrc-container\" onclick=\"Ymplayer.showFixer("+tempID+");\"></div>\n<div class=\"lrc-fixer\">\n"
-		+"<a href=\"javascript:;\" title=\"将歌词延后0.5s\" onclick=\"Ymplayer.Fixer("+tempID+",'next')\" class=\"ym-fix-btn\"><i class=\"fa fa-angle-up\"></i></a>\n"
-		+"<a href=\"javascript:;\" title=\"将歌词提前0.5s\" onclick=\"Ymplayer.Fixer("+tempID+",'prev')\" class=\"ym-fix-btn\"><i class=\"fa fa-angle-down\"></i></a>\n"				
-		+"</div>\n";
-		*/
+		lrcbox.innerHTML = "<div class=\"lrc-container\"></div>\n<div class=\"lrc-fixer\">"
+			+"<span title=\"将歌词延后0.5s\" class=\"ym-fix-btn\"><i class=\"fa fa-angle-up\"></i></span>"
+			+"<span title=\"将歌词提前0.5s\" class=\"ym-fix-btn\"><i class=\"fa fa-angle-down\"></i></span>"
+			+"</div>";
 
 		/** Add list, lrcbox, audio and other stuffs into Ymplayer */
 		ymplayer.appendChild(listEle);
 		ymplayer.appendChild(audioEle);
 		ymplayer.appendChild(progressBarEle);
 		ymplayer.appendChild(conEle);
+		if (firstSingle) {
+			Ymplayer.ChangeAudio(ymplayer, firstSingle, true);
+		}
 	},
 
-	/** Automatically specify which style to use based on player's width */
-	StyleByWidth: function(){
-		var classes_max_width = [
-			{maxWidth:686, className:'max-width-686'},
-			{maxWidth:644, className:'max-width-644'},
-			{maxWidth:560, className:'max-width-560'},
-			{maxWidth:400, className:'max-width-400'},
-		]
-		var _StyleByWidth = function(player) {
-			var width = player.offsetWidth;
-			for (var i = 0; i < classes_max_width.length; i++) {
-				removeClass(player, classes_max_width[i].className);
-				if (width <= classes_max_width[i].maxWidth) {
-					addClass(player, classes_max_width[i].className);
-				}
-			}
-		}
-		var ymplayer = document.getElementsByTagName("ymplayer");	/** 获取 Tagname 为 ymplayer 的元素 */
-		if(ymplayer.length != 0){
-			for(var i = 0; i < ymplayer.length; i ++){
-				_StyleByWidth(ymplayer[i]);
-			}
-		}
-	},
 	/** Play and Pause Event */
 	TogglePlay : function(ymplayer){
 		var audioElement = ymplayer.getElementsByTagName('audio')[0];
@@ -418,7 +413,7 @@ var Ymplayer = {
 		}
 	},
 	/** Change Audio */
-	ChangeAudio : function(ymplayer,list_item){
+	ChangeAudio : function(ymplayer,list_item,no_autoplay){
 		var num = Number(list_item.getAttribute('idx'));
 		ymplayer.querySelector(".ym-song").innerHTML = list_item.getAttribute('song');
 		ymplayer.querySelector(".ym-artist").innerHTML = list_item.getAttribute('artist');
@@ -430,13 +425,16 @@ var Ymplayer = {
 		addClass(list_item, "single-active");
 
 		var player = ymplayer.getElementsByTagName('audio')[0];
+		player.pause();
 		player.currentTime = 0;
 		player.setAttribute('src', list_item.getAttribute('src'));
 		ymplayer.removeAttribute('playing');
 		ymplayer.querySelector(".current-time").innerHTML = '00:00';
 		ymplayer.querySelector(".duration-time").innerHTML = '00:00';
 		ymplayer.querySelector(".ym-played").style.width = '0%';
-		player.play();
+		if (!no_autoplay){
+			player.play();
+		}
 	},
 	/** Show LRC Fixer Box */
 	ShowFixer : function(obj){
@@ -479,8 +477,6 @@ var Ymplayer = {
 		}
 	},
 }
-window.addEventListener('resize', Ymplayer.StyleByWidth);
-Ymplayer.StyleByWidth();
 
 function hasClass(e,c){
 	return e.className.match(new RegExp('(\\s|^)'+c+'(\\s|$)'))?true:false;
