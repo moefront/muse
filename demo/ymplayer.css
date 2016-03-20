@@ -53,6 +53,9 @@ ymplayer[playing] .play-button .fa-play{
 ymplayer[playing] .play-button .fa-pause{
 	display:inline;
 }
+ymplayer[current-lrc] .no-lrc{
+	display:none;
+}
 
 .ym-controller{
 	overflow:visible;
@@ -214,7 +217,7 @@ ymplayer[playing] .play-button .fa-pause{
 	right:-12px;
 }
 .lrc-container{
-	min-height: 100%;
+	position:absolute;left:0;right:0;top:0;
 	text-align: center;
 	transition: 1s all ease-out;
 	-webkit-transition: 1s all ease-out;
@@ -279,6 +282,8 @@ single:hover{
 	font-weight: 100;
 	font-size: 18px;
 	line-height: 2;
+	-webkit-transition: 0.3s all;
+	-moz-transition: 0.3s all;
 }
 .ym-active{
 	color: #fff;
@@ -287,16 +292,23 @@ single:hover{
 	-moz-transition: 0.3s all;	
 }
 .ym-active p{
-	font-weight: bold!important;
+	font-weight:bold;
 }
-.lyrictag-no-lrc{
-	line-height: 290px;
+.no-lrc{
+	display: table;
+	width: 100%;
 	height: 100%;
 }
-.lyrictag-no-lrc p {
-	line-height: 290px;
+.no-lrc p {
+	display: table-cell;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	vertical-align: middle;
+	font-weight: bold;
+	font-size: 18px;
 }
-.lrc-fixer{
+.lrc-fixer {
 	background-color: rgba(51, 51, 51, 0.08);
 	opacity: 0;
 	position: absolute;
@@ -313,6 +325,7 @@ single:hover{
 	display: block;
 	font-size: 24px;
 	margin:5px 0px 5px 0px;
+	cursor:pointer;
 }
 
 .ym-progress, .ym-controller{

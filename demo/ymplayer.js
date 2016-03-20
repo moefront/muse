@@ -1,5 +1,4 @@
 var Ymplayer = {
-	than : 3,
 	/** Init player for given element */
 	InitPlayer : function(ymplayer){
 		var songTag = ymplayer.getElementsByTagName("song");
@@ -84,6 +83,7 @@ var Ymplayer = {
 			var time = parseInt(Math.round(this.currentTime));
 			ymplayer.querySelector(".ym-played").style.width = percent * 100 + '%';
 			ymplayer.querySelector(".current-time").innerHTML = padZero(Math.floor(time / 60), 2) + ':' + padZero(time % 60, 2);
+			Ymplayer.SyncLRC(ymplayer, this.currentTime);
 		});
 
 		/** 创建进度条元素 */
@@ -138,6 +138,9 @@ var Ymplayer = {
 				Ymplayer.List(ymplayer);
 			});
 		}
+		ctEle.querySelector('.lyric-button').addEventListener('click', function(e){
+			Ymplayer.LrcBox(ymplayer);
+		});
 		ctEle.querySelector('.play-button').addEventListener('click', function(e){
 			Ymplayer.TogglePlay(ymplayer);
 		});
@@ -174,15 +177,30 @@ var Ymplayer = {
 		conEle.appendChild(coverEle);
 		conEle.appendChild(ctEle);
 
-		lrcbox = document.createElement("div");
-		lrcbox.setAttribute("class","ym-lrcbox");
-		lrcbox.innerHTML = "<div class=\"lrc-container\"></div>\n<div class=\"lrc-fixer\">"
-			+"<span title=\"将歌词延后0.5s\" class=\"ym-fix-btn\"><i class=\"fa fa-angle-up\"></i></span>"
-			+"<span title=\"将歌词提前0.5s\" class=\"ym-fix-btn\"><i class=\"fa fa-angle-down\"></i></span>"
+		/* 显示歌词 */
+		lrcBox = document.createElement("div");
+		lrcBox.setAttribute("class","ym-lrcbox");
+		lrcBox.innerHTML = "<div class='lrc-container'></div>"
+			+"<div class='no-lrc'><p>这首歌是没有填词的纯音乐（或者没有找到歌词），请欣赏。</p></div>"
+			+"<div class='lrc-fixer'>"
+			+"<span title='将歌词延后0.5s' class='ym-fix-btn ym-fix-slower'><i class='fa fa-angle-up'></i></span>"
+			+"<span title='将歌词提前0.5s' class='ym-fix-btn ym-fix-faster'><i class='fa fa-angle-down'></i></span>"
 			+"</div>";
+		lrcBox.querySelector('.lrc-container').addEventListener('click', function(){
+			Ymplayer.ToggleFixer(ymplayer);
+		});
+		lrcBox.querySelector('.ym-fix-slower').addEventListener('click', function(){
+			ymplayer.setAttribute('current-lrc-timeoffset', Number(ymplayer.getAttribute('current-lrc-timeoffset')) - 0.5);
+			Ymplayer.SyncLRC(ymplayer);
+		});
+		lrcBox.querySelector('.ym-fix-faster').addEventListener('click', function(){
+			ymplayer.setAttribute('current-lrc-timeoffset', Number(ymplayer.getAttribute('current-lrc-timeoffset')) + 0.5);
+			Ymplayer.SyncLRC(ymplayer);
+		});
 
 		/** Add list, lrcbox, audio and other stuffs into Ymplayer */
 		ymplayer.appendChild(listEle);
+		ymplayer.appendChild(lrcBox);
 		ymplayer.appendChild(audioEle);
 		ymplayer.appendChild(progressBarEle);
 		ymplayer.appendChild(conEle);
@@ -239,12 +257,36 @@ var Ymplayer = {
 	},
 	/** Show play list */
 	List : function(ymplayer){
-		//removeClass(ymplayer.querySelector(".ym-lrcbox"), 'ym-show');
+		removeClass(ymplayer.querySelector(".ym-lrcbox"), 'ym-show');
 		toggleClass(ymplayer.querySelector(".ym-playlist"), 'ym-show');
 	},
 	/** Lrc sync */
-	Lrc : function(obj){
-		audioElement = document.getElementById(obj);
+	SyncLRC: function(ymplayer, currentTime){
+		if (undefined == currentTime) {
+			var currentTime = ymplayer.getElementsByTagName('audio')[0].currentTime;
+		}
+		currentTime += Number(ymplayer.getAttribute('current-lrc-timeoffset'));
+
+		/* Fetch all the lyrics */
+		var lyrics_all = ymplayer.getElementsByTagName('lyric');
+		var lyric_selected = undefined;
+		for (var i = 0; i < lyrics_all.length; i++) {
+			removeClass(lyrics_all[i], 'ym-active');
+			var time_now = Number(lyrics_all[i].getAttribute('timeline'));
+			var time_next = Number(lyrics_all[i+1].getAttribute('timeline'));
+			if (i <= 0 && currentTime <= time_now) {
+				lyric_selected = lyrics_all[i];
+			} else if (currentTime < time_next && currentTime >= time_now) {
+				lyric_selected = lyrics_all[i];
+			}
+		}
+
+		/* Show the lyric */
+		if (lyric_selected) {
+			addClass(lyric_selected, 'ym-active');
+		}
+
+		/*audioElement = document.getElementById(obj);
 		if (typeof audioElement == 'undefined' || audioElement == null)	return;
 		par = audioElement.parentNode;
 		if(audioElement.paused != false)	return;
@@ -322,34 +364,26 @@ var Ymplayer = {
 				}
 			}
 		}
-
+		*/
 	},
 	/** LRC Parser */
-	lrcParse : function(obj,n){
-		obj = typeof obj == "object" ? obj : document.getElementById(obj);
-		par = obj.parentNode;
-		lrcbox = par.getElementsByClassName("ym-lrcbox")[0];
-		lrcContainer = lrcbox.getElementsByClassName("lrc-container")[0];
-		if("" != lrcContainer.innerHTML) lrcContainer.innerHTML = "";
-		lrc = par.getElementsByTagName("song");
-		if(typeof lrc != "null" && lrc.length != 0){
-			lyric = lrc[n].innerHTML;
+	ParseLRC : function(ymplayer,idx){
+		var lrcContainer = ymplayer.querySelector(".lrc-container");
+		var lrcData = ymplayer.getElementsByTagName("song")[idx];
+		ymplayer.removeAttribute('current-lrc');
+		ymplayer.removeAttribute('current-lrc-timeoffset');
+		lrcContainer.innerHTML = '';
+		ymplayer.querySelector(".lrc-fixer").style.opacity = 0;
 
-			if("" == lyric)	noLrc();
-
-			lyric = lyric.replace(/(\\n)/g,"\n");
-			lyric = lyric.replace(/(\\r)/g,"");
-			lyric = lyric.split("\n");
-			timeline = Array();
-			lrcContent = Array();
-
+		if(lrcData && lrcData.innerHTML.length != 0 && lrcData.innerHTML!= ''){
+			var lyric = lrcData.innerHTML;
+			lyric = lyric.replace(/(\\n)/g,"\n").replace(/(\\r)/g,"").split("\n");
 			for (var x in lyric) {
 				if (lyric[x].match(/(ti:|ar:|by:|al:|offset:)/)) {
 					continue;
-				}
-				else if(lyric[x] == "")
+				} else if(lyric[x] == "") {
 					continue; 
-				else {
+				} else {
 					tempLrc = lyric[x].match(/([0-9]{2})\:([0-9]{2}\.[0-9]{2})/);
 				}
 				tempContent = lyric[x].match(/\[.*?\](.*?)$/);
@@ -362,17 +396,8 @@ var Ymplayer = {
 					lrcContainer.appendChild(lrcEle);
 				}
 			}
-			par.setAttribute("currentLrc",0);
-		}
-		else{
-			noLrc();
-		}
-		function noLrc(){
-			lrcEle = document.createElement("lyric");
-			lrcEle.setAttribute("timeline",0);
-			lrcEle.setAttribute("class","lyrictag-no-lrc");
-			lrcEle.innerHTML = "<p>这首歌是没有填词的纯音乐（或者没有找到歌词），请欣赏。</p>";
-			lrcContainer.appendChild(lrcEle);		
+			ymplayer.setAttribute("current-lrc",0);
+			ymplayer.setAttribute('current-lrc-timeoffset',0);
 		}
 	},
 	/** Change Audio */
@@ -391,39 +416,16 @@ var Ymplayer = {
 		ymplayer.querySelector(".duration-time").innerHTML = '00:00';
 		var player = ymplayer.getElementsByTagName('audio')[0];
 		player.setAttribute('src', list_item.getAttribute('src'));
+		Ymplayer.ParseLRC(ymplayer, num);
 		if (!no_autoplay){
 			player.play();
 		}
 	},
-	/** Show LRC Fixer Box */
-	ShowFixer : function(obj){
-		obj = typeof obj == "object" ? obj : document.getElementById(obj);
-		par = obj.parentNode;
-		fixer = par.querySelector(".lrc-fixer");
-		if(fixer.style.opacity == 1)
-			fixer.style.opacity = 0;
-		else
-			fixer.style.opacity = 1;
-	},
-	/** Fix the LRC sync */
-	Fixer : function(obj, act){
-		obj = typeof obj == "object" ? obj : document.getElementById(obj);
-		par = obj.parentNode;
-		lrcList = par.querySelectorAll("lyric");
-		/** 如果动作为 提前 0.5s */
-		if(act == "prev"){
-			for(i=0;i<lrcList.length;i++){
-				nowline = lrcList[i].attributes.timeline.value;
-				if(nowline < 0.5)	continue;
-				lrcList[i].attributes.timeline.value = parseFloat(nowline) - 0.5;
-			}
-		}
-		/** 否则执行动作 延后0.5s */
-		else{
-			for(i=0;i<lrcList.length;i++){
-				nowline = lrcList[i].attributes.timeline.value;
-				lrcList[i].attributes.timeline.value = parseFloat(nowline) + 0.5;
-			}
+	/** Toggle LRC Fixer Box */
+	ToggleFixer: function(ymplayer){
+		if (ymplayer.hasAttribute('current-lrc')) {
+			fixer = ymplayer.querySelector(".lrc-fixer");
+			fixer.style.opacity = (fixer.style.opacity == 1 ? 0 : 1);
 		}
 	},
 	/** Init YmPlayer */
