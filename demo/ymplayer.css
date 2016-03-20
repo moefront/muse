@@ -282,8 +282,6 @@ single:hover{
 	font-weight: 100;
 	font-size: 18px;
 	line-height: 2;
-	-webkit-transition: 0.3s all;
-	-moz-transition: 0.3s all;
 }
 .ym-active{
 	color: #fff;

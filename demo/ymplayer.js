@@ -22,6 +22,7 @@ var Ymplayer = {
 					addClass(ymplayer, classes_max_width[i].className);
 				}
 			}
+			Ymplayer.SyncLRC(ymplayer);
 		});
 
 		/** Init Playlist */
@@ -140,6 +141,7 @@ var Ymplayer = {
 		}
 		ctEle.querySelector('.lyric-button').addEventListener('click', function(e){
 			Ymplayer.LrcBox(ymplayer);
+			Ymplayer.SyncLRC(ymplayer);
 		});
 		ctEle.querySelector('.play-button').addEventListener('click', function(e){
 			Ymplayer.TogglePlay(ymplayer);
@@ -261,110 +263,47 @@ var Ymplayer = {
 		toggleClass(ymplayer.querySelector(".ym-playlist"), 'ym-show');
 	},
 	/** Lrc sync */
-	SyncLRC: function(ymplayer, currentTime){
+	SyncLRC: function(ymplayer, currentTime) {
 		if (undefined == currentTime) {
-			var currentTime = ymplayer.getElementsByTagName('audio')[0].currentTime;
+			var time = ymplayer.getElementsByTagName('audio')[0].currentTime;
+		} else {
+			var time = currentTime;
 		}
-		currentTime += Number(ymplayer.getAttribute('current-lrc-timeoffset'));
+		time += Number(ymplayer.getAttribute('current-lrc-timeoffset'));
 
 		/* Fetch all the lyrics */
 		var lyrics_all = ymplayer.getElementsByTagName('lyric');
-		var lyric_selected = undefined;
-		for (var i = 0; i < lyrics_all.length; i++) {
-			removeClass(lyrics_all[i], 'ym-active');
+		var current_lrc = undefined;
+		for (var i = 0; i < lyrics_all.length-1; i++) {
 			var time_now = Number(lyrics_all[i].getAttribute('timeline'));
 			var time_next = Number(lyrics_all[i+1].getAttribute('timeline'));
-			if (i <= 0 && currentTime <= time_now) {
-				lyric_selected = lyrics_all[i];
-			} else if (currentTime < time_next && currentTime >= time_now) {
-				lyric_selected = lyrics_all[i];
+			if (i <= 0 && time <= time_now) {
+				current_lrc = i;
+			} else if (i == lyrics_all.length-2 && time >= time_next) {
+				current_lrc = i + 1;
+			} else if (time < time_next && time >= time_now) {
+				current_lrc = i;
 			}
 		}
 
-		/* Show the lyric */
-		if (lyric_selected) {
-			addClass(lyric_selected, 'ym-active');
+		/* Failed to select lyric */
+		if (current_lrc === undefined) {
+			ymplayer.setAttribute('current-lrc', -1);
+			return;
 		}
 
-		/*audioElement = document.getElementById(obj);
-		if (typeof audioElement == 'undefined' || audioElement == null)	return;
-		par = audioElement.parentNode;
-		if(audioElement.paused != false)	return;
-		time = audioElement.currentTime;
-		all = audioElement.duration;
-		lrcEle = par.getElementsByTagName("lyric");
-		long = lrcEle.length;
-		currentLrc = parseInt(par.getAttribute("currentLrc"));
-		lrccontainer = par.getElementsByClassName("lrc-container")[0];
-
-		if(time > lrcEle[long-1].getAttribute("timeline"))		return false;
-
-		if (lrcEle[currentLrc] && time >= lrcEle[currentLrc].getAttribute("timeline")) {
-			if (currentLrc < long-1) {
-				if(time > lrcEle[parseInt(currentLrc)+1].getAttribute("timeline")){
-					active = lrccontainer.getElementsByClassName("ym-active");
-					if(typeof active != "null"){
-						leng = active.length;
-						o = 0;
-						while(o < leng){
-							removeClass(active[o],"ym-active");
-							o++;
-						}
-					}
-
-					for (var i = 0; i < long; i++) {
-						if (time > lrcEle[currentLrc].getAttribute("timeline")) {
-							i++;
-						} else {
-							marginHeight = lrcEle[this.than - 1].offsetTop - lrcEle[currentLrc].offsetTop;
-							lrccontainer.style.transform = "transformY("+marginHeight+"px)";							
-							par.setAttribute("currentLrc",i);
-							Ymplayer.Lrc(obj);
-						}
-					}			
-				}
-			}
-			if(currentLrc != 0) removeClass(lrcEle[currentLrc - 1],"ym-active");
-			addClass(lrcEle[currentLrc], "ym-active");
-			if (currentLrc >= this.than) {
-				marginHeight = lrcEle[this.than - 1].offsetTop - lrcEle[currentLrc].offsetTop;
-				lrccontainer.style.marginTop = marginHeight+"px";
-			}
-			par.setAttribute("currentLrc",currentLrc+1);
-		} else if (currentLrc != 0 && time < lrcEle[currentLrc-1].getAttribute("timeline")) {
-			active = lrccontainer.getElementsByClassName("ym-active");
-			if(typeof active != "null"){
-				leng = active.length;
-				o = 0;
-				while(o < leng){
-					removeClass(active[o],"ym-active");
-					o++;
-				}
-			}
-			for (var s = 0; s < lrcEle.length; s++) {
-				if(time < lrcEle[0].getAttribute("timeline")){
-					lrccontainer.style.marginTop = 0+"px";
-					break;
-				}
-				if (time > lrcEle[s].getAttribute("timeline")){
-					if(s<=this.than){
-						lrccontainer.style.marginTop = 0+"px";
-					}
-					else{
-						marginHeight = lrcEle[this.than - 1].offsetTop - lrcEle[currentLrc].offsetTop;
-						lrccontainer.style.marginTop = marginHeight+"px";		
-					}
-					addClass(lrcEle[s], "ym-active");				
-					par.setAttribute("currentLrc",s);
-					Ymplayer.Lrc(obj);		
-
-					break;
-				} else {
-					s++;
-				}
-			}
+		/* Update lyric */
+		ymplayer.setAttribute('current-lrc', current_lrc);
+		var lyric_selected = ymplayer.querySelectorAll('.ym-active');
+		for (var i = 0; i < lyric_selected.length; i++) {
+			removeClass(lyric_selected[i], 'ym-active');
 		}
-		*/
+		addClass(lyrics_all[current_lrc], 'ym-active');
+		var ym_lrcbox = ymplayer.querySelector('.ym-lrcbox');
+		var lrc_container = ymplayer.querySelector(".lrc-container");
+		var target_offset = lyrics_all[current_lrc].offsetTop - (ym_lrcbox.offsetHeight - lyrics_all[current_lrc].offsetHeight) / 2;
+		if (target_offset < 0) {target_offset = 0;}
+		lrc_container.style.top = String(-target_offset)+'px';
 	},
 	/** LRC Parser */
 	ParseLRC : function(ymplayer,idx){
@@ -376,8 +315,7 @@ var Ymplayer = {
 		ymplayer.querySelector(".lrc-fixer").style.opacity = 0;
 
 		if(lrcData && lrcData.innerHTML.length != 0 && lrcData.innerHTML!= ''){
-			var lyric = lrcData.innerHTML;
-			lyric = lyric.replace(/(\\n)/g,"\n").replace(/(\\r)/g,"").split("\n");
+			var lyric = lrcData.innerHTML.replace(/(\\n)/g,"\n").replace(/(\\r)/g,"").split("\n");
 			for (var x in lyric) {
 				if (lyric[x].match(/(ti:|ar:|by:|al:|offset:)/)) {
 					continue;
@@ -390,13 +328,13 @@ var Ymplayer = {
 				if(typeof tempLrc != null){
 					minute = tempLrc[1] * 60;
 					sec = minute + parseFloat(tempLrc[2]);
-					lrcEle = document.createElement("lyric");
+					var lrcEle = document.createElement("lyric");
 					lrcEle.setAttribute("timeline",sec);
 					lrcEle.innerHTML = "<p>"+tempContent[1]+"</p>";
 					lrcContainer.appendChild(lrcEle);
 				}
 			}
-			ymplayer.setAttribute("current-lrc",0);
+			ymplayer.setAttribute("current-lrc",-1);
 			ymplayer.setAttribute('current-lrc-timeoffset',0);
 		}
 	},
