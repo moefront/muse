@@ -4,7 +4,7 @@ var Ymplayer = {
 	InitPlayer : function(ymplayer){
 		var songTag = ymplayer.getElementsByTagName("song");
 		if(songTag.length === 0){
-			remove(ymplayer);
+			ymplayer.parentNode.removeChild(ymplayer);
 			return false;
 		}
 
@@ -51,23 +51,24 @@ var Ymplayer = {
 		/** Init audio element */
 		var audioEle = document.createElement("audio");
 		audioEle.setAttribute("preload","yes");
+		audioEle.addEventListener('loadeddata', function(){
+			var time = parseInt(Math.round(this.duration));
+			ymplayer.querySelector(".duration-time").innerHTML = padZero(Math.floor(time / 60), 2) + ':' + padZero(time % 60, 2);
+		});
+		audioEle.addEventListener('play', function(){
+			ymplayer.setAttribute('playing', 'playing');
+		});
+		audioEle.addEventListener('pause', function(){
+			ymplayer.removeAttribute('playing');
+		});
 		audioEle.addEventListener('ended', function(){
+			ymplayer.removeAttribute('playing');
 			var single_active = ymplayer.querySelector('.single-active');
 			if (ymplayer.getAttribute('loop') == 'yes') {
 				Ymplayer.ChangeAudio(ymplayer, single_active);
 			} else if (single_active.nextSibling){
 				Ymplayer.ChangeAudio(ymplayer, single_active.nextSibling);
 			}
-		});
-		audioEle.addEventListener('loadeddata', function(){
-			var time = parseInt(Math.round(this.duration));
-			ymplayer.querySelector(".duration-time").innerHTML = padZero(Math.floor(time / 60), 2) + ':' + padZero(time % 60, 2);
-		});
-		audioEle.addEventListener('timeupdate', function(){
-			var percent = this.currentTime / this.duration;
-			var time = parseInt(Math.round(this.currentTime));
-			ymplayer.querySelector(".ym-played").style.width = percent * 100 + '%';
-			ymplayer.querySelector(".current-time").innerHTML = padZero(Math.floor(time / 60), 2) + ':' + padZero(time % 60, 2);
 		});
 		audioEle.addEventListener('volumechange', function(){
 			ymplayer.querySelector('.volume-current').style.width = String(this.volume * 100) + '%';
@@ -77,24 +78,41 @@ var Ymplayer = {
 				removeClass(ymplayer.querySelector('.vol-button'), 'muted');
 			}
 		});
-		audioEle.addEventListener('play', function(){
-			ymplayer.setAttribute('playing', 'playing');
-		});
-		audioEle.addEventListener('pause', function(){
-			ymplayer.removeAttribute('playing');
+		//TODO: audio的timeupdate事件在firefox下比较耗CPU。。。
+		audioEle.addEventListener('timeupdate', function(){
+			var percent = this.currentTime / this.duration;
+			var time = parseInt(Math.round(this.currentTime));
+			ymplayer.querySelector(".ym-played").style.width = percent * 100 + '%';
+			ymplayer.querySelector(".current-time").innerHTML = padZero(Math.floor(time / 60), 2) + ':' + padZero(time % 60, 2);
 		});
 
 		/** 创建进度条元素 */
 		progressBarEle = document.createElement("div");
 		progressBarEle.setAttribute("class","ym-progress");
 		progressBarEle.innerHTML = "<span class='current-time'>00:00</span>"
-			+"<div class='ym-pgbar'><div class='ym-buffed'></div><div class='ym-played'><span class='ym-circle'></span></div></div>"
+			+"<div class='ym-pgbar-outer'><div class='ym-pgbar'><div class='ym-buffed'></div><div class='ym-played'><span class='ym-circle'></span></div></div></div>"
 			+"<span class=\"duration-time\">00:00</span>";
-		progressBarEle.querySelector('.ym-pgbar').addEventListener('click', function(e){
-			Ymplayer.Skip(ymplayer,e);
+		progressBarEle.querySelector('.ym-pgbar-outer').addEventListener('mousedown', function(e){
+			Ymplayer.Seek(ymplayer,e);
 		});
-		progressBarEle.querySelector('.ym-circle').addEventListener('click', function(e){
-			Ymplayer.Move(ymplayer,e);
+
+		/* Seek via mouse */
+		progressBarEle.querySelector('.ym-pgbar-outer').addEventListener('mousedown', function(e){
+			ymplayer.setAttribute('drag', 'progress');
+			Ymplayer.Seek(ymplayer, e);
+		});
+		progressBarEle.querySelector('.ym-pgbar-outer').addEventListener('mousemove', function(e){
+			if (ymplayer.getAttribute('drag') == 'progress'){
+				Ymplayer.Seek(ymplayer,e);
+			}
+		});
+		progressBarEle.querySelector('.ym-pgbar-outer').addEventListener('mouseout', function(e){
+			if (e.target == this) {
+				ymplayer.removeAttribute('drag');
+			}
+		});
+		progressBarEle.querySelector('.ym-pgbar-outer').addEventListener('mouseup', function(e){
+			ymplayer.removeAttribute('drag');
 		});
 
 		/** 创建控制器元素 */
@@ -114,7 +132,7 @@ var Ymplayer = {
 			+ (songTag.length > 0 ? "<i class='list-button ymbtn fa fa-list'></i>" : '')
 			+ "<i class='lyric-button ymbtn fa fa-file-text'></i></a>"
 			+ "<span class='vol-button ymbtn'><i class='fa fa-volume-down'></i><i class='fa fa-volume-off'></i></span>"
-			+ "<div class='volume-bar'><div class='volume-current'><span class='ym-circle'></span></div></div>";
+			+ "<div class='volume-bar'><div class='volume-bar-inner'><div class='volume-current'><span class='ym-circle'></span></div></div></div>";
 		if (songTag.length > 0) {
 			ctEle.querySelector('.list-button').addEventListener('click', function(e){
 				Ymplayer.List(ymplayer);
@@ -132,6 +150,25 @@ var Ymplayer = {
 		ctEle.querySelector('.vol-button').addEventListener('click', function(e){
 			var audioElement = ymplayer.getElementsByTagName('audio')[0];
 			audioElement.volume = (audioElement.volume > 0 ? 0 : 1);
+		});
+
+		/* Adjust volume via mouse */
+		ctEle.querySelector('.volume-bar').addEventListener('mousedown', function(e){
+			ymplayer.setAttribute('drag', 'volume');
+			Ymplayer.ChangeVol(ymplayer, e);
+		});
+		ctEle.querySelector('.volume-bar').addEventListener('mousemove', function(e){
+			if (ymplayer.getAttribute('drag') == 'volume'){
+				Ymplayer.ChangeVol(ymplayer,e);
+			}
+		});
+		ctEle.querySelector('.volume-bar').addEventListener('mouseout', function(e){
+			if (e.target == this) {
+				ymplayer.removeAttribute('drag');
+			}
+		});
+		ctEle.querySelector('.volume-bar').addEventListener('mouseup', function(e){
+			ymplayer.removeAttribute('drag');
 		});
 
 		conEle.appendChild(coverEle);
@@ -153,7 +190,6 @@ var Ymplayer = {
 			Ymplayer.ChangeAudio(ymplayer, firstSingle, true);
 		}
 	},
-
 	/** Play and Pause Event */
 	TogglePlay : function(ymplayer){
 		var audioElement = ymplayer.getElementsByTagName('audio')[0];
@@ -169,110 +205,37 @@ var Ymplayer = {
 		var audioElement = ymplayer.getElementsByTagName('audio')[0];
 		audioElement.pause();
 		audioElement.currentTime = 0;
+		ymplayer.removeAttribute('playing');
+		ymplayer.querySelector(".current-time").innerHTML = '00:00';
+		ymplayer.querySelector(".ym-played").style.width = '0%';
 	},
 	/** Toggle Loop or unloop mode */
 	ToggleLoop : function(ymplayer){
 		ymplayer.setAttribute("loop", (ymplayer.getAttribute("loop") == 'no' ? 'yes' : 'no'));
 	},
-	/** Progress related functions */
-	/*Change : function(obj){
-		ae = typeof(obj) == "object" ? obj : document.getElementById(obj);
-		obj = typeof(obj) == "object" ? obj.id : obj;
-		if (typeof ae == 'undefined' || ae == null)	return;	
-		if(ae.currentTime == ae.duration)	{
-			if(ae.parentNode.getAttribute("loop") == "yes"){
-				ae.currentTime = 0;
-				ae.parentNode.setAttribute("currentLrc",0);
-				ae.parentNode.getElementsByClassName("lrc-container")[0].style.margin = "0px";
-			}
-			ae.parentNode.getElementsByClassName("play-button")[0].innerHTML = "<i class=\"fa fa-play\"></i>";
-			eval("clearInterval("+obj+");");
-		}
-		now = ae.currentTime / ae.duration;
-		percent = now*100 + "%";
-		current = "0"+parseInt(ae.currentTime/60) + ":"; 
-		inter =  parseInt(ae.currentTime - (parseInt(ae.currentTime/60)*60));
-		if(inter < 10) inter = "0"+inter;
-		current = current + inter;
-		ae.parentNode.getElementsByClassName("ym-played")[0].style.width = percent;
-		ae.parentNode.getElementsByClassName("current-time")[0].innerHTML = current;	
-	},*/
-	Seek:function(ymplayer,pos) {
-		var audioElement = ymplayer.getElementsByTagName('audio')[0];
-	},
 	/** Show or hide lrcbox */
-	LrcBox : function(obj){
-		audioElement = typeof(obj) == "object" ? obj : document.getElementById(obj);
-		var player = audioElement.parentNode;
-		removeClass(player.querySelector(".ym-playlist"), 'ym-show');
-		toggleClass(player.querySelector(".ym-lrcbox"), 'ym-show');
+	LrcBox : function(ymplayer){
+		removeClass(ymplayer.querySelector(".ym-playlist"), 'ym-show');
+		toggleClass(ymplayer.querySelector(".ym-lrcbox"), 'ym-show');
 	},
-	/** Click to skip progress */
-	Skip : function(ymplayer,event){
-		/*obj = audioElement = typeof(obj) == "object" ? obj : document.getElementById(obj);
-		pbarEle = audioElement.parentNode.getElementsByClassName("ym-pgbar")[0];
-		playedEle = audioElement.parentNode.getElementsByClassName("ym-played")[0];
-		clickarea = event.clientX;
-		awayleft =  getRect(audioElement.parentNode.querySelector(".ym-pgbar")).left;				//获取进度条到屏幕左边的距离
-		divwidth = pbarEle.offsetWidth;
-		clickwidth = clickarea - awayleft;
-		pro = clickwidth / divwidth;
-		obj.currentTime = obj.duration * pro;
-		propercent = pro*100 + "%";
-		playedEle.style.width = propercent;*/
+	/** Seek progress */
+	Seek : function(ymplayer,e){
+		var audioElement = ymplayer.getElementsByTagName('audio')[0];
+		var pgbar = ymplayer.querySelector('.ym-pgbar-outer');
+		var pgbar_rect = getRect(pgbar);
+		if (!isNaN(audioElement.duration)) {
+			var progress_bar = ymplayer.querySelector('.ym-pgbar-outer');
+			audioElement.currentTime = audioElement.duration * (e.clientX - pgbar_rect.left) / pgbar.offsetWidth;
+		}
 	},
 	/** Click to change volume */
-	/*ChangeVol : function(obj , event){
-		obj = audioElement = typeof(obj) == "object" ? obj : document.getElementById(obj);
-		barEle = audioElement.parentNode.getElementsByClassName("volume-bar")[0];
-		currentEle = audioElement.parentNode.getElementsByClassName("volume-current")[0];
-		clickarea = event.clientX;
-		awayleft =  getRect(barEle).left;
-		divwidth = barEle.offsetWidth;
-		clickwidth = clickarea - awayleft;
-		pro = clickwidth / divwidth;
-		if(pro>1) pro=1;
-		obj.volume =  pro;
-		propercent = pro*100 + "%";
-		currentEle.style.width = propercent;
-	},*/
-	UpdateVol : function(ymplayer) {
-		var audioElement = ymplayer.getElementsByTagName('audio')[0];
-		ymplayer.querySelector('.volume-current');
-	},
-	/** No volume event */
-	/*Novol : function(obj){
-		obj = document.getElementById(obj);
-		if(obj.volume === 0){
-			obj.volume = 1;
-			btn = obj.parentNode.getElementsByClassName("vol-button");
-			btn[0].innerHTML = "<i class=\"fa fa-volume-down\"></i>";				
-		}
-		else{
-			obj.volume = 0;
-			btn = obj.parentNode.getElementsByClassName("vol-button");
-			btn[0].innerHTML = "<i class=\"fa fa-volume-off\"></i>";				
-		}
-	},*/
-	/** Move mouse to change progress */
-	Move : function(a,event){
-		a = typeof a == 'object' ? a : document.getElementById(a);
-		played = a.parentNode.getElementsByClassName("ym-played")[0];
-		currentWidth = getRect(played).left;
-		last = a.parentNode.getElementsByClassName("ym-pgbar")[0].offsetWidth;
-		document.onmousemove = function(event){
-			var x = event.clientX - currentWidth;
-			floater = percent = x/last;
-			percent = percent * 100;
-			if(percent > 100) {percent = 100; floater = 1;}
-			percent = percent + "%";
-			played.style.width=percent;
-			a.currentTime = a.duration * floater;
-		}
-		document.onmouseup = function(){
-			document.onmousemove = null;
-			document.onmouseup = null;
-		}
+	ChangeVol : function(ymplayer,e){
+		var volume_bar = ymplayer.querySelector('.volume-bar');
+		var volume_bar_rect = getRect(volume_bar);
+		var vol_amount = (e.clientX - volume_bar_rect.left) / volume_bar.offsetWidth;
+		if (vol_amount < 0.01) {vol_amount = 0;}
+		else if (vol_amount > 0.99) {vol_amount = 1;}
+		ymplayer.getElementsByTagName('audio')[0].volume = vol_amount;
 	},
 	/** Show play list */
 	List : function(ymplayer){
@@ -424,14 +387,10 @@ var Ymplayer = {
 		}
 		addClass(list_item, "single-active");
 
-		var player = ymplayer.getElementsByTagName('audio')[0];
-		player.pause();
-		player.currentTime = 0;
-		player.setAttribute('src', list_item.getAttribute('src'));
-		ymplayer.removeAttribute('playing');
-		ymplayer.querySelector(".current-time").innerHTML = '00:00';
+		Ymplayer.Stop(ymplayer);
 		ymplayer.querySelector(".duration-time").innerHTML = '00:00';
-		ymplayer.querySelector(".ym-played").style.width = '0%';
+		var player = ymplayer.getElementsByTagName('audio')[0];
+		player.setAttribute('src', list_item.getAttribute('src'));
 		if (!no_autoplay){
 			player.play();
 		}
@@ -475,6 +434,12 @@ var Ymplayer = {
 				Ymplayer.InitPlayer(ymplayer[i]);
 			}
 		}
+
+		/* 加载完成后触发resize事件，对所有ymplayer的样式进行调整 */
+		var event_resize = document.createEvent('HTMLEvents');
+		event_resize.initEvent('resize', true, false);
+		event_resize.synthetic = true;
+		window.dispatchEvent(event_resize);
 	},
 }
 
@@ -510,8 +475,5 @@ function getRect(elements){
 		left : rect.left - clientLeft,  
 		right : rect.right - clientLeft
 	}; 
-}
-function remove(element) {
-	element.parentNode.removeChild(element);
 }
 
