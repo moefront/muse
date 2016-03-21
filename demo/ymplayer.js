@@ -264,6 +264,9 @@ var Ymplayer = {
 	},
 	/** Lrc sync */
 	SyncLRC: function(ymplayer, currentTime) {
+		if (!ymplayer.getAttribute('current-lrc')) {
+			return;
+		}
 		if (undefined == currentTime) {
 			var time = ymplayer.getElementsByTagName('audio')[0].currentTime;
 		} else {
@@ -314,7 +317,7 @@ var Ymplayer = {
 		lrcContainer.innerHTML = '';
 		ymplayer.querySelector(".lrc-fixer").style.opacity = 0;
 
-		if(lrcData && lrcData.innerHTML.length != 0 && lrcData.innerHTML!= ''){
+		if(lrcData && lrcData.innerHTML.length != 0 && lrcData.innerHTML != ''){
 			var lyric = lrcData.innerHTML.replace(/(\\n)/g,"\n").replace(/(\\r)/g,"").split("\n");
 			for (var x in lyric) {
 				if (lyric[x].match(/(ti:|ar:|by:|al:|offset:)/)) {
@@ -350,12 +353,12 @@ var Ymplayer = {
 		}
 		addClass(list_item, "single-active");
 
-		Ymplayer.Stop(ymplayer);
 		ymplayer.querySelector(".duration-time").innerHTML = '00:00';
 		var player = ymplayer.getElementsByTagName('audio')[0];
 		player.setAttribute('src', list_item.getAttribute('src'));
 		Ymplayer.ParseLRC(ymplayer, num);
 		if (!no_autoplay){
+			Ymplayer.Stop(ymplayer);
 			player.play();
 		}
 	},
