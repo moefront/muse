@@ -304,7 +304,7 @@ var Ymplayer = {
 		addClass(lyrics_all[current_lrc], 'ym-active');
 		var ym_lrcbox = ymplayer.querySelector('.ym-lrcbox');
 		var lrc_container = ymplayer.querySelector(".lrc-container");
-		var target_offset = lyrics_all[current_lrc].offsetTop - (ym_lrcbox.offsetHeight - lyrics_all[current_lrc].offsetHeight) / 2;
+		var target_offset = lyrics_all[current_lrc].offsetTop - Math.abs(ym_lrcbox.offsetHeight - lyrics_all[current_lrc].offsetHeight) / 2;
 		if (target_offset < 0) {target_offset = 0;}
 		lrc_container.style.top = String(-target_offset)+'px';
 	},
@@ -327,13 +327,15 @@ var Ymplayer = {
 				} else {
 					tempLrc = lyric[x].match(/([0-9]{2})\:([0-9]{2}\.[0-9]{2})/);
 				}
-				tempContent = lyric[x].match(/\[.*?\](.*?)$/);
-				if(typeof tempLrc != null){
+				tempContent = lyric[x].match(/\[.*?\](.*?)$/)[1].replace('/(^\s*)|(\s*$)/','');
+				if(tempLrc){
 					minute = tempLrc[1] * 60;
 					sec = minute + parseFloat(tempLrc[2]);
 					var lrcEle = document.createElement("lyric");
 					lrcEle.setAttribute("timeline",sec);
-					lrcEle.innerHTML = "<p>"+tempContent[1]+"</p>";
+					if (tempContent.length > 0) {
+						lrcEle.innerHTML = "<p>"+tempContent+"</p>";
+					}
 					lrcContainer.appendChild(lrcEle);
 				}
 			}

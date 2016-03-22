@@ -278,6 +278,7 @@ single:hover{
 	height:290px;
 }
 .lrc-container lyric{
+	display:block;
 	font-weight: normal;
 	font-size: 18px;
 	line-height: 2;
@@ -285,15 +286,18 @@ single:hover{
 	padding:0;
 	margin:0;
 }
-lyric.ym-active{
+.lrc-container lyric.ym-active{
 	color: #fff;
 	transition: 0.3s all;
 	-webkit-transition: 0.3s all;
 	-moz-transition: 0.3s all;	
 	font-weight:bold;
+	margin:0;
+	padding:0;
 }
 lyric p {
-	margin: 15px 0;
+	padding:10px 0;
+	margin:0;
 }
 .no-lrc{
 	display: table;
