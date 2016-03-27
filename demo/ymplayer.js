@@ -372,7 +372,7 @@ var Ymplayer = {
 	},
 	/** Init YmPlayer */
 	Init : function(){
-		ymplayer = document.getElementsByTagName("ymplayer");	/** 获取 Tagname 为 ymplayer 的元素 */
+		var ymplayer = document.getElementsByTagName("ymplayer");	/** 获取 Tagname 为 ymplayer 的元素 */
 		if(ymplayer.length != 0){
 			for(var i = 0; i < ymplayer.length; i ++){
 				Ymplayer.InitPlayer(ymplayer[i]);
