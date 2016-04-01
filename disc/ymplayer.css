@@ -14,6 +14,8 @@ ymplayer{
 	-webkit-transition:0.3s all;
 	transition:0.3s all;	
 	-moz-transition:0.3s all;		
+	font-size: 14px;
+	line-height: 1.42857143;
 }
 
 ymplayer a{
@@ -38,15 +40,35 @@ ymplayer loading{
 	z-index: 233;
 	background: #000;
 }
+ymplayer[loop="yes"] .loop-button{
+	opacity: 0.3;
+}
+ymplayer .play-button .fa-play{
+	display:inline;
+}
+ymplayer .play-button .fa-pause{
+	display:none;
+}
+ymplayer[playing] .play-button .fa-play{
+	display:none;
+}
+ymplayer[playing] .play-button .fa-pause{
+	display:inline;
+}
+ymplayer[current-lrc] .no-lrc{
+	display:none;
+}
 
 .ym-controller{
-	overflow:hidden;
+	overflow:visible;
+	white-space:nowrap;
 	float:right;
-	transition: color .25s ease, background-color .25s ease, opacity .5s ease;
 	width: 60%;
 	height: 50px;
-	line-height: 48px;
+	line-height: 50px;
 	text-align: right;
+	transition: color .25s ease, background-color .25s ease, opacity .5s ease;
+	vertical-align: middle;
 }
 .ym-songinfo{
 	overflow:hidden;
@@ -74,20 +96,46 @@ ymplayer loading{
 	-webkit-transition:0.3s all;
 	transition:0.3s all;	
 	-moz-transition:0.3s all;		
+	cursor: pointer;
+}
+.vol-button {
+	width: 12px;
+	display: inline-block;
+	text-align:left;
+}
+.vol-button .fa-volume-down {
+	display:inline;
+}
+.vol-button .fa-volume-off {
+	display:none;
+}
+.vol-button.muted .fa-volume-down {
+	display:none;
+}
+.vol-button.muted .fa-volume-off {
+	display:inline;
 }
 .volume-bar{
 	display:inline-block;
 	width: 30%;
+	height: 50px;
+	cursor: pointer;
+	position:relative;
+	vertical-align: middle;
+}
+.volume-bar-inner{
+	position:absolute; left:0; right:10px; top:21px;
 	height: 4px;
 	background-color: #fff;
-	transform: translate3D(0,-50%,0);
-	-webkit-transform: translate3D(0,-50%,0);	
-	margin: 0 8px 2px 10px;
-	cursor: pointer;
 }
-.ym-play-status{
-	display:inline-block;
-	/*width: 250px;*/
+.volume-current{
+	width: 100%;
+	background-color: rgb(129,224,242);
+	height: 100%;
+	transition: 0.3s all;
+	-webkit-transition:0.3s all;
+	-moz-transition:0.3s all;
+	position:relative;
 }
 .ym-cover-image{
 	display: inline-block;
@@ -97,58 +145,43 @@ ymplayer loading{
 	margin-right: 10px;
 	background-size: cover;
 	background-position: center;
-	background-color: #fff;
 }
 .ym-progress{
 	height: 60px;
-	width: 100%;
-}
-.ym-progress-handler{
+	margin: 0 2%;
 	position: relative;
-	height: 100%;
-	width: 100%;
+}
+.ym-pgbar-outer{
+	position:absolute; top:0; left:60px; bottom:0; right:60px;
+	cursor:pointer;
 }
 .ym-pgbar{
 	display: inline-block;
-	width: 75%;
 	height: 4px;
 	background-color: rgb(117,222,243);
 	position: absolute;
 	top: 50%;
 	transform: translate3D(0,-50%,0);
 	-webkit-transform: translate3D(0,-50%,0);
-	left: 13%;
+	left: 0;
 	cursor: pointer;
-	right: 13%;
+	right: 0;
 }
-/*
-.duration-time{
-	position: absolute;
-	display: block;
-	right: 9%;
-	top: 50%;
-	transform: translate3D(0,-50%,0);
-	-webkit-transform: translate3D(0,-50%,0);			
-}
-*/
 .current-time{
-	display: inline-block;
-	width: 5%;
+	display: block;
 	position: absolute;
-	top: 50%;
-	transform: translate3D(0,-50%,0);
-	-webkit-transform: translate3D(0,-50%,0);
-	left: 4%;
-	right: 1%;
-	width: 10%;
+	left: 0;
+	top: 0;
+	line-height: 60px;
+	text-align: center;
 }
 .duration-time{
-	display: inline-block;
+	display: block;
 	position: absolute;
-	right: 4%;
-	top: 50%;
-	transform: translate3D(0,-50%,0);
-	-webkit-transform: translate3D(0,-50%,0);
+	right: 0;
+	top: 0;
+	line-height: 60px;
+	text-align: center;
 }
 .ym-played{
 	position: relative;
@@ -183,11 +216,8 @@ ymplayer loading{
 	top:-6px;
 	right:-12px;
 }
-.looping{
-	color: rgb(83,209,223)!important;
-}
 .lrc-container{
-	min-height: 100%;
+	position:absolute;left:0;right:0;top:0;
 	text-align: center;
 	transition: 1s all ease-out;
 	-webkit-transition: 1s all ease-out;
@@ -207,7 +237,6 @@ ymplayer loading{
 	overflow-y: auto;
 }
 .ym-playlist > single{
-	width: 100%;
 	font-size: 16px;
 	padding: 10px 3%;
 	display: block;
@@ -247,38 +276,43 @@ single:hover{
 .ym-lrcbox.ym-show{
 	height:290px;
 }
-.lrc-container p{
-	margin:15px 0px;
-	font-weight: 100;
+.lrc-container lyric{
+	display:block;
+	font-weight: normal;
 	font-size: 18px;
 	line-height: 2;
+	vertical-align: middle;
+	padding:0;
+	margin:0;
 }
-.ym-active{
+.lrc-container lyric.ym-active{
 	color: #fff;
 	transition: 0.3s all;
 	-webkit-transition: 0.3s all;
 	-moz-transition: 0.3s all;	
+	font-weight:bold;
+	margin:0;
+	padding:0;
 }
-.ym-active p{
-	font-weight: bold!important;
+lyric p {
+	padding:10px 0;
+	margin:0;
 }
-.volume-current{
+.no-lrc{
+	display: table;
 	width: 100%;
-	background-color: rgb(129,224,242);
-	height: 100%;
-	transition: 0.3s all;
-	-webkit-transition:0.3s all;
-	-moz-transition:0.3s all;
-	position:relative;
-}
-.lyrictag-no-lrc{
-	line-height: 290px;
 	height: 100%;
 }
-.lyrictag-no-lrc p {
-	line-height: 290px;
+.no-lrc p {
+	display: table-cell;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	vertical-align: middle;
+	font-weight: bold;
+	font-size: 18px;
 }
-.lrc-fixer{
+.lrc-fixer {
 	background-color: rgba(51, 51, 51, 0.08);
 	opacity: 0;
 	position: absolute;
@@ -295,6 +329,7 @@ single:hover{
 	display: block;
 	font-size: 24px;
 	margin:5px 0px 5px 0px;
+	cursor:pointer;
 }
 
 .ym-progress, .ym-controller{
@@ -306,9 +341,6 @@ single:hover{
 }
 
 /* Responsive Design */
-ymplayer.max-width-686 .ym-pgbar{
-	width:75%;
-}
 ymplayer.max-width-644 .ym-songinfo{
 	display: none;
 }
@@ -319,17 +351,16 @@ ymplayer.max-width-644 .ym-controller{
 }
 ymplayer.max-width-560 .current-time,
 ymplayer.max-width-560 .duration-time{
-		display: none;
-	}
-ymplayer.max-width-560 .ym-pgbar{
-	width: 94%;
-	left: 3%;
-	right: 3%;
+	display: none;
+}
+ymplayer.max-width-560 .ym-pgbar-outer{
+	left: 0;
+	right: 0;
 }
 ymplayer.max-width-400 .volume-bar{
 	display: none;
 }
-ymplayer.max-width-400 .ym-play-status{
+ymplayer.max-width-400 .ym-controller{
 	text-align: center;
 	width: 100%;
 }

@@ -78,7 +78,6 @@ var Ymplayer = {
 				removeClass(ymplayer.querySelector('.vol-button'), 'muted');
 			}
 		});
-		//TODO: audio的timeupdate事件在firefox下比较耗CPU。。。
 		audioEle.addEventListener('timeupdate', function(){
 			var percent = this.currentTime / this.duration;
 			var time = parseInt(Math.round(this.currentTime));
@@ -373,7 +372,7 @@ var Ymplayer = {
 	},
 	/** Init YmPlayer */
 	Init : function(){
-		ymplayer = document.getElementsByTagName("ymplayer");	/** 获取 Tagname 为 ymplayer 的元素 */
+		var ymplayer = document.getElementsByTagName("ymplayer");	/** 获取 Tagname 为 ymplayer 的元素 */
 		if(ymplayer.length != 0){
 			for(var i = 0; i < ymplayer.length; i ++){
 				Ymplayer.InitPlayer(ymplayer[i]);
