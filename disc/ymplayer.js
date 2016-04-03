@@ -78,7 +78,6 @@ var Ymplayer = {
 				removeClass(ymplayer.querySelector('.vol-button'), 'muted');
 			}
 		});
-		//TODO: audio的timeupdate事件在firefox下比较耗CPU。。。
 		audioEle.addEventListener('timeupdate', function(){
 			var percent = this.currentTime / this.duration;
 			var time = parseInt(Math.round(this.currentTime));
@@ -103,7 +102,9 @@ var Ymplayer = {
 			Ymplayer.Seek(ymplayer, e);
 		});
 		progressBarEle.querySelector('.ym-pgbar-outer').addEventListener('mousemove', function(e){
-			if (ymplayer.getAttribute('drag') == 'progress'){
+			if (!inRect(getRect(progressBarEle), e.clientX, e.clientY)) {
+				ymplayer.removeAttribute('drag');
+			} else if (ymplayer.getAttribute('drag') == 'progress'){
 				Ymplayer.Seek(ymplayer,e);
 			}
 		});
@@ -158,21 +159,24 @@ var Ymplayer = {
 		});
 
 		/* Adjust volume via mouse */
-		ctEle.querySelector('.volume-bar').addEventListener('mousedown', function(e){
+		var volumeBar = ctEle.querySelector('.volume-bar');
+		volumeBar.addEventListener('mousedown', function(e){
 			ymplayer.setAttribute('drag', 'volume');
 			Ymplayer.ChangeVol(ymplayer, e);
 		});
-		ctEle.querySelector('.volume-bar').addEventListener('mousemove', function(e){
-			if (ymplayer.getAttribute('drag') == 'volume'){
+		volumeBar.addEventListener('mousemove', function(e){
+			if (!inRect(getRect(volumeBar), e.clientX, e.clientY)) {
+				ymplayer.removeAttribute('drag');
+			} else if (ymplayer.getAttribute('drag') == 'volume'){
 				Ymplayer.ChangeVol(ymplayer,e);
 			}
 		});
-		ctEle.querySelector('.volume-bar').addEventListener('mouseout', function(e){
+		volumeBar.addEventListener('mouseout', function(e){
 			if (e.target == this) {
 				ymplayer.removeAttribute('drag');
 			}
 		});
-		ctEle.querySelector('.volume-bar').addEventListener('mouseup', function(e){
+		volumeBar.addEventListener('mouseup', function(e){
 			ymplayer.removeAttribute('drag');
 		});
 
@@ -373,7 +377,7 @@ var Ymplayer = {
 	},
 	/** Init YmPlayer */
 	Init : function(){
-		ymplayer = document.getElementsByTagName("ymplayer");	/** 获取 Tagname 为 ymplayer 的元素 */
+		var ymplayer = document.getElementsByTagName("ymplayer");	/** 获取 Tagname 为 ymplayer 的元素 */
 		if(ymplayer.length != 0){
 			for(var i = 0; i < ymplayer.length; i ++){
 				Ymplayer.InitPlayer(ymplayer[i]);
@@ -420,5 +424,8 @@ function getRect(elements){
 		left : rect.left - clientLeft,  
 		right : rect.right - clientLeft
 	}; 
+}
+function inRect(rect, x, y) {
+	return ((x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) ? true : false);
 }
 

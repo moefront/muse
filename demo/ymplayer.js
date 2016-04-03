@@ -102,7 +102,9 @@ var Ymplayer = {
 			Ymplayer.Seek(ymplayer, e);
 		});
 		progressBarEle.querySelector('.ym-pgbar-outer').addEventListener('mousemove', function(e){
-			if (ymplayer.getAttribute('drag') == 'progress'){
+			if (!inRect(getRect(progressBarEle), e.clientX, e.clientY)) {
+				ymplayer.removeAttribute('drag');
+			} else if (ymplayer.getAttribute('drag') == 'progress'){
 				Ymplayer.Seek(ymplayer,e);
 			}
 		});
@@ -157,21 +159,24 @@ var Ymplayer = {
 		});
 
 		/* Adjust volume via mouse */
-		ctEle.querySelector('.volume-bar').addEventListener('mousedown', function(e){
+		var volumeBar = ctEle.querySelector('.volume-bar');
+		volumeBar.addEventListener('mousedown', function(e){
 			ymplayer.setAttribute('drag', 'volume');
 			Ymplayer.ChangeVol(ymplayer, e);
 		});
-		ctEle.querySelector('.volume-bar').addEventListener('mousemove', function(e){
-			if (ymplayer.getAttribute('drag') == 'volume'){
+		volumeBar.addEventListener('mousemove', function(e){
+			if (!inRect(getRect(volumeBar), e.clientX, e.clientY)) {
+				ymplayer.removeAttribute('drag');
+			} else if (ymplayer.getAttribute('drag') == 'volume'){
 				Ymplayer.ChangeVol(ymplayer,e);
 			}
 		});
-		ctEle.querySelector('.volume-bar').addEventListener('mouseout', function(e){
+		volumeBar.addEventListener('mouseout', function(e){
 			if (e.target == this) {
 				ymplayer.removeAttribute('drag');
 			}
 		});
-		ctEle.querySelector('.volume-bar').addEventListener('mouseup', function(e){
+		volumeBar.addEventListener('mouseup', function(e){
 			ymplayer.removeAttribute('drag');
 		});
 
@@ -419,5 +424,8 @@ function getRect(elements){
 		left : rect.left - clientLeft,  
 		right : rect.right - clientLeft
 	}; 
+}
+function inRect(rect, x, y) {
+	return ((x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) ? true : false);
 }
 
