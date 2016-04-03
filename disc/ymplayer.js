@@ -285,7 +285,7 @@ var Ymplayer = {
 			var time_now = Number(lyrics_all[i].getAttribute('timeline'));
 			var time_next = Number(lyrics_all[i+1].getAttribute('timeline'));
 			if (i <= 0 && time <= time_now) {
-				current_lrc = i;
+				current_lrc = -1;
 			} else if (i == lyrics_all.length-2 && time >= time_next) {
 				current_lrc = i + 1;
 			} else if (time < time_next && time >= time_now) {
@@ -295,8 +295,7 @@ var Ymplayer = {
 
 		/* Failed to select lyric */
 		if (current_lrc === undefined) {
-			ymplayer.setAttribute('current-lrc', -1);
-			return;
+			current_lrc = -1;
 		}
 
 		/* Update lyric */
@@ -305,12 +304,17 @@ var Ymplayer = {
 		for (var i = 0; i < lyric_selected.length; i++) {
 			removeClass(lyric_selected[i], 'ym-active');
 		}
-		addClass(lyrics_all[current_lrc], 'ym-active');
+
 		var ym_lrcbox = ymplayer.querySelector('.ym-lrcbox');
 		var lrc_container = ymplayer.querySelector(".lrc-container");
-		var target_offset = lyrics_all[current_lrc].offsetTop - Math.abs(ym_lrcbox.offsetHeight - lyrics_all[current_lrc].offsetHeight) / 2;
-		if (target_offset < 0) {target_offset = 0;}
-		lrc_container.style.top = String(-target_offset)+'px';
+		if (current_lrc < 0) {
+			lrc_container.style.top = 0;
+		} else {
+			addClass(lyrics_all[current_lrc], 'ym-active');
+			var target_offset = lyrics_all[current_lrc].offsetTop - Math.abs(ym_lrcbox.offsetHeight - lyrics_all[current_lrc].offsetHeight) / 2;
+			if (target_offset < 0) {target_offset = 0;}
+			lrc_container.style.top = String(-target_offset)+'px';
+		}
 	},
 	/** LRC Parser */
 	ParseLRC : function(ymplayer,idx){
