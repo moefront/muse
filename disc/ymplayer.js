@@ -61,6 +61,13 @@ var Ymplayer = {
 		audioEle.addEventListener('pause', function(){
 			ymplayer.removeAttribute('playing');
 		});
+		audioEle.addEventListener('error', function(){
+			var single_active = ymplayer.querySelector('.single-active');
+			if (!single_active) {return}
+			var single_next = single_active.nextSibling;
+			if (!single_next) {return}
+			Ymplayer.ChangeAudio(ymplayer, single_next);
+		});
 		audioEle.addEventListener('ended', function(){
 			ymplayer.removeAttribute('playing');
 			var single_active = ymplayer.querySelector('.single-active');
@@ -78,7 +85,6 @@ var Ymplayer = {
 				removeClass(ymplayer.querySelector('.vol-button'), 'muted');
 			}
 		});
-		//TODO: audio的timeupdate事件在firefox下比较耗CPU。。。
 		audioEle.addEventListener('timeupdate', function(){
 			var percent = this.currentTime / this.duration;
 			var time = parseInt(Math.round(this.currentTime));
@@ -103,7 +109,9 @@ var Ymplayer = {
 			Ymplayer.Seek(ymplayer, e);
 		});
 		progressBarEle.querySelector('.ym-pgbar-outer').addEventListener('mousemove', function(e){
-			if (ymplayer.getAttribute('drag') == 'progress'){
+			if (!inRect(getRect(progressBarEle), e.clientX, e.clientY)) {
+				ymplayer.removeAttribute('drag');
+			} else if (ymplayer.getAttribute('drag') == 'progress'){
 				Ymplayer.Seek(ymplayer,e);
 			}
 		});
@@ -158,21 +166,24 @@ var Ymplayer = {
 		});
 
 		/* Adjust volume via mouse */
-		ctEle.querySelector('.volume-bar').addEventListener('mousedown', function(e){
+		var volumeBar = ctEle.querySelector('.volume-bar');
+		volumeBar.addEventListener('mousedown', function(e){
 			ymplayer.setAttribute('drag', 'volume');
 			Ymplayer.ChangeVol(ymplayer, e);
 		});
-		ctEle.querySelector('.volume-bar').addEventListener('mousemove', function(e){
-			if (ymplayer.getAttribute('drag') == 'volume'){
+		volumeBar.addEventListener('mousemove', function(e){
+			if (!inRect(getRect(volumeBar), e.clientX, e.clientY)) {
+				ymplayer.removeAttribute('drag');
+			} else if (ymplayer.getAttribute('drag') == 'volume'){
 				Ymplayer.ChangeVol(ymplayer,e);
 			}
 		});
-		ctEle.querySelector('.volume-bar').addEventListener('mouseout', function(e){
+		volumeBar.addEventListener('mouseout', function(e){
 			if (e.target == this) {
 				ymplayer.removeAttribute('drag');
 			}
 		});
-		ctEle.querySelector('.volume-bar').addEventListener('mouseup', function(e){
+		volumeBar.addEventListener('mouseup', function(e){
 			ymplayer.removeAttribute('drag');
 		});
 
@@ -281,7 +292,7 @@ var Ymplayer = {
 			var time_now = Number(lyrics_all[i].getAttribute('timeline'));
 			var time_next = Number(lyrics_all[i+1].getAttribute('timeline'));
 			if (i <= 0 && time <= time_now) {
-				current_lrc = i;
+				current_lrc = -1;
 			} else if (i == lyrics_all.length-2 && time >= time_next) {
 				current_lrc = i + 1;
 			} else if (time < time_next && time >= time_now) {
@@ -291,8 +302,7 @@ var Ymplayer = {
 
 		/* Failed to select lyric */
 		if (current_lrc === undefined) {
-			ymplayer.setAttribute('current-lrc', -1);
-			return;
+			current_lrc = -1;
 		}
 
 		/* Update lyric */
@@ -301,12 +311,17 @@ var Ymplayer = {
 		for (var i = 0; i < lyric_selected.length; i++) {
 			removeClass(lyric_selected[i], 'ym-active');
 		}
-		addClass(lyrics_all[current_lrc], 'ym-active');
+
 		var ym_lrcbox = ymplayer.querySelector('.ym-lrcbox');
 		var lrc_container = ymplayer.querySelector(".lrc-container");
-		var target_offset = lyrics_all[current_lrc].offsetTop - Math.abs(ym_lrcbox.offsetHeight - lyrics_all[current_lrc].offsetHeight) / 2;
-		if (target_offset < 0) {target_offset = 0;}
-		lrc_container.style.top = String(-target_offset)+'px';
+		if (current_lrc < 0) {
+			lrc_container.style.top = 0;
+		} else {
+			addClass(lyrics_all[current_lrc], 'ym-active');
+			var target_offset = lyrics_all[current_lrc].offsetTop - Math.abs(ym_lrcbox.offsetHeight - lyrics_all[current_lrc].offsetHeight) / 2;
+			if (target_offset < 0) {target_offset = 0;}
+			lrc_container.style.top = String(-target_offset)+'px';
+		}
 	},
 	/** LRC Parser */
 	ParseLRC : function(ymplayer,idx){
@@ -373,7 +388,7 @@ var Ymplayer = {
 	},
 	/** Init YmPlayer */
 	Init : function(){
-		ymplayer = document.getElementsByTagName("ymplayer");	/** 获取 Tagname 为 ymplayer 的元素 */
+		var ymplayer = document.getElementsByTagName("ymplayer");	/** 获取 Tagname 为 ymplayer 的元素 */
 		if(ymplayer.length != 0){
 			for(var i = 0; i < ymplayer.length; i ++){
 				Ymplayer.InitPlayer(ymplayer[i]);
@@ -420,5 +435,8 @@ function getRect(elements){
 		left : rect.left - clientLeft,  
 		right : rect.right - clientLeft
 	}; 
+}
+function inRect(rect, x, y) {
+	return ((x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) ? true : false);
 }
 
