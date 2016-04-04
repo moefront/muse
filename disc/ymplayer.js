@@ -61,6 +61,13 @@ var Ymplayer = {
 		audioEle.addEventListener('pause', function(){
 			ymplayer.removeAttribute('playing');
 		});
+		audioEle.addEventListener('error', function(){
+			var single_active = ymplayer.querySelector('.single-active');
+			if (!single_active) {return}
+			var single_next = single_active.nextSibling;
+			if (!single_next) {return}
+			Ymplayer.ChangeAudio(ymplayer, single_next);
+		});
 		audioEle.addEventListener('ended', function(){
 			ymplayer.removeAttribute('playing');
 			var single_active = ymplayer.querySelector('.single-active');
