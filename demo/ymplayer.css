@@ -1,5 +1,3 @@
-@import url("font-awesome.min.css");
-
 ymplayer{
 	background-color: rgb(52,189,207);
 	display: block;
@@ -42,16 +40,16 @@ ymplayer loading{
 ymplayer[loop="yes"] .loop-button{
 	opacity: 0.3;
 }
-ymplayer .play-button .fa-play{
+ymplayer .play-button .btn-play{
 	display:inline;
 }
-ymplayer .play-button .fa-pause{
+ymplayer .play-button .btn-pause{
 	display:none;
 }
-ymplayer[playing] .play-button .fa-play{
+ymplayer[playing] .play-button .btn-play{
 	display:none;
 }
-ymplayer[playing] .play-button .fa-pause{
+ymplayer[playing] .play-button .btn-pause{
 	display:inline;
 }
 ymplayer[current-lrc] .no-lrc{
@@ -69,6 +67,11 @@ ymplayer[current-lrc] .no-lrc{
 	transition: color .25s ease, background-color .25s ease, opacity .5s ease;
 	vertical-align: middle;
 }
+.ym-controller svg {
+	width:18px;height:18px;
+	vertical-align:middle;
+}
+.ym-controller svg path{fill:#FFF;}
 .ym-songinfo{
 	overflow:hidden;
 	float:left;
@@ -90,28 +93,28 @@ ymplayer[current-lrc] .no-lrc{
 }
 .ymbtn{
 	color:#fff;
-	margin:0 10px;
+	margin:0 8px;
 	font-size: 18px;
 	-webkit-transition:0.3s all;
 	transition:0.3s all;	
 	-moz-transition:0.3s all;		
 	cursor: pointer;
 }
-.vol-button {
+/*.vol-button {
 	width: 12px;
 	display: inline-block;
 	text-align:left;
-}
-.vol-button .fa-volume-down {
+}*/
+.vol-button .btn-volume {
 	display:inline;
 }
-.vol-button .fa-volume-off {
+.vol-button .btn-mute {
 	display:none;
 }
-.vol-button.muted .fa-volume-down {
+.vol-button.muted .btn-volume {
 	display:none;
 }
-.vol-button.muted .fa-volume-off {
+.vol-button.muted .btn-mute {
 	display:inline;
 }
 .volume-bar{
@@ -123,7 +126,7 @@ ymplayer[current-lrc] .no-lrc{
 	vertical-align: middle;
 }
 .volume-bar-inner{
-	position:absolute; left:0; right:5px; top:21px;
+	position:absolute; left:0; right:5px; top:22px;
 	height: 4px;
 	background-color: #fff;
 }
@@ -319,19 +322,15 @@ lyric p {
 	position: absolute;
 	left: 0%;
 	top: 50%;
-	padding: 0% 1% 0% 1%;
 	transition: 0.75s all;
 	-webkit-transition: 0.75s all;
 	-moz-transition: 0.75s all;
 	transform: translate3D(0,-50%,0);
 	-webkit-transform: translate3D(0,-50%,0);
 }
-.ym-fix-btn{
-	display: block;
-	font-size: 24px;
-	margin:5px 0px 5px 0px;
-	cursor:pointer;
-}
+.ym-fix-btn{display:block;cursor:pointer;width:28px;line-height:38px;vertical-align:middle;text-align:center;}
+.ym-fix-btn svg{display:inline-block;width:24px;height:24px;vertical-align:middle;text-align:center;}
+.ym-fix-btn svg path{fill:#FFF;}
 
 .ym-progress, .ym-controller{
 	user-select:none;

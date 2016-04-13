@@ -3,7 +3,7 @@ Just a Music Player : )
 
 ### Description
 
-一个简单的音乐播放器（颜值不高 _ (:з」∠) _），全 CSS/Javascript 完成，需要 Font-Awesome 图标库，无需 jQuery。
+一个简单的音乐播放器（颜值不高 _ (:з」∠) _），全 CSS/Javascript 完成，无需 jQuery。
 
 
 ### Screenshot
