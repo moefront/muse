@@ -39,8 +39,6 @@ _ (:з」∠) _ 谢谢小伙伴的帮忙
 <script type="text/javascript" src="ymplayer.js"></script>
 ```
 
-//注意：需要引入 font-awesome 图标库，可以自行引入，也可以复制 /demo/res/ 下的文件并引入 /demo/font-awesome.css 。
-
 > 构造 HTML DOM：
 
 //如果没有歌词
