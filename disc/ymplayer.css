@@ -370,7 +370,6 @@ ymplayer.max-width-400 .ym-controller{
 /* nico : Pink */
 .nico{
 	background-color: rgb(255,128,132);
-	/*background-color: rgba(238,110,115,.85);*/
 }
 .nico .ym-pgbar, .nico .ym-circle, .nico .volume-current{
 	background-color:#FFDDE4;
@@ -383,6 +382,9 @@ ymplayer.max-width-400 .ym-controller{
 }
 .nico .ym-played{
 	background-color: #fff;
+}
+.nico .single-active {
+	border-left: 4px solid rgb(255,43,50);
 }
 
 /* honoka : orange */
@@ -401,6 +403,9 @@ ymplayer.max-width-400 .ym-controller{
 .honoka .ym-active{
 	color:#fff;
 }
+.honoka .single-active {
+	border-left: 4px solid rgb(197,95,0);
+}
 
 /* umi : depp blue */
 .umi{
@@ -414,6 +419,9 @@ ymplayer.max-width-400 .ym-controller{
 }
 .umi .ym-active{
 	color:#fff;
+}
+.umi .single-active {
+	border-left: 4px solid rgb(15,14,89);
 }
 
 /* kotori : grey */
@@ -431,4 +439,7 @@ ymplayer.max-width-400 .ym-controller{
 }
 .kotori lyric{
 	color: #EFE1CB;
+}
+.kotori .single-active {
+	border-left: 4px solid rgb(159,130,87);
 }
