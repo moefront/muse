@@ -357,6 +357,9 @@ ymplayer.max-width-560 .ym-pgbar-outer{
 	left: 0;
 	right: 0;
 }
+ymplayer.max-width-560 .ym-progress{
+	margin:0 8px;
+}
 ymplayer.max-width-400 .volume-bar{
 	display: none;
 }
