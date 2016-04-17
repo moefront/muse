@@ -199,7 +199,7 @@ var Ymplayer = {
 			+"<span title='将歌词延后0.5s' class='ym-fix-btn ym-fix-slower'>"+SVG.angleUp+"</span>"
 			+"<span title='将歌词提前0.5s' class='ym-fix-btn ym-fix-faster'>"+SVG.angleDown+"</span>"
 			+"</div>";
-		lrcBox.querySelector('.lrc-container').addEventListener('click', function(){
+		lrcBox.addEventListener('click', function(){
 			Ymplayer.ToggleFixer(ymplayer);
 		});
 		lrcBox.querySelector('.ym-fix-slower').addEventListener('click', function(){
@@ -326,33 +326,49 @@ var Ymplayer = {
 	/** LRC Parser */
 	ParseLRC : function(ymplayer,idx){
 		var lrcContainer = ymplayer.querySelector(".lrc-container");
-		var lrcData = ymplayer.getElementsByTagName("song")[idx];
 		ymplayer.removeAttribute('current-lrc');
 		ymplayer.removeAttribute('current-lrc-timeoffset');
 		lrcContainer.innerHTML = '';
 		ymplayer.querySelector(".lrc-fixer").style.opacity = 0;
 
-		if(lrcData && lrcData.innerHTML.length != 0 && lrcData.innerHTML != ''){
-			var lyric = lrcData.innerHTML.replace(/(\\n)/g,"\n").replace(/(\\r)/g,"").split("\n");
-			for (var x in lyric) {
-				if (lyric[x].match(/(ti:|ar:|by:|al:|offset:)/)) {
-					continue;
-				} else if(lyric[x] == "") {
-					continue; 
+		var lrcData = ymplayer.getElementsByTagName("song")[idx].innerHTML;
+		var result = new Array();
+		if (!lrcData) { return; }
+		var lines_all = String(lrcData).split('\n');
+		for (var i = 0; i < lines_all.length; i++) {
+			var line = lines_all[i].replace(/(^\s*)|(\s*$)/g,'');
+			if (!line) {
+				continue;
+			}
+			var timestamp_all = Array();
+			while (true) {
+				var match = /^(\[\d+:\d+(.\d+)?\])(.*)/g.exec(line);
+				if (match) {
+					timestamp_all.push(match[1]);
+					line = match[match.length-1].replace(/(^\s*)|(\s*$)/g,'');
 				} else {
-					tempLrc = lyric[x].match(/([0-9]{2})\:([0-9]{2}\.[0-9]{2})/);
+					break;
 				}
-				tempContent = lyric[x].match(/\[.*?\](.*?)$/)[1].replace('/(^\s*)|(\s*$)/','');
-				if(tempLrc){
-					minute = tempLrc[1] * 60;
-					sec = minute + parseFloat(tempLrc[2]);
-					var lrcEle = document.createElement("lyric");
-					lrcEle.setAttribute("timeline",sec);
-					if (tempContent.length > 0) {
-						lrcEle.innerHTML = "<p>"+tempContent+"</p>";
-					}
-					lrcContainer.appendChild(lrcEle);
+			}
+			for (var j = 0; j < timestamp_all.length; j++) {
+				var ts_match = /^\[(\d{1,2}):(\d|[0-5]\d)(\.(\d+))?\]$/g.exec(timestamp_all[j]);
+				if (ts_match) {
+					result.push({
+						timestamp:Number(ts_match[1])*60 + Number(ts_match[2]) + (ts_match[4] ? Number('0.'+ts_match[4]) : 0),
+						text:line
+					});
 				}
+			}
+		}
+		result.sort(function(a,b){
+			return (a.timestamp > b.timestamp ? 1 : -1);
+		});
+		if (result.length > 0) {
+			for (var i = 0; i < result.length; i++) {
+				var lrcEle = document.createElement("lyric");
+				lrcEle.setAttribute("timeline",result[i].timestamp);
+				lrcEle.innerHTML = (result[i].text ? "<p>"+result[i].text+"</p>" : '');
+				lrcContainer.appendChild(lrcEle);
 			}
 			ymplayer.setAttribute("current-lrc",-1);
 			ymplayer.setAttribute('current-lrc-timeoffset',0);
