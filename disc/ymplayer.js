@@ -332,6 +332,8 @@ var Ymplayer = {
 		ymplayer.querySelector(".lrc-fixer").style.opacity = 0;
 
 		var lrcData = ymplayer.getElementsByTagName("song")[idx].innerHTML;
+		lrcData = lrcData.replace(/\\n/g,"\n").replace(/\\r/g,"\r");				//replace \n & \r
+
 		var result = new Array();
 		if (!lrcData) { return; }
 		var lines_all = String(lrcData).split('\n');
