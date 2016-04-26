@@ -4,7 +4,7 @@ ymplayer{
 	margin:10px auto;
 	width: 100%;
 	position: relative;
-	font-family: "Microsoft Yahei";
+	font-family: "Microsoft Yahei",arial,sans;
 	color: #fff;
 	margin: 10px auto;
 	opacity: 0.9;
@@ -299,7 +299,7 @@ single:hover{
 	padding:0;
 }
 lyric p {
-	padding:10px 0;
+	padding:10px;
 	margin:0;
 }
 .no-lrc{
