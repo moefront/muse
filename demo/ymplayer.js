@@ -195,20 +195,32 @@ var Ymplayer = {
 		lrcBox.setAttribute("class","ym-lrcbox");
 		lrcBox.innerHTML = "<div class='lrc-container'></div>"
 			+"<div class='no-lrc'><p>这首歌是没有填词的纯音乐（或者没有找到歌词），请欣赏。</p></div>"
-			+"<div class='lrc-fixer'>"
+			+"<div class='lrc-fixer' disabled='disabled'>"
 			+"<span title='将歌词延后0.5s' class='ym-fix-btn ym-fix-slower'>"+SVG.angleUp+"</span>"
 			+"<span title='将歌词提前0.5s' class='ym-fix-btn ym-fix-faster'>"+SVG.angleDown+"</span>"
 			+"</div>";
 		lrcBox.addEventListener('click', function(){
 			Ymplayer.ToggleFixer(ymplayer);
 		});
-		lrcBox.querySelector('.ym-fix-slower').addEventListener('click', function(){
+		lrcBox.querySelector('.ym-fix-slower').addEventListener('click', function(e){
+			if (this.parentNode.getAttribute('disabled')) {
+				return true;
+			}
+			e.preventDefault();
+			e.stopPropagation();
 			ymplayer.setAttribute('current-lrc-timeoffset', Number(ymplayer.getAttribute('current-lrc-timeoffset')) - 0.5);
 			Ymplayer.SyncLRC(ymplayer);
+			return false;
 		});
-		lrcBox.querySelector('.ym-fix-faster').addEventListener('click', function(){
+		lrcBox.querySelector('.ym-fix-faster').addEventListener('click', function(e){
+			if (this.parentNode.getAttribute('disabled')) {
+				return true;
+			}
+			e.preventDefault();
+			e.stopPropagation();
 			ymplayer.setAttribute('current-lrc-timeoffset', Number(ymplayer.getAttribute('current-lrc-timeoffset')) + 0.5);
 			Ymplayer.SyncLRC(ymplayer);
+			return false;
 		});
 
 		/** Add list, lrcbox, audio and other stuffs into Ymplayer */
@@ -329,7 +341,7 @@ var Ymplayer = {
 		ymplayer.removeAttribute('current-lrc');
 		ymplayer.removeAttribute('current-lrc-timeoffset');
 		lrcContainer.innerHTML = '';
-		ymplayer.querySelector(".lrc-fixer").style.opacity = 0;
+		ymplayer.querySelector(".lrc-fixer").setAttribute('disabled', 'disabled');
 
 		var lrcData = ymplayer.getElementsByTagName("song")[idx].innerHTML;
 		lrcData = lrcData.replace(/\\n/g,"\n").replace(/\\r/g,"\r");				//replace \n & \r
@@ -401,7 +413,11 @@ var Ymplayer = {
 	ToggleFixer: function(ymplayer){
 		if (ymplayer.hasAttribute('current-lrc')) {
 			fixer = ymplayer.querySelector(".lrc-fixer");
-			fixer.style.opacity = (fixer.style.opacity == 1 ? 0 : 1);
+			if (fixer.getAttribute('disabled')) {
+				fixer.removeAttribute('disabled');
+			} else {
+				fixer.setAttribute('disabled', 'disabled');
+			}
 		}
 	},
 	/** Init YmPlayer */
