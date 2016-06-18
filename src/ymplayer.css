@@ -9,8 +9,8 @@ ymplayer{
 	margin: 10px auto;
 	opacity: 0.9;
 	-webkit-transition:0.3s all;
-	transition:0.3s all;	
-	-moz-transition:0.3s all;		
+	transition:0.3s all;
+	-moz-transition:0.3s all;
 	font-size: 14px;
 	line-height: 1.42857143;
 }
@@ -96,8 +96,8 @@ ymplayer[current-lrc] .no-lrc{
 	margin:0 8px;
 	font-size: 18px;
 	-webkit-transition:0.3s all;
-	transition:0.3s all;	
-	-moz-transition:0.3s all;		
+	transition:0.3s all;
+	-moz-transition:0.3s all;
 	cursor: pointer;
 }
 /*.vol-button {
@@ -193,8 +193,8 @@ ymplayer[current-lrc] .no-lrc{
 	width: 0%;
 	background-color: rgb(206,255,255);
 	-webkit-transition:0.2s all;
-	transition:0.2s all;	
-	-moz-transition:0.2s all;	
+	transition:0.2s all;
+	-moz-transition:0.2s all;
 }
 .ym-circle{
 	width: 6px;
@@ -211,8 +211,8 @@ ymplayer[current-lrc] .no-lrc{
 	-webkit-box-sizing:content-box!important;
 	transition:0.3s all;
 	-webkit-transition:0.3s all;
-	-moz-transition:0.3s all;	
-	-o-transition:0.3s all;	
+	-moz-transition:0.3s all;
+	-o-transition:0.3s all;
 	cursor: w-resize;
 }
 .ym-circle:hover{
@@ -231,13 +231,14 @@ ymplayer[current-lrc] .no-lrc{
 	transition: 0.3s all ease-out;
 	-webkit-transition:0.3s all ease-out;
 	-moz-transition:0.3s all ease-out;
+
 	width: 100%;
 	height: 0px;
 	overflow-x: hidden;
 	overflow-y: hidden;
 }
 .ym-playlist.ym-show{
-	height: 400px;
+	height: 290px;
 	overflow-y: auto;
 }
 .ym-playlist > single{
@@ -293,7 +294,7 @@ single:hover{
 	color: #fff;
 	transition: 0.3s all;
 	-webkit-transition: 0.3s all;
-	-moz-transition: 0.3s all;	
+	-moz-transition: 0.3s all;
 	font-weight:bold;
 	margin:0;
 	padding:0;

@@ -3,128 +3,137 @@ Just a Music Player : )
 
 ### Description
 
-一个简单的音乐播放器（颜值不高 _ (:з」∠) _），全 CSS/Javascript 完成，无需 jQuery。
+A simple HTML5 music player with lyric support and play list.
 
+### Demo
 
-### Screenshot
+See https://kirainmoe.github.io/ymplayer/demo/ .
 
-正常形态：
+### Related Project
 
-![with no lrc](https://www.imim.pw/usr/uploads/with-no-lrc.jpg)
-
-贴入 LRC 的时候：
-
-![with lrc](https://www.imim.pw/usr/uploads/with-lrc.jpg)
-
-播放列表：
-
-![with list](https://www.imim.pw/usr/uploads/with-playlist.jpg)
-
-### Plugins
-
-以下是一些将 YmPlayer 和别的程序融合的产物（好像怪怪的）……使用它们可以十分方便快速地调用 YmPlayer。
+There are some project related to YmPlayer. They can help you construct YmPlayer on your site more easily.
 
 ##### Typecho Plugin YmPlayer
 
-_ (:з」∠) _ 谢谢小伙伴的帮忙
+_ (:з」∠) _ Thanks to my friend for her help~.
 
 [@kokororin](https://github.com/kokororin) : https://github.com/kokororin/typecho-plugin-ymplayer
 
 ### How to use?
 
-> 引入 ymplayer.css 和 ymplayer.js：
+> Import CSS and Javascript File, you can find them in the directory ./dist/ .
+
+Insert the code below into your <head> tag.
 
 ```html
 <link rel="stylesheet" type="text/css" href="ymplayer.css">
 <script type="text/javascript" src="ymplayer.js"></script>
 ```
 
-> 构造 HTML DOM：
+> Construct HTML DOM
 
-//如果没有歌词
+//If there isn't any lyric
 
 ```html
-<ymplayer  name="标识ID，支持 0-9 A-Z a-z _" loop="是否单曲循环，yes or no">
-	<song  src="mp3 文件地址" song="歌曲名" artist="歌手" cover="歌曲专辑封面"></song>
+<ymplayer  name="给你的播放器一个 独一无二 的名字，支持 0-9 A-Z a-z _">
+	<song  src="歌曲文件地址" song="歌曲名" artist="歌手" cover="歌曲专辑封面"></song>
 </ymplayer>
 ```
 
-//如果有歌词
+//Else
 
 ```html
-<ymplayer  name="标识ID，支持 0-9 A-Z a-z _" loop="是否单曲循环，yes or no">
-	<song  src="mp3 文件地址" song="歌曲名" artist="歌手" cover="歌曲专辑封面">歌词内容</song>
+<ymplayer  name="给你的播放器一个 独一无二 的名字，支持 0-9 A-Z a-z _">
+	<song  src="歌曲文件地址" song="歌曲名" artist="歌手" cover="歌曲专辑封面">
+		把歌词内容填写在这里
+	</song>
 </ymplayer>
 ```
 
 //如果有多首歌
 ```html
-<ymplayer  name="标识ID，支持 0-9 A-Z a-z _" loop="是否单曲循环，yes or no">
-	<song  src="mp3 文件地址1" song="歌曲名1" artist="歌手1" cover="歌曲专辑封面1">歌词内容1</song>
-	<song  src="mp3 文件地址2" song="歌曲名2" artist="歌手2" cover="歌曲专辑封面2">歌词内容2</song>
+<ymplayer  name="给你的播放器一个 独一无二 的名字，支持 0-9 A-Z a-z _">
+	<song  src="歌曲文件地址1" song="歌曲名1" artist="歌手1" cover="歌曲专辑封面1">
+		把歌曲 1 的歌词内容填写在这里
+	</song>
+
+	<song  src="歌曲文件地址2" song="歌曲名2" artist="歌手2" cover="歌曲专辑封面2">
+		把歌曲 2 的歌词内容填写在这里
+	</song>
 </ymplayer>
 ```
 
-> 最后别忘了初始化 YmPlayer：
+> Finally we should init the YmPlayer
+
+Add the code below before your <body> tag end.
 
 ```html
 
 <script type="text/javascript">
-	Ymplayer.Init();
+	window.Ymplayer.Init();
 </script>
 
 ```
 
-### Argument
+### Params
 
-```
-src    string    歌曲文件的地址，必填
+| Param Name    | Type    | Description                                                                   					|
+| --------------------- | --------- | ------------------------------------------------------------------------------|
+| src           					 | string  | <song> 标签的属性，歌曲文件的地址，必填        			        |
+| name      					 | string  | <ymplayer> 标签的属性，标识ID，必须唯一 										 |
+| song									 | string	 | <song> 标签的属性，歌曲																										 |
+| artist				          | string	| <song> 标签的属性，歌手																											 |
+| cover									 | string	 | <song> 标签的属性，专辑封面，或者你喜欢的图片			   		|
+| loop										| string	| <ymplayer> 标签的属性，是否开启单曲循环，yes or no	 |
 
-name     string    标识ID，用于在一个页面摆放多个 YmPlayer 时区分，*必须唯一*
-
-song      string     歌曲名
-
-artist       string     歌手
-
-cover      string      专辑封面，或者你喜欢的图片
-
-loop      string       是否开启单曲循环，如果是填写 yes ， 否则填 no，在播放时可以通过播放器按钮改动
-```
 
 ### Color your YmPlayer!
 
-YmPlayer 内置了好多好多种配色方案（由于时间有限，目前只适配包括原版在内的 5 种配色方案）。
+Light Blue : default color.
 
-> 浅蓝色：默认颜色
+Orange : add ```class="honoka"``` to <ymplayer> tag.
 
-> 橙色：在 <ymplayer> 标签添加： class="honoka"
+Grey : add ```class="kotori"``` to <ymplayer> tag.
 
-> （近似灰色）？：在 <ymplayer> 标签添加：  class="kotori"
+Deep Blue : add ```class="umi"``` to <ymplayer> tag.
 
-> 深蓝色：在 <ymplayer> 标签添加：  class="umi"
+Pink : add add ```class="nico"``` to <ymplayer> tag.
 
-> 粉色：在 <ymplayer> 标签添加：  class="nico"
+ More color is discovering ! _ (:з」∠) _
 
-其他的方案日后将会完善_ (:з」∠) _
+
+ ### Interface (API)
+
+Go to wiki and learn more about APIs of YmPlayer. 
 
 ### Issues
 
-> Q:使用 PJAX 时不加载 YmPlayer 怎么办 _ (:з」∠) _
-A:在 PJAX 的 end 事件中，插入 YmPlayer 的 Initer 函数，如：
+> Q: 使用 PJAX 时，新页面的 YmPlayer  无法 Init
+A: 在 PJAX 的 end 事件中，使用 YmPlayer 的 Init 方法。
+
+以 jquery-pjax 库为例，如：
 
 ```javascript
 $(document).pjax("end",function(){
-	YmplayerIniter();
+	window.Ymplayer.Init();
+});
+```
+
+再以 PJAX.js 为例：
+
+```javascript
+document.addEventListener("pjax:complete", function () {
+	window.Ymplayer.Init();
 });
 ```
 
 ### Other
 
-目前处于 Beta 阶段，在不同的站点上可能出现不同程度的错位，还请自己解决，或者开 issues 告知作者。
+If there are any problems, please open an issue and talk about it with me.
+But you may need to try to fix it by yourself on some occasions.
 
-欢迎开 issues 报告问题。
-
-**不求您 star，不求您向他人推荐（当然如果您愿意也是可以哒_(:з」∠)_）如果您喜欢 YmPlayer，就请多多给我们提出意见或者建议，有什么 idea 告诉我们让我们帮你实现。YmPlayer 的完善需要您的帮助！**
+**If you have any good idea, just open an issue and tell me, let me make it come true.
+WE NEED YOUR HELP TO MAKE THIS PLAYER BETTER !!**
 
 ### To do
 
@@ -139,4 +148,4 @@ $(document).pjax("end",function(){
 
 ### License
 
-遵循 The MIT License (MIT) 开源。
+The MIT License (MIT).
