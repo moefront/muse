@@ -242,8 +242,9 @@ ymplayer[current-lrc] .no-lrc{
 	overflow-y: auto;
 }
 .ym-playlist > single{
+	overflow:auto;
 	font-size: 16px;
-	padding: 10px 3%;
+	padding: 10px 5% 10px 3%;
 	display: block;
 	transition: 0.3s all ease;
 	-webkit-transition: 0.3s all ease;
@@ -252,14 +253,15 @@ ymplayer[current-lrc] .no-lrc{
 	cursor:pointer;
 }
 .ym-playlist > single > .list-number{
+	display:inline-block;
+	width:2.5em;
 	color: #dedede;
 }
 .ym-playlist > single >  .list-song{
-	padding: 0px 0px 0px 20px;
 }
 .ym-playlist  > single > .list-artist{
-	position: absolute;
-	right: 5%;
+	float:right;
+	margin-left: 10px;
 }
 single:hover{
 	background-color: rgba(51, 51, 51, 0.08);
