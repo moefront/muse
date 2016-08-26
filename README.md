@@ -110,11 +110,11 @@ You can find a detailed documentation about APIs, methods, specification, etc. o
 
 You can find most problems solution in [WiKi](https://github.com/kirainmoe/ymplayer/wiki). If not, please open an issue / pull a request whenever you face a problem or have some suggestions, or contact me at kirainmoe@gmail.com.
 
-## Thanks to
+## Thanks
 
-Those who have contributed to this project or solved problems: @frank-deng, @kokororin.
+Thank those who have contributed to this project or solved problems: @frank-deng, @kokororin.
 
-Projects that make this player more easy and effective to be developed: Yeoman, generator-react-webpack as well as their dependence.
+Thank those projects that make this player more easy and effective to be developed: Yeoman, generator-react-webpack as well as their dependence.
 
 Finally, thanks to all of you for your likes, thanks to myself for the best code I have ever written.
 
