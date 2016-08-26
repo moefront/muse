@@ -1,151 +1,137 @@
-# YmPlayer
-Just a Music Player : )
+# YMPlayer
 
-### Description
+[![npm](https://img.shields.io/npm/v/npm.svg?maxAge=2592000)]()
+[![devDependencies](https://img.shields.io/david/strongloop/express.svg?maxAge=2592000)]()
+[![Build](https://img.shields.io/teamcity/http/teamcity.jetbrains.com/s/bt345.svg?maxAge=2592000)]()
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)]()
 
-A simple HTML5 music player with lyric support and play list.
+Just a simple and diligent HTML5 audio player made with ❤ :) (current version: 4)
 
-### Demo
+## Install
 
-See https://kirainmoe.github.io/ymplayer/demo/ .
+YMPlayer has been published to **npmjs.com**, so you can install it from npm:
+```shell
+$ npm install ymplayer
+```
 
-### Related Project
+Or, via Git repository :
+```shell
+$ git clone https://github.com/kirainmoe/ymplayer
+$ cd ymplayer
+$ npm install
+```
 
-There are some project related to YmPlayer. They can help you construct YmPlayer on your site more easily.
+Pay attention that YMPlayer used a dependency named **node-sass** may not be installed by npm successfully sometimes. To avoid that, run **npm install -g cnpm && cnpm install node-sass** yourself, or use **npm run setup** instead of command **npm install**.
 
-##### Typecho Plugin YmPlayer
+## Run in your local machine
+
+Run in webpack dev-server mode:
+
+```shell
+$ npm run serve
+```
+
+Run in dist mode:
+```shell
+$ npm run demo
+```
+
+## Online Demo
+
+Have a look at https://kirainmoe.github.io/ymplayer/demo .
+
+## Usage
+
+#### Easily render player for single page
+
+There are two methods for you to render a player on your own web page. Both of them requires you to import **ymplayer.js** at first. This file is included in the *dist/* directory. PS: Stylesheet has been injected in this Javascript file.
+
+```html
+<script type="text/javascript" src="./dist/ymplayer.js"></script>
+```
+
+You can render a player component as we used to construct *<ymplayer>* tag in DOM:
+
+```html
+<ymplayer>
+	<song title="Your song title" artist="Your artist" cover="Album image src" src="Audio file src">
+		<lyric>Your lyric here. If you do not have a raw lyric, delete this tag.</lyric>
+
+		<translation>Translation should be put here. If you do not need a translation, delete this tag.</translation>
+	</song>
+
+	<!-- You can add far more musics by adding more <song> tag. -->
+</ymplayer>
+```
+
+You are permitted to use ```YMPlayer.render()``` method to render a player in YMPlayer 4, just like this:
+
+```javascript
+/**
+ * render a YMPlayer component on your page.
+ *
+ * @param data {Array}  musics' detail
+ * @param node {Object} HTML element in which new player will be put.
+ */
+
+YMPlayer.render([{
+	title: '',
+	artist: '',
+	cover: '',
+	src: '',
+	lyric: '',
+	translation: ''			// if you do not need translation, delete this row.
+}, {
+	// ......
+}], document.getElementById('player'));
+```
+
+#### Use player in your own project
+
+Copy ```src/styles``` and ```src/components``` to your project directory, and import YMPlayer as an expoted class:
+
+```javascript
+import YMPlayer from './src/components/ymplayer.js';
+```
+
+## Related project
+
+There are some project related to YMPlayer. They can help you construct YmPlayer on your site more easily.
+
+ - Typecho Plugin YmPlayer by @kokororin : https://github.com/kokororin/typecho-plugin-ymplayer
 
 _ (:з」∠) _ Thanks to my friend for her help~.
 
-[@kokororin](https://github.com/kokororin) : https://github.com/kokororin/typecho-plugin-ymplayer
+## Developing & APIs
 
-### How to use?
+You can find a detailed documentation about APIs, methods, specification, etc. on [WiKi](https://github.com/kirainmoe/ymplayer/wiki) soon.
 
-> Import CSS and Javascript File, you can find them in the directory ./dist/ .
+## Troubleshooting
 
-Insert the code below into your <head> tag.
+You can find most problems solution in [WiKi](https://github.com/kirainmoe/ymplayer/wiki). If not, please open an issue / pull a request whenever you face a problem or have some suggestions, or contact me at kirainmoe@gmail.com.
 
-```html
-<link rel="stylesheet" type="text/css" href="ymplayer.css">
-<script type="text/javascript" src="ymplayer.js"></script>
-```
+## Thanks to
 
-> Construct HTML DOM
+Those who have contributed to this project or solved problems: @frank-deng, @kokororin.
 
-//If there isn't any lyric
+Projects that make this player more easy and effective to be developed: Yeoman, generator-react-webpack as well as their dependence.
 
-```html
-<ymplayer  name="给你的播放器一个 独一无二 的名字，支持 0-9 A-Z a-z _">
-	<song  src="歌曲文件地址" song="歌曲名" artist="歌手" cover="歌曲专辑封面"></song>
-</ymplayer>
-```
+Finally, thanks to all of you for your likes, thanks to myself for the best code I have ever written.
 
-//Else
+## Other
 
-```html
-<ymplayer  name="给你的播放器一个 独一无二 的名字，支持 0-9 A-Z a-z _">
-	<song  src="歌曲文件地址" song="歌曲名" artist="歌手" cover="歌曲专辑封面">
-		把歌词内容填写在这里
-	</song>
-</ymplayer>
-```
+If you have any good idea, just tell me, let me make it come true. I NEED YOUR HELP TO MAKE THIS PLAYER BETTER !!
 
-//如果有多首歌
-```html
-<ymplayer  name="给你的播放器一个 独一无二 的名字，支持 0-9 A-Z a-z _">
-	<song  src="歌曲文件地址1" song="歌曲名1" artist="歌手1" cover="歌曲专辑封面1">
-		把歌曲 1 的歌词内容填写在这里
-	</song>
+## Todo list
 
-	<song  src="歌曲文件地址2" song="歌曲名2" artist="歌手2" cover="歌曲专辑封面2">
-		把歌曲 2 的歌词内容填写在这里
-	</song>
-</ymplayer>
-```
+ - [x] Responsive design
+ - [x] Play list
+ - [x] Fullscreen mode (testing)
+ - [x] Rendering method of pure Javascript
+ - [ ] Right-click menu
+ - [ ] Support of different environment
 
-> Finally we should init the YmPlayer
-
-Add the code below before your <body> tag end.
-
-```html
-
-<script type="text/javascript">
-	window.Ymplayer.Init();
-</script>
-
-```
-
-### Params
-
-| Param Name    | Type    | Description                                                                   					|
-| --------------------- | --------- | ------------------------------------------------------------------------------|
-| src           					 | string  | <song> 标签的属性，歌曲文件的地址，必填        			        |
-| name      					 | string  | <ymplayer> 标签的属性，标识ID，必须唯一 										 |
-| song									 | string	 | <song> 标签的属性，歌曲																										 |
-| artist				          | string	| <song> 标签的属性，歌手																											 |
-| cover									 | string	 | <song> 标签的属性，专辑封面，或者你喜欢的图片			   		|
-| loop										| string	| <ymplayer> 标签的属性，是否开启单曲循环，yes or no	 |
-
-
-### Color your YmPlayer!
-
-Light Blue : default color.
-
-Orange : add ```class="honoka"``` to <ymplayer> tag.
-
-Grey : add ```class="kotori"``` to <ymplayer> tag.
-
-Deep Blue : add ```class="umi"``` to <ymplayer> tag.
-
-Pink : add add ```class="nico"``` to <ymplayer> tag.
-
- More color is discovering ! _ (:з」∠) _
-
-
- ### Interface (API)
-
-Go to wiki and learn more about APIs of YmPlayer. 
-
-### Issues
-
-> Q: 使用 PJAX 时，新页面的 YmPlayer  无法 Init
-A: 在 PJAX 的 end 事件中，使用 YmPlayer 的 Init 方法。
-
-以 jquery-pjax 库为例，如：
-
-```javascript
-$(document).pjax("end",function(){
-	window.Ymplayer.Init();
-});
-```
-
-再以 PJAX.js 为例：
-
-```javascript
-document.addEventListener("pjax:complete", function () {
-	window.Ymplayer.Init();
-});
-```
-
-### Other
-
-If there are any problems, please open an issue and talk about it with me.
-But you may need to try to fix it by yourself on some occasions.
-
-**If you have any good idea, just open an issue and tell me, let me make it come true.
-WE NEED YOUR HELP TO MAKE THIS PLAYER BETTER !!**
-
-### To do
-
-- [x] 播放进度拖拽控制（目前支持点击控制）
-- [x] 响应式的优化
-- [x] 多音乐播放（播放列表） 注：目前处于 Alpha 阶段！
-- [ ] 更多种形态和颜色
-- [ ] 类似2.0的全屏模式
-- [ ] 右键菜单啥的
-- [ ] 调整不同环境下的兼容性
-- [ ] 无需构建 HTML DOM 的调用方法？
-
-### License
+## License
 
 The MIT License (MIT).
+
