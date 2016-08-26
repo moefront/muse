@@ -432,8 +432,10 @@ class YMPlayer
 	changeVolume (element, event) {
 		let audioElement = element.querySelector('audio'),
 				volBar  = element.querySelector('.yp-volumeBar'),
-				volRect = this.getRect(volBar);
-		audioElement.volume = (event.clientX - volRect.left) / volBar.offsetWidth;
+				volRect = this.getRect(volBar),
+				percentage = (event.clientX - volRect.left) / volBar.offsetWidth;
+		audioElement.volume = percentage;
+		volBar.querySelector('.yp-volumeBar__inner').style.width = percentage * 100 + '%';
 		return this;
 	}
 
@@ -636,7 +638,8 @@ class YMPlayer
 			if (!state) { throw('Microsoft 家的 Internet Explorer 暂时不支持（以后也不会支持） HTML5 fullscreen API.'); }
 
 			element.setAttribute('box', 'active');
-			extendBox.setAttribute('style', 'height:' + window.screen.availHeight - 60 + 'px');
+			let fullHei = window.screen.availHeight - 60 + 'px';
+			extendBox.setAttribute('style', 'height:' + fullHei);
 		}
 		else {
 			document.exitFullscreen ? document.exitFullscreen() :
