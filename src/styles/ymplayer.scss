@@ -30,6 +30,14 @@ $currentBorder: rgb(33,150,243);
 	-webkit-transform: $val;
 }
 
+@mixin fullscreen() {
+	height: 100%;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	margin-top: 5px;
+}
+
 ymplayer {
 
 	width: 100%;
@@ -327,27 +335,26 @@ ymplayer {
 					margin: 0px;
 				}
 			}
-
-			.yp-lrcFixer {
-				width: 40px;
-				height: 60px;
-
-				position: absolute;
-				display: inline-block;
-				top: calc(50% - 30px);
-				left: 0px;
-				opacity: 1;
-
-				padding: 8px 0px;
-
-				background: $mask;
-				@include transition(.2s all);
-
-				&[disabled='disabled'] {	opacity: 0;	}
-			}
-
 			.yp-translation {	 font-size: 13px;	}
 		} // .yp-lyricContainer
+
+		.yp-lrcFixer {
+			width: 40px;
+			height: 60px;
+
+			position: absolute;
+			display: inline-block;
+			top: calc(50% - 30px);
+			left: 0px;
+			opacity: 1;
+
+			padding: 8px 0px;
+
+			background: $mask;
+			@include transition(.2s all);
+
+			&[disabled='disabled'] {	opacity: 0;	}
+		}		
 	}
 
 	&[box='active'] .yp-extendBox{
@@ -391,28 +398,8 @@ ymplayer {
 	// End responsive design
 
 	// Fullscreen mode
-	&:full-screen {
-		height: 100%;
-		position: fixed;
-		top: 0px;
-		left: 0px;
-		margin-top: 5px;
-	}
-
-	&:-webkit-full-screen {
-		height: 100%;
-		position: fixed;
-		top: 0px;
-		left: 0px;
-		margin-top: 5px;
-	}
-
-	&:-moz-full-screen {
-		height: 100%;
-		position: fixed;
-		top: 0px;
-		left: 0px;
-		margin-top: 5px;
-	}
+	&:full-screen {	@include fullscreen();	}
+	&:-webkit-full-screen {	@include fullscreen();	}
+	&:-moz-full-screen {	@include fullscreen();	}
 
 }
