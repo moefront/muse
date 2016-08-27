@@ -108,7 +108,7 @@ You can find a detailed documentation about APIs, methods, specification, etc. o
 
 ## Troubleshooting
 
-You can find most problems solution in [WiKi](https://github.com/kirainmoe/ymplayer/wiki). If not, please open an issue / pull a request whenever you face a problem or have some suggestions, or contact me at kirainmoe@gmail.com.
+You can find most problems solution on [WiKi](https://github.com/kirainmoe/ymplayer/wiki). If not, please open an issue / pull a request whenever you face a problem or have some suggestions, or contact me at kirainmoe@gmail.com.
 
 ## Thanks
 
@@ -117,6 +117,20 @@ Thank those who have contributed to this project or solved problems: @frank-deng
 Thank those projects that make this player more easy and effective to be developed: Yeoman, generator-react-webpack as well as their dependence.
 
 Finally, thanks to all of you for your likes, thanks to myself for the best code I have ever written.
+
+## Browser supports
+
+![IE](https://raw.github.com/alrra/browser-logos/master/internet-explorer/internet-explorer_48x48.png) | ![Chrome](https://raw.github.com/alrra/browser-logos/master/chrome/chrome_48x48.png) | ![Firefox](https://raw.github.com/alrra/browser-logos/master/firefox/firefox_48x48.png) | ![Opera](https://raw.github.com/alrra/browser-logos/master/opera/opera_48x48.png) | ![Safari](https://raw.github.com/alrra/browser-logos/master/safari/safari_48x48.png)
+--- | --- | --- | --- | --- |
+IE 10+ ✔ | Chrome 24.0+ ✔ | Firefox 24.0+ ✔ | Opera 15.0+ ✔ | Safari 7.0+ ✔ |
+
+PS: Because of the ClassList API, some elder browser can not be support well.
+
+## Known issues
+
+ - [x] <s>Can not parse [ti:] [ar:] [by:] [al:]</s> solved : )
+ - [ ] Responsive design may not work well on Internet Explorer.
+ - [ ] Lyric balloon may not display normally.
 
 ## Other
 

@@ -51,7 +51,7 @@ class YMPlayer
 	 * @return {this}
 	 */
 	init () {
-		if (!document.querySelectorAll)	throw('YMPlayer requires Internet Explorer 9 or higher version.');
+		if (!document.querySelectorAll)	throw('YMPlayer requires Internet Explorer 10 or higher version.');
 
 		let ymplayers = document.querySelectorAll('ymplayer, .ymplayer');
 		if (ymplayers.length != 0) {
@@ -469,12 +469,11 @@ class YMPlayer
 		for (let i = 0; i < linesAll.length; i ++)
 		{
 			let line = linesAll[i].replace(/(^\s*)|(\s*$)/g,'');
-			if (!line)
+			if (!line || line.match(/\[(ti:|ar:|al:|by:)/g))		// filter [ti:xxx] [ar:xxx]...
 				continue;
 
-			let timestamps = [];
-
-			let match = /^(\[\d+:\d+(.\d+)?\])(.*)/g.exec(line);
+			let timestamps = [],
+					match = /^(\[\d+:\d+(.\d+)?\])(.*)/g.exec(line);
 			if (match) {
 				timestamps.push(match[1]);
 				line = match[match.length-1].replace(/(^\s*)|(\s*$)/g,'');
@@ -757,7 +756,7 @@ class YMPlayer
 		let node = this.make('ymplayer', null, singles);
 		ele.appendChild(node);
 		this.serialize(node);
-		return this;
+		return node;
 	}
 }
 
