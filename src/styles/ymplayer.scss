@@ -36,6 +36,12 @@ $currentBorder: rgb(33,150,243);
 	top: 0px;
 	left: 0px;
 	margin-top: 5px;
+
+	.yp-extendBox {
+		height: -moz-calc(100% - 60px);
+		height: -webkit-calc(100% - 60px);
+		height: calc(100% - 60px);
+	}
 }
 
 ymplayer {
@@ -158,6 +164,9 @@ ymplayer {
 				height: 0px;
 				position: absolute;
 				bottom: -10px;
+
+				right: -moz-calc(50% - 4px);
+				right: -webkit-calc(50% - 5px);
 				right: calc(50% - 4px);
 
 			  border-width:4px 0px 4px 13px;  
@@ -215,16 +224,20 @@ ymplayer {
 		.yp-toggler {
 			width: 40%;
 			height: 60px;
-			
-			// Because of 'inline-flex' is new feature of Flexible Box, 
-			// there is no use to use a mixin.
-			display: -webkit-inline-flex;
-			display: inline-flex;
-			line-height: 70px;
 
+			// Flexbox old grammar
+			display: -moz-box;
+			display: -webkit-box;
+			display: -ms-flexbox;
+			display: -webkit-flex;
+			display: flex;
+
+			line-height: 70px;
 			position: relative;
 
 			.yp-volumeBar {
+				width: -moz-calc(100% - 180px);
+				width: -webkit-calc(100% - 180px);
 				width: calc(100% - 180px);
 				height: 3px;
 
@@ -258,11 +271,11 @@ ymplayer {
 		@include transition(.3s all ease-in-out);
 
 		.yp-lyricBox, .yp-playList {
-			width: 50%;
 			height: 100%;
-
 			display: inline-block;
 		}
+		.yp-lyricBox { width: 60%; }
+		.yp-playList { width: 40%; }
 
 		.yp-lyricBox {
 			float: left;
@@ -344,7 +357,11 @@ ymplayer {
 
 			position: absolute;
 			display: inline-block;
+
+			top: -moz-calc(50% - 30px);
+			top: -webkit-calc(50% - 30px);
 			top: calc(50% - 30px);
+
 			left: 0px;
 			opacity: 1;
 
@@ -401,5 +418,4 @@ ymplayer {
 	&:full-screen {	@include fullscreen();	}
 	&:-webkit-full-screen {	@include fullscreen();	}
 	&:-moz-full-screen {	@include fullscreen();	}
-
 }

@@ -1,6 +1,6 @@
 {
   "name": "ymplayer",
-  "version": "4.0.6",
+  "version": "4.0.7",
   "description": "Just a simple and diligent HTML5 audio player made with love.",
   "main": "",
   "scripts": {
@@ -60,6 +60,7 @@
     "null-loader": "^0.1.1",
     "open": "0.0.5",
     "phantomjs-prebuilt": "^2.0.0",
+    "postcss-loader": "^0.11.0",
     "rimraf": "^2.4.3",
     "sass-loader": "^4.0.0",
     "style-loader": "^0.13.0",

@@ -34,6 +34,7 @@ class YMPlayer
 	}
 
 	balloonState = true
+	fullscreenState = false
 
 	/**
 	 * constructor function, register self to global window
@@ -101,7 +102,7 @@ class YMPlayer
 				this.make('span', 'class=yp-listTitle', songTags[t].attributes.title.value),
 				this.make('span', 'class=yp-listArtist', songTags[t].attributes.artist.value)
 			], {
-				click: e => this.change(element, e.srcElement || e.target, true)
+				click: function () {	refs.change(element, this, true);	}		// there should not have a => func
 			});
 
 			singleArray.push(single);				// push single element to array
@@ -368,9 +369,15 @@ class YMPlayer
 				else if (balloon.parentNode.hasAttribute('empty'))	balloon.parentNode.removeAttribute('empty');
 			}
 
-			let targetOffset = lyricsAll[currentLyric].offsetTop - Math.abs(lyricBox.offsetHeight - lyricsAll[currentLyric].offsetHeight) / 2;
+			let boxHeight    = this.fullscreenState ? document.body.offsetHeight - 60 : lyricBox.offsetHeight,
+					targetOffset = lyricsAll[currentLyric].offsetTop - Math.abs(boxHeight - lyricsAll[currentLyric].offsetHeight) / 2;
 			if (targetOffset < 0) { targetOffset = 0; }
-			lyricContainer.setAttribute('style', 'transform: translateY(' + String(-targetOffset) + 'px)');
+
+			let transf = String(-targetOffset);
+			lyricContainer.setAttribute('style', 'transform: translateY(' + transf + 'px);'
+				+ '-webkit-transform: translateY(' + transf + 'px);'
+				+ '-moz-transform: translateY(' + transf + 'px);'
+				+ '-ms-transform: translateY(' + transf + 'px);');
 		}
 		return this;
 	}
@@ -626,8 +633,6 @@ class YMPlayer
 						 document.mozFullscreenElement ? true : false;
 		}
 
-		let extendBox = element.querySelector('.yp-extendBox');
-
 		if (!getFullscreenState()) {
 
 			var state = element.requestFFullscreenElementullscreen ? element.requestFullscreen() || true :
@@ -636,18 +641,17 @@ class YMPlayer
 
 			if (!state) { throw('Microsoft 家的 Internet Explorer 暂时不支持（以后也不会支持） HTML5 fullscreen API.'); }
 
+			this.fullscreenState = true;
 			element.setAttribute('box', 'active');
-			let fullHei = window.screen.availHeight - 60 + 'px';
-			extendBox.setAttribute('style', 'height:' + fullHei);
 		}
 		else {
 			document.exitFullscreen ? document.exitFullscreen() :
 			document.webkitExitFullscreen ? document.webkitExitFullscreen() :
 			document.mozExitFullscreen ? document.mozExitFullscreen() : '';
 
+			this.fullscreenState = false;
 			element.setAttribute('box', 'inactive');
 			element.classList.toggle('yp-boxActived', false);
-			extendBox.setAttribute('style', '');			// remove custom height
 		}
 		return this;
 	}
