@@ -1,145 +1,151 @@
-# YmPlayer
-Just a Music Player : )
+# YMPlayer
 
-### Description
+[![npm](https://img.shields.io/npm/v/npm.svg?maxAge=2592000)]()
+[![devDependencies](https://img.shields.io/david/strongloop/express.svg?maxAge=2592000)]()
+[![Build](https://img.shields.io/teamcity/http/teamcity.jetbrains.com/s/bt345.svg?maxAge=2592000)]()
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)]()
 
-一个简单的音乐播放器（颜值不高 _ (:з」∠) _），全 CSS/Javascript 完成，需要 Font-Awesome 图标库，无需 jQuery。
+Just a simple and diligent HTML5 audio player made with ❤ :) (current version: 4)
 
------
+## Install
 
-### Screenshot
-
-正常形态：
-
-![with no lrc](https://www.imim.pw/usr/uploads/with-no-lrc.jpg)
-
-贴入 LRC 的时候：
-
-![with lrc](https://www.imim.pw/usr/uploads/with-lrc.jpg)
-
-播放列表：
-
-![with list](https://www.imim.pw/usr/uploads/with-playlist.jpg)
-
-### Plugins
-
-以下是一些将 YmPlayer 和别的程序融合的产物（好像怪怪的）……使用它们可以十分方便快速地调用 YmPlayer。
-
-##### Typecho Plugin YmPlayer
-
-_ (:з」∠) _ 谢谢小伙伴的帮忙
-
-[@kokororin](https://github.com/kokororin) : https://github.com/kokororin/typecho-plugin-ymplayer
-
-### How to use?
-
-> 引入 ymplayer.css 和 ymplayer.js：
-
-```html
-<link rel="stylesheet" type="text/css" href="ymplayer.css">
-<script type="text/javascript" src="ymplayer.js"></script>
+YMPlayer has been published to **npmjs.com**, so you can install it from npm:
+```shell
+$ npm install ymplayer
 ```
 
-//注意：需要引入 font-awesome 图标库，可以自行引入，也可以复制 /demo/res/ 下的文件并引入 /demo/font-awesome.css 。
+Or, via Git repository :
+```shell
+$ git clone https://github.com/kirainmoe/ymplayer
+$ cd ymplayer
+$ npm install
+```
 
-> 构造 HTML DOM：
+Pay attention that YMPlayer used a dependency named **node-sass** may not be installed by npm successfully sometimes. To avoid that, run **npm install -g cnpm && cnpm install node-sass** yourself, or use **npm run setup** instead of command **npm install**.
 
-//如果没有歌词
+## Run in your local machine
+
+Run in webpack dev-server mode:
+
+```shell
+$ npm run serve
+```
+
+Run in dist mode:
+```shell
+$ npm run demo
+```
+
+## Online Demo
+
+Have a look at https://kirainmoe.github.io/ymplayer/demo .
+
+## Usage
+
+#### Easily render player for single page
+
+There are two methods for you to render a player on your own web page. Both of them requires you to import **ymplayer.js** at first. This file is included in the *dist/* directory. PS: Stylesheet has been injected in this Javascript file.
 
 ```html
-<ymplayer  name="标识ID，支持 0-9 A-Z a-z _" loop="是否单曲循环，yes or no">
-	<song  src="mp3 文件地址" song="歌曲名" artist="歌手" cover="歌曲专辑封面"></song>
+<script type="text/javascript" src="./dist/ymplayer.js"></script>
+```
+
+You can render a player component as we used to construct *<ymplayer>* tag in DOM:
+
+```html
+<ymplayer>
+	<song title="Your song title" artist="Your artist" cover="Album image src" src="Audio file src">
+		<lyric>Your lyric here. If you do not have a raw lyric, delete this tag.</lyric>
+
+		<translation>Translation should be put here. If you do not need a translation, delete this tag.</translation>
+	</song>
+
+	<!-- You can add far more musics by adding more <song> tag. -->
 </ymplayer>
 ```
 
-//如果有歌词
-
-```html
-<ymplayer  name="标识ID，支持 0-9 A-Z a-z _" loop="是否单曲循环，yes or no">
-	<song  src="mp3 文件地址" song="歌曲名" artist="歌手" cover="歌曲专辑封面">歌词内容</song>
-</ymplayer>
-```
-
-//如果有多首歌
-```html
-<ymplayer  name="标识ID，支持 0-9 A-Z a-z _" loop="是否单曲循环，yes or no">
-	<song  src="mp3 文件地址1" song="歌曲名1" artist="歌手1" cover="歌曲专辑封面1">歌词内容1</song>
-	<song  src="mp3 文件地址2" song="歌曲名2" artist="歌手2" cover="歌曲专辑封面2">歌词内容2</song>
-</ymplayer>
-```
-
-> 最后别忘了初始化 YmPlayer：
-
-```html
-
-<script type="text/javascript">
-	Ymplayer.Init();
-</script>
-
-```
-
-### Argument
-
-```
-src    string    歌曲文件的地址，必填
-
-name     string    标识ID，用于在一个页面摆放多个 YmPlayer 时区分，*必须唯一*
-
-song      string     歌曲名
-
-artist       string     歌手
-
-cover      string      专辑封面，或者你喜欢的图片
-
-loop      string       是否开启单曲循环，如果是填写 yes ， 否则填 no，在播放时可以通过播放器按钮改动
-```
-
-### Color your YmPlayer!
-
-YmPlayer 内置了好多好多种配色方案（由于时间有限，目前只适配包括原版在内的 5 种配色方案）。
-
-> 浅蓝色：默认颜色
-
-> 橙色：在 <ymplayer> 标签添加： class="honoka"
-
-> （近似灰色）？：在 <ymplayer> 标签添加：  class="kotori"
-
-> 深蓝色：在 <ymplayer> 标签添加：  class="umi"
-
-> 粉色：在 <ymplayer> 标签添加：  class="nico"
-
-其他的方案日后将会完善_ (:з」∠) _
-
-### Issues
-
-> Q:使用 PJAX 时不加载 YmPlayer 怎么办 _ (:з」∠) _
-A:在 PJAX 的 end 事件中，插入 YmPlayer 的 Initer 函数，如：
+You are permitted to use ```YMPlayer.render()``` method to render a player in YMPlayer 4, just like this:
 
 ```javascript
-$(document).pjax("end",function(){
-	YmplayerIniter();
-});
+/**
+ * render a YMPlayer component on your page.
+ *
+ * @param data {Array}  musics' detail
+ * @param node {Object} HTML element in which new player will be put.
+ */
+
+YMPlayer.render([{
+	title: '',
+	artist: '',
+	cover: '',
+	src: '',
+	lyric: '',
+	translation: ''			// if you do not need translation, delete this row.
+}, {
+	// ......
+}], document.getElementById('player'));
 ```
 
-### Other
+#### Use player in your own project
 
-目前处于 Beta 阶段，在不同的站点上可能出现不同程度的错位，还请自己解决，或者开 issues 告知作者。
+Copy ```src/styles``` and ```src/components``` to your project directory, and import YMPlayer as an expoted class:
 
-欢迎开 issues 报告问题。
+```javascript
+import YMPlayer from './src/components/ymplayer.js';
+```
 
-**不求您 star，不求您向他人推荐（当然如果您愿意也是可以哒_(:з」∠)_）如果您喜欢 YmPlayer，就请多多给我们提出意见或者建议，有什么 idea 告诉我们让我们帮你实现。YmPlayer 的完善需要您的帮助！**
+## Related project
 
-### To do
+There are some project related to YMPlayer. They can help you construct YmPlayer on your site more easily.
 
-- [x] 播放进度拖拽控制（目前支持点击控制）
-- [x] 响应式的优化
-- [x] 多音乐播放（播放列表） 注：目前处于 Alpha 阶段！
-- [ ] 更多种形态和颜色
-- [ ] 类似2.0的全屏模式
-- [ ] 右键菜单啥的
-- [ ] 调整不同环境下的兼容性
-- [ ] 无需构建 HTML DOM 的调用方法？
+ - Typecho Plugin YmPlayer by @kokororin : https://github.com/kokororin/typecho-plugin-ymplayer
 
-### License
+_ (:з」∠) _ Thanks to my friend for her help~.
 
-遵循 GPL v2 开源。
+## Developing & APIs
+
+You can find a detailed documentation about APIs, methods, specification, etc. on [WiKi](https://github.com/kirainmoe/ymplayer/wiki) soon.
+
+## Troubleshooting
+
+You can find most problems solution on [WiKi](https://github.com/kirainmoe/ymplayer/wiki). If not, please open an issue / pull a request whenever you face a problem or have some suggestions, or contact me at kirainmoe@gmail.com.
+
+## Thanks
+
+Thank those who have contributed to this project or solved problems: @frank-deng, @kokororin.
+
+Thank those projects that make this player more easy and effective to be developed: Yeoman, generator-react-webpack as well as their dependence.
+
+Finally, thanks to all of you for your likes, thanks to myself for the best code I have ever written.
+
+## Browser supports
+
+![IE](https://raw.github.com/alrra/browser-logos/master/internet-explorer/internet-explorer_48x48.png) | ![Chrome](https://raw.github.com/alrra/browser-logos/master/chrome/chrome_48x48.png) | ![Firefox](https://raw.github.com/alrra/browser-logos/master/firefox/firefox_48x48.png) | ![Opera](https://raw.github.com/alrra/browser-logos/master/opera/opera_48x48.png) | ![Safari](https://raw.github.com/alrra/browser-logos/master/safari/safari_48x48.png)
+--- | --- | --- | --- | --- |
+IE 10+ ✔ | Chrome 24.0+ ✔ | Firefox 24.0+ ✔ | Opera 15.0+ ✔ | Safari 7.0+ ✔ |
+
+PS: Because of the ClassList API, some elder browser can not be support well.
+
+## Known issues
+
+ - [x] <s>Can not parse [ti:] [ar:] [by:] [al:]</s> solved : )
+ - [ ] Responsive design may not work well on Internet Explorer.
+ - [ ] Lyric balloon may not display normally.
+
+## Other
+
+If you have any good idea, just tell me, let me make it come true. I NEED YOUR HELP TO MAKE THIS PLAYER BETTER !!
+
+## Todo list
+
+ - [x] Responsive design
+ - [x] Play list
+ - [x] Fullscreen mode (testing)
+ - [x] Rendering method of pure Javascript
+ - [ ] Right-click menu
+ - [ ] Support of different environment
+
+## License
+
+The MIT License (MIT).
+
