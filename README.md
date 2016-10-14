@@ -2,16 +2,17 @@
 
 [![npm](https://img.shields.io/npm/v/npm.svg?maxAge=2592000)]()
 [![devDependencies](https://img.shields.io/david/strongloop/express.svg?maxAge=2592000)]()
-[![Build](https://img.shields.io/teamcity/http/teamcity.jetbrains.com/s/bt345.svg?maxAge=2592000)]()
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)]()
 
 Just a simple and diligent HTML5 audio player made with ❤ :) (current version: 4)
 
 ## Install
 
-YMPlayer has been published to **npmjs.com**, so you can install it from npm:
+You can install **YMplayer** from both **_npm_** and **_yarn**(Yarn is a new package manager for Node.js developed by Facebook. It will be faster.).
+
 ```shell
-$ npm install ymplayer
+$ yarn add ymplayer    # using yarn
+$ npm install ymplayer # using npm
 ```
 
 Or, via Git repository :
