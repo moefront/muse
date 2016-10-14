@@ -8,7 +8,7 @@ Just a simple and diligent HTML5 audio player made with ❤ :) (current version:
 
 ## Install
 
-You can install **YMplayer** from both **_npm_** and **_yarn**(Yarn is a new package manager for Node.js developed by Facebook. It will be faster.).
+You can install **YMplayer** from both **_npm_** and **_yarn_**. (Yarn is a new package manager for Node.js developed by Facebook. It will be faster.)
 
 ```shell
 $ yarn add ymplayer    # using yarn
