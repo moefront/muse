@@ -2,7 +2,7 @@
   "name": "ymplayer",
   "version": "4.0.7",
   "description": "Just a simple and diligent HTML5 audio player made with love.",
-  "main": "",
+  "main": "dist/assets/ymplayer.js",
   "scripts": {
     "clean": "rimraf dist/*",
     "copy": "copyfiles -f ./src/index.html ./src/favicon.ico ./dist",

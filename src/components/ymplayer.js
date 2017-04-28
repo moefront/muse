@@ -37,16 +37,6 @@ class YMPlayer
 	fullscreenState = false
 
 	/**
-	 * constructor function, register self to global window
-	 *
-	 * @return {void}
-	 */
-	constructor () {
-		window.YMPlayer = this;
-		window.addEventListener('load', this.init.bind(this));
-	}
-
-	/**
 	 * initialize YMPlayer DOM node structure
 	 *
 	 * @return {this}
@@ -59,7 +49,7 @@ class YMPlayer
 			for (let i in ymplayers)
 				if (ymplayers[i] instanceof HTMLElement)	this.serialize(ymplayers[i]);
 		}
-		
+
 		return this;
 	}
 
@@ -247,7 +237,7 @@ class YMPlayer
 	togglePlay (element) {
 		let audioElement = element.querySelector('audio'),
 				playBtn      = element.querySelector('.yp-button__play');
-			
+
 		if (audioElement.paused !== false) {
 			playBtn.innerHTML = this.icons.pause;
 			audioElement.play();
@@ -596,7 +586,7 @@ class YMPlayer
 
 		player.setAttribute('src', nextSingle.getAttribute('src'));
 		this.parseLrc(element, nextSingle.getAttribute('index'));
-		
+
 		if (autoplay) {
 			this.stop(element).togglePlay(element);
 		}
