@@ -17,6 +17,9 @@ module.exports = {
   output: {
     path: path.join(__dirname, '/../dist/assets'),
     filename: 'ymplayer.js',
+    library: 'YMPlayer',
+    libraryTarget: 'umd',
+    umdNamedDefine: true,
     publicPath: defaultSettings.publicPath
   },
   devServer: {

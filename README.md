@@ -55,7 +55,7 @@ You can render a player component as we used to construct *<ymplayer>* tag in DO
 
 ```html
 <ymplayer>
-	<song title="Your song title" artist="Your artist" cover="Album image src" src="Audio file src">
+    <song title="Your song title" artist="Your artist" cover="Album image src" src="Audio file src">
 		<lyric>Your lyric here. If you do not have a raw lyric, delete this tag.</lyric>
 
 		<translation>Translation should be put here. If you do not need a translation, delete this tag.</translation>
@@ -89,11 +89,37 @@ YMPlayer.render([{
 
 #### Use player in your own project
 
-Copy ```src/styles``` and ```src/components``` to your project directory, and import YMPlayer as an expoted class:
+#### webpack
+
+Install YMPlayer from npm, and import YMPlayer as an expoted class:
+
+```bash
+npm install ymplayer --save
+```
 
 ```javascript
-import YMPlayer from './src/components/ymplayer.js';
+import YMPlayer from 'ymplayer';
 ```
+
+#### RequireJS or other AMD mobule loader
+
+```javascript
+require(['ymplayer'], function(YMPlayer) {
+    YMPlayer.render(opt);
+});
+```
+
+#### Others
+
+````
+<script type="text/javascript" src="./dist/ymplayer.js"></script>
+````
+
+This will export YMPlayer to window:
+```javascript
+window.YMPlayer.render(opt);
+```
+
 
 ## Related project
 
@@ -149,4 +175,5 @@ If you have any good idea, just tell me, let me make it come true. I NEED YOUR H
 ## License
 
 The MIT License (MIT).
+
 
