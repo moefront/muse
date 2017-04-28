@@ -1,8 +1,8 @@
 # YMPlayer
 
-[![npm](https://img.shields.io/npm/v/npm.svg?maxAge=2592000)]()
-[![devDependencies](https://img.shields.io/david/strongloop/express.svg?maxAge=2592000)]()
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)]()
+[![npm](https://img.shields.io/npm/v/ymplayer.svg?maxAge=2592000)]()
+[![devDependencies](https://img.shields.io/david/dev/kirainmoe/ymplayer.svg?maxAge=2592000)]()
+[![license](https://img.shields.io/github/license/kirainmoe/ymplayer.svg?maxAge=2592000)]()
 
 Just a simple and diligent HTML5 audio player made with ❤ :) (current version: 4)
 
@@ -93,10 +93,6 @@ YMPlayer.render([{
 
 Install YMPlayer from npm, and import YMPlayer as an expoted class:
 
-```bash
-npm install ymplayer --save
-```
-
 ```javascript
 import YMPlayer from 'ymplayer';
 ```
@@ -111,7 +107,7 @@ require(['ymplayer'], function(YMPlayer) {
 
 #### Others
 
-````
+````html
 <script type="text/javascript" src="./dist/ymplayer.js"></script>
 ````
 
