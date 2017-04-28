@@ -143,7 +143,7 @@ Finally, thanks to all of you for your likes, thanks to myself for the best code
 
 ## Browser supports
 
-![IE](https://raw.github.com/alrra/browser-logos/master/internet-explorer/internet-explorer_48x48.png) | ![Chrome](https://raw.github.com/alrra/browser-logos/master/chrome/chrome_48x48.png) | ![Firefox](https://raw.github.com/alrra/browser-logos/master/firefox/firefox_48x48.png) | ![Opera](https://raw.github.com/alrra/browser-logos/master/opera/opera_48x48.png) | ![Safari](https://raw.github.com/alrra/browser-logos/master/safari/safari_48x48.png)
+![IE](https://github.com/alrra/browser-logos/raw/master/src/archive/internet-explorer_9-11/internet-explorer_9-11_48x48.png) | ![Chrome](https://raw.githubusercontent.com/alrra/browser-logos/master/src/archive/chrome_12-48/chrome_12-48_48x48.png) | ![Firefox](https://github.com/alrra/browser-logos/raw/master/src/archive/firefox_3.5-22/firefox_3.5-22_48x48.png) | ![Opera](https://github.com/alrra/browser-logos/raw/master/src/archive/opera_15-32/opera_15-32_48x48.png) | ![Safari](https://github.com/alrra/browser-logos/raw/master/src/archive/safari_1-7/safari_1-7_48x48.png)
 --- | --- | --- | --- | --- |
 IE 10+ ✔ | Chrome 24.0+ ✔ | Firefox 24.0+ ✔ | Opera 15.0+ ✔ | Safari 7.0+ ✔ |
 
