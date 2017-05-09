@@ -30,7 +30,8 @@ class YMPlayer
 		volume : '<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1088 352v1088q0 26-19 45t-45 19-45-19l-333-333h-262q-26 0-45-19t-19-45v-384q0-26 19-45t45-19h262l333-333q19-19 45-19t45 19 19 45zm384 544q0 76-42.5 141.5t-112.5 93.5q-10 5-25 5-26 0-45-18.5t-19-45.5q0-21 12-35.5t29-25 34-23 29-35.5 12-57-12-57-29-35.5-34-23-29-25-12-35.5q0-27 19-45.5t45-18.5q15 0 25 5 70 27 112.5 93t42.5 142z"/></svg>',
 		mute : '<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1280 352v1088q0 26-19 45t-45 19-45-19l-333-333h-262q-26 0-45-19t-19-45v-384q0-26 19-45t45-19h262l333-333q19-19 45-19t45 19 19 45z"/></svg>',
 		angleUp : '<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1395 1184q0 13-10 23l-50 50q-10 10-23 10t-23-10l-393-393-393 393q-10 10-23 10t-23-10l-50-50q-10-10-10-23t10-23l466-466q10-10 23-10t23 10l466 466q10 10 10 23z"/></svg>',
-		angleDown : '<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1395 736q0 13-10 23l-466 466q-10 10-23 10t-23-10l-466-466q-10-10-10-23t10-23l50-50q10-10 23-10t23 10l393 393 393-393q10-10 23-10t23 10l50 50q10 10 10 23z"/></svg>'
+		angleDown : '<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1395 736q0 13-10 23l-466 466q-10 10-23 10t-23-10l-466-466q-10-10-10-23t10-23l50-50q10-10 23-10t23 10l393 393 393-393q10-10 23-10t23 10l50 50q10 10 10 23z"/></svg>',
+		fullscreen: '<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>'
 	}
 
 	balloonState = true
@@ -74,14 +75,14 @@ class YMPlayer
 		window.addEventListener('resize', () => this.resizer(element));
 
 		/* Init play list */
-		var firstSingle = undefined,
+		let firstSingle = undefined,
 				songTags = element.querySelectorAll('song'),
 				singleArray = [],
 				refs = this;
 
-		for (var t = 0; t < songTags.length; t ++)
+		for (let t = 0; t < songTags.length; t ++)
 		{
-			var single = this.make('single', {
+			let single = this.make('single', {
 				index: t,
 				src: songTags[t].attributes.src.value,
 				title: songTags[t].attributes.title.value,
@@ -104,7 +105,7 @@ class YMPlayer
 		}
 
 		/* Progress bar element */
-		var ProgressBar = this.make('div', 'class=yp-progressBar', [
+		let ProgressBar = this.make('div', 'class=yp-progressBar', [
 				this.make('div', 'class=yp-progressBar__outside',
 					this.make('div', 'class=yp-progressBar__inner', [
 							this.make('span', 'class=yp-circle|for=progressBar', null, {
@@ -130,7 +131,7 @@ class YMPlayer
 			]);
 
 		/* Controller bar component */
-		var Controller = this.make('div', 'class=yp-controller', [
+		let Controller = this.make('div', 'class=yp-controller', [
 			// single info for album image and title & artist
 			this.make('div', 'class=yp-singleInfo', [
 				this.make('div', { className: 'yp-albumImg', style: 'background-image: url();' }),
@@ -145,6 +146,7 @@ class YMPlayer
 				this.make('i', 'class=yp-button__stop', this.icons.stop, {click: () => this.stop(element) }),
 				this.make('i', 'class=yp-button__loop', this.icons.loop, {click: () => this.toggleLoop(element) }),
 				this.make('i', 'class=yp-button__list', this.icons.list, {click: () => this.toggleBox(element) }),
+				this.make('i', 'class=yp-button__fullscreen', this.icons.fullscreen, {click: () => this.requestFullscreen(element) }),
 				this.make('div', 'class=yp-volumeBar', [
 					this.make('div', 'class=yp-volumeBar__inner', [this.make('span', 'class=yp-circle')])
 				], {	click: function (e) {	refs.changeVolume(element, e);	}	})
@@ -152,7 +154,7 @@ class YMPlayer
 		]);
 
 		/* Box component */
-		var ExtendBox = this.make('div', 'class=yp-extendBox', [
+		let ExtendBox = this.make('div', 'class=yp-extendBox', [
 			this.make('div', 'class=yp-lyricBox', [
 				this.make('div', 'class=yp-lyricContainer'),
 				this.make('div', 'class=yp-lrcFixer|disabled=disabled', [
@@ -180,17 +182,17 @@ class YMPlayer
 			this.make('div', 'class=yp-playList', singleArray)
 		]);
 
-		var AudioComponent = this.make('audio', 'preload=no', null, {
+		let AudioComponent = this.make('audio', 'preload=no', null, {
 			// 播放事件
 			play: () => element.setAttribute('playing', 'playing'),
 			// 暂停事件
 			pause: () => element.removeAttribute('playing'),
 			// 加载错误
 			error: () => {
-				var currentSingle = element.querySelector('.yp-currentSingle');
+				let currentSingle = element.querySelector('.yp-currentSingle');
 				if (!currentSingle)
 					return;
-				var nextSingle = currentSingle.nextSibling;
+				let nextSingle = currentSingle.nextSibling;
 				if (!nextSingle)
 					return;
 				refs.change(element, nextSingle, true);
@@ -198,7 +200,7 @@ class YMPlayer
 			// 播放结束
 			ended: () => {
 				element.removeAttribute('playing');		// remove play state
-				var currentSingle = element.querySelector('.yp-currentSingle');
+				let currentSingle = element.querySelector('.yp-currentSingle');
 				if (element.getAttribute('loop') == 'true') {
 					refs.change(element, currentSingle, true);
 				} else {
@@ -209,15 +211,19 @@ class YMPlayer
 			volumechange: () => element.querySelector('.yp-volumeBar__inner').style.width = String(this.volume * 100) + '%',
 			// 播放进度变化事件
 			timeupdate: function () {
-				var percent = this.currentTime / this.duration,
+				let percent = this.currentTime / this.duration,
 						innerBar = element.querySelector('.yp-progressBar__inner');
 				innerBar.style.width = String(percent * 100) + '%';
 				refs.syncLyric(element, this.currentTime);		// sync lyric when time update
 			}
 		});
-		var YMPlayerContainer = this.make('div', 'class=yp-container', [ProgressBar, Controller, ExtendBox, AudioComponent], {
-			mousedown: e => e.button == 2 ? refs.requestFullscreen(element) : false
-		});
+
+		const YMPlayerContainer = this.make('div', 'class=yp-container', [
+			ProgressBar,
+			Controller,
+			ExtendBox,
+			AudioComponent
+		]);
 
 		element.appendChild(YMPlayerContainer);
 
@@ -447,16 +453,17 @@ class YMPlayer
 		element.removeAttribute('current-lrc');
 		element.removeAttribute('current-lrc-timeoffset');
 
-		let lrcContainer = element.getElementsByClassName('yp-lyricContainer'),
-				temp 				 = element.querySelectorAll('song')[index].querySelector('lyric'),
-				result 			 = [];
+		const lrcContainer = element.getElementsByClassName('yp-lyricContainer'),
+					temp 				 = element.querySelectorAll('song')[index].querySelector('lyric');
+		let result = [];
 		lrcContainer[0].innerHTML = '';			// make current container empty
 
+		let lyricData;
 		if (!temp) {
 			lrcContainer[0].innerHTML = '<div class="yp-nolyric" style="text-align: center;"><p>没有找到这首歌的歌词 OvO 请欣赏。</p></div>';
 			lrcContainer[0].style.transform = 'translateY(0px)';
 		} else {
-			var lyricData = temp.innerHTML.replace(/\\n/g, '\n').replace(/\\r/g, '\r');		// replace \\n and \\r for netease cloud music lyric...
+			lyricData = temp.innerHTML.replace(/\\n/g, '\n').replace(/\\r/g, '\r');		// replace \\n and \\r for netease cloud music lyric...
 		}
 
 		if (!lyricData)	return false;
@@ -625,7 +632,7 @@ class YMPlayer
 
 		if (!getFullscreenState()) {
 
-			var state = element.requestFFullscreenElementullscreen ? element.requestFullscreen() || true :
+			let state = element.requestFFullscreenElementullscreen ? element.requestFullscreen() || true :
 			element.webkitRequestFullscreen ? element.webkitRequestFullscreen() || true :
 			element.mozRequestFullscreen ? element.mozRequestFullscreen() || true : false;
 
@@ -656,27 +663,28 @@ class YMPlayer
 	 * @return {Object}
 	 */
 	make (element, extra, inner, events) {
-		var node = document.createElement(element);
+		let node = document.createElement(element);
 
 		/* Inject attributes */
 		if (extra && extra != null) {
 			switch(typeof extra)
 			{
 				case 'string':
-					var attrs = extra.split('|');
+					let attrs = extra.split('|');
 					attrs.forEach(function(index) {
-						var detail = index.split('=');
+						let detail = index.split('=');
 						node.setAttribute(detail[0], detail[1]);
 					});
 					break;
 
 				case 'object':
-					for (var i in extra)
+					let attrName;
+					for (let i in extra)
 					{
 						if (i == 'className')
-							var attrName = 'class';
+							attrName = 'class';
 						else
-							var attrName = i;
+							attrName = i;
 						node.setAttribute(attrName, extra[i]);
 					}
 					break;
@@ -702,7 +710,7 @@ class YMPlayer
 
 		/* Event listener */
 		if (events && events != null) {
-			for (var eventName in events)
+			for (let eventName in events)
 			{
 				node.addEventListener(eventName, events[eventName]);
 			}
@@ -710,7 +718,7 @@ class YMPlayer
 
 		/* stringify for setting innerHTML */
 		if (extra && extra.stringify) {
-			var virtualDOM = document.createElement('div');
+			let virtualDOM = document.createElement('div');
 			virtualDOM.appendChild(node);
 			return virtualDOM.innerHTML;
 		}
@@ -747,7 +755,7 @@ class YMPlayer
 			singles.push(single);
 		});
 
-		let node = this.make('ymplayer', null, singles);
+		const node = this.make('ymplayer', null, singles);
 		ele.appendChild(node);
 		this.serialize(node);
 		return node;

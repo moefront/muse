@@ -236,9 +236,9 @@ ymplayer {
 			position: relative;
 
 			.yp-volumeBar {
-				width: -moz-calc(100% - 180px);
-				width: -webkit-calc(100% - 180px);
-				width: calc(100% - 180px);
+				width: -moz-calc(100% - 220px);
+				width: -webkit-calc(100% - 220px);
+				width: calc(100% - 220px);
 				height: 3px;
 
 				background: #fff;
@@ -257,6 +257,12 @@ ymplayer {
 					@include transition(.2s all);
 				}
 			}
+		}
+
+		.yp-button__fullscreen svg {
+			width: 24px;
+			height: 24px;
+			@include transform(translateY(1px));
 		}
 
 	}	// .yp-controller
@@ -411,6 +417,12 @@ ymplayer {
 	&.yp-responsive__500px {
 		.yp-singleInfo {	display: none;	}
 		.yp-toggler {	width: 100%;	}
+		.yp-button__fullscreen { display: none; }
+		.yp-volumeBar {
+			width: -moz-calc(100% - 180px)!important;
+			width: -webkit-calc(100% - 180px)!important;
+			width: calc(100% - 180px)!important;
+		}	
 	}
 	// End responsive design
 

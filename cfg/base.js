@@ -1,5 +1,6 @@
 'use strict';
 let path = require('path');
+let webpack = require('webpack');
 let defaultSettings = require('./defaults');
 
 // Additional npm or bower modules to include in builds
@@ -10,9 +11,6 @@ let defaultSettings = require('./defaults');
 let additionalPaths = [];
 
 module.exports = {
-  additionalPaths: additionalPaths,
-  port: defaultSettings.port,
-  debug: true,
   devtool: 'eval',
   output: {
     path: path.join(__dirname, '/../dist/assets'),
@@ -30,8 +28,17 @@ module.exports = {
     publicPath: defaultSettings.publicPath,
     noInfo: false
   },
+  plugins: [
+    new webpack.LoaderOptionsPlugin({
+      options: {
+        debug: true,
+        port: defaultSettings.port,
+        additionalPaths: additionalPaths
+      }
+    })
+  ],
   resolve: {
-    extensions: ['', '.js', '.jsx'],
+    extensions: ['.js', '.jsx'],
     alias: {
       actions: `${defaultSettings.srcPath}/actions/`,
       components: `${defaultSettings.srcPath}/components/`,
