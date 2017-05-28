@@ -1,0 +1,96 @@
+$primaryColor = #e91e63;
+$secondaryColor = #c2185b;
+$lightColor = #f8bbd0;
+
+.muse-player.muse-layout-landscape {
+	width: 100%;
+	height: 370px;
+	position: relative;
+	
+	background: $primaryColor;
+	box-shadow: 0.06rem 0.06rem 0.1rem rgba(0,0,0,.2), -0.06rem 0 0.06rem rgba(0,0,0,.1);
+
+	.muse-cover {
+		width: 70px;
+		height: 70px;
+		
+		position: static;
+	}
+
+	.muse-progress {
+		background: $secondaryColor;
+		position: absolute;
+		top: 0px;
+	}
+
+	.muse-progress__played {
+		background: $lightColor;
+	}
+	
+	.muse-progress__handle {
+		border: 2px solid $lightColor;
+	}
+
+	.muse-controller {
+		width: calc(100% - 70px);
+		height: 70px;
+		
+		position: absolute;
+		top: 0px;
+		left: 70px;
+	
+		background: $primaryColor;
+
+	}
+
+	.muse-selector {
+		display: none;
+	}
+	
+	.muse-drawer {
+		width: 100%;
+		height: 300px;
+		
+		position: absolute;
+		top: 70px;
+		
+		padding: 0px;
+		background: $primaryColor;
+		border-top: 1px solid rgba(51, 51, 51, 0.05);
+		
+		&.muse-drawer__state-close {
+			.muse-lyric__item {
+				text-shadow: none;
+			}
+		}
+		
+		&.muse-drawer__state-close {
+			background: $primaryColor;
+		}
+		
+		.muse-drawer__panel-toggler {
+			display: none;
+		}
+		
+		.muse-drawer__lyric {
+			width: 65%;
+			height: 100%;
+		}
+		
+		.muse-drawer__playList {
+			width: 35%;
+			position: static;
+			float: left;
+			
+			border-left: 1px solid rgba(51, 51, 51, 0.05);
+		}
+	}
+	
+	.muse-lyric__translation, .muse-musicDetail__artist {
+		color: #fff;
+	}
+	
+	.muse-drawer .muse-drawer__playList .muse-playList__item.muse-playList__item-state-playing {
+		border-left: 3px solid $lightColor;
+	}
+}

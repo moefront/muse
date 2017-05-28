@@ -1,81 +1,88 @@
-# YMPlayer
+<h1 align="center">MUSE</h1>
 
-[![npm](https://img.shields.io/npm/v/ymplayer.svg?maxAge=2592000)]()
-[![devDependencies](https://img.shields.io/david/dev/kirainmoe/ymplayer.svg?maxAge=2592000)]()
-[![license](https://img.shields.io/github/license/kirainmoe/ymplayer.svg?maxAge=2592000)]()
+[![npm](https://img.shields.io/npm/v/muse-player.svg?maxAge=2592000&style=flat)]()
+[![devDependencies](https://img.shields.io/david/dev/moefront/muse.svg?maxAge=2592000&style=flat)]()
+[![license](https://img.shields.io/github/license/moefront/muse.svg?maxAge=2592000&style=flat)]()
+[![downloads](https://img.shields.io/github/downloads/moefront/muse/total.svg&style=flat)]()
 
-Just a simple and diligent HTML5 audio player made with ❤ :) (current version: 4)
 
-## Install
+MUSE is a simple and diligent HTML5 audio player made with ❤ :)
 
-You can install **YMplayer** from both **_npm_** and **_yarn_**. (Yarn is a new package manager for Node.js developed by Facebook. It will be faster.)
+[中文文档](https://github.com/moefront/muse/wiki)
+
+## Demo
+
+Have a look at [https://moefront.github.io/muse/dist](https://moefront.github.io/muse/dist).
+
+## Tech Stack
+
+ - react
+ - react-dom
+ - redux
+ - react-redux
+ - stylus
+
+## Installation
+
+### Install via Package Manager
+
+MUSE is avaliable in [npmjs](https://www.npmjs.com/package/muse-player). You can install it by both **npm** and **yarn**.
 
 ```shell
-$ yarn add ymplayer    # using yarn
-$ npm install ymplayer # using npm
+$ yarn add muse-player  # using yarn
+$ npm install --save-dev muse-player # using npm
 ```
 
-Or, via Git repository :
-```shell
-$ git clone https://github.com/kirainmoe/ymplayer
-$ cd ymplayer
-$ npm install
-```
-
-Pay attention that YMPlayer used a dependency named **node-sass** may not be installed by npm successfully sometimes. To avoid that, run **npm install -g cnpm && cnpm install node-sass** yourself, or use **npm run setup** instead of command **npm install**.
-
-## Run in your local machine
-
-Run in webpack dev-server mode:
+### Install via Git
 
 ```shell
-$ npm run serve
+$ git clone https://github.com/moefront/muse
+$ cd muse
+$ yarn install  # or: npm install
 ```
 
-Run in dist mode:
-```shell
-$ npm run demo
-```
+### Download ZIP Directly
 
-## Online Demo
+Click ```Clone or download``` then choose ```Download ZIP```, or redirect to release page to download a release version.
 
-Have a look at https://kirainmoe.github.io/ymplayer/demo .
+## Features
+
+ - Build with React.js and Redux
+ - Full lyric support
+ - Lyric offset fixing
+ - Right-click menu is finally supported
+ - Fullscreen mode
+ - Middlewares and Custom layouts (new)
+ - Responsive design
+ - Better mobile side experience
+ - ...
 
 ## Usage
 
-#### Easily render player for single page
-
-There are two methods for you to render a player on your own web page. Both of them requires you to import **ymplayer.js** at first. This file is included in the *dist/* directory. PS: Stylesheet has been injected in this Javascript file.
-
+### Easily render player for single page
+---
+Firstly, import **./dist/assets/muse-player.js** to your own page (Stylesheet has been injected in this Javascript file):
 ```html
-<script type="text/javascript" src="./dist/ymplayer.js"></script>
+<script type="text/javascript" src="./dist/assets/muse-player.js"></script>
 ```
 
-You can render a player component as we used to construct *<ymplayer>* tag in DOM:
+Secondly, use ```MUSE.render()``` method to render player to your page.
 
-```html
-<ymplayer>
-    <song title="Your song title" artist="Your artist" cover="Album image src" src="Audio file src">
-		<lyric>Your lyric here. If you do not have a raw lyric, delete this tag.</lyric>
-
-		<translation>Translation should be put here. If you do not need a translation, delete this tag.</translation>
-	</song>
-
-	<!-- You can add far more musics by adding more <song> tag. -->
-</ymplayer>
-```
-
-You are permitted to use ```YMPlayer.render()``` method to render a player in YMPlayer 4, just like this:
+> PS: If you are migrating from YMPlayer 4 to MUSE, pay attention that the method of using custom tag to render player has been removed. But you can still use ```MUSE.render()``` or ```YMPlayer.render()``` to render a player:
 
 ```javascript
 /**
- * render a YMPlayer component on your page.
+ * use MUSE.render() or YMPlayer.render() to 
+ * render a MUSE Player component on your page.
  *
- * @param data {Array}  musics' detail
+ * @param data {Array}  Musics' detail
  * @param node {Object} HTML element in which new player will be put.
+ * @param opt  {Object} Player options
+ *
+ * @return {Object}
  */
 
-YMPlayer.render([{
+MUSE.render([{
 	title: '',
 	artist: '',
 	cover: '',
@@ -87,59 +94,83 @@ YMPlayer.render([{
 }], document.getElementById('player'));
 ```
 
-#### Use player in your own project
+---
 
-#### webpack
+### Using MUSE in your own project
 
-Install YMPlayer from npm, and import YMPlayer as an expoted class:
+---
+
+You must have muse-player already installed.
+
+#### in React.js Project with webpack bundling
 
 ```javascript
-import YMPlayer from 'ymplayer';
+import React from 'react';
+import { render } from 'react-dom';
+
+import { MuseDOM as MUSE } from 'muse-player';
+
+const playList = [{
+	// ...
+}];
+
+// MUSE.render() will returns a object with React Component and Player ID wrapped
+// player { component: ReactComponent, ref: undefined, id }
+const player = MUSE.render(playList); 
+
+const node = document.getElementById('app');		// DOM
+
+render(
+	<player.component />,
+	node
+);
+
 ```
 
-#### RequireJS or other AMD mobule loader
+#### RequireJS or other AMD module loader
 
 ```javascript
-require(['ymplayer'], function(YMPlayer) {
-    YMPlayer.render(opt);
+require(['muse-player'], function(MuseDOM) {
+	MuseDOM.render(...);
 });
 ```
 
 #### Others
 
-````html
-<script type="text/javascript" src="./dist/ymplayer.js"></script>
-````
-
-This will export YMPlayer to window:
-```javascript
-window.YMPlayer.render(opt);
+```html
+<script text="text/javascript" src="./dist/assets/muse-player.js"></script>
 ```
 
+This will export MuseDOM instance to ```window```:
+```javascript
+window.MuseDOM.render();
+```
 
-## Related project
+## Commands
 
-There are some project related to YMPlayer. They can help you construct YmPlayer on your site more easily.
+ - Run server in dev mode: ```yarn serve```
+ - Run server in production mode: ```yarn serve:dist```
+ - Build a dist: ```yarn dist```
 
- - Typecho Plugin YmPlayer by @kokororin : https://github.com/kokororin/typecho-plugin-ymplayer
+## Related Projects
 
-_ (:з」∠) _ Thanks to my friend for her help~.
+Projects related to MUSE below can help you construct MUSE Player on your site easily. Thanks for their hard working!
 
-## Developing & APIs
-
-You can find a detailed documentation about APIs, methods, specification, etc. on [WiKi](https://github.com/kirainmoe/ymplayer/wiki) soon.
+ - **typecho-plugin-ymplayer** by [@kokororin](https;//github.com/kokororin): https://github.com/kokororin/typecho-plugin-ymplayer
 
 ## Troubleshooting
 
-You can find most problems solution on [WiKi](https://github.com/kirainmoe/ymplayer/wiki). If not, please open an issue / pull a request whenever you face a problem or have some suggestions, or contact me at kirainmoe@gmail.com.
+You can find solutions of most problems on [Wiki](https://github.com/moefront/muse). If not, please open an issue whenever you are facing a problem, or contact us at kirainmoe@gmail.com.
 
-## Thanks
+## Contributing
 
-Thank those who have contributed to this project or solved problems: @frank-deng, @kokororin.
+Both contributing code to this project and telling us your suggestion and ideas are welcomed.
 
-Thank those projects that make this player more easy and effective to be developed: Yeoman, generator-react-webpack as well as their dependence.
+Thanks those who contributed to MUSE Player: [@kokororin](https://github.com/kokororin), [@frank-deng](https://github.com/frank-deng).
 
-Finally, thanks to all of you for your likes, thanks to myself for the best code I have ever written.
+## Developing Docs
+
+You can find a detailed documentation about APIs, methods, specification, etc. on WiKi.
 
 ## Browser supports
 
@@ -147,29 +178,15 @@ Finally, thanks to all of you for your likes, thanks to myself for the best code
 --- | --- | --- | --- | --- |
 IE 10+ ✔ | Chrome 24.0+ ✔ | Firefox 24.0+ ✔ | Opera 15.0+ ✔ | Safari 7.0+ ✔ |
 
-PS: Because of the ClassList API, some elder browser can not be support well.
+## What's not working
 
-## Known issues
-
- - [x] <s>Can not parse [ti:] [ar:] [by:] [al:]</s> solved : )
- - [ ] Responsive design may not work well on Internet Explorer.
- - [ ] Lyric balloon may not display normally.
-
-## Other
-
-If you have any good idea, just tell me, let me make it come true. I NEED YOUR HELP TO MAKE THIS PLAYER BETTER !!
+Currently everything is OK on my dev environment.
 
 ## Todo list
 
- - [x] Responsive design
- - [x] Play list
- - [x] Fullscreen mode (testing)
- - [x] Rendering method of pure Javascript
- - [ ] Right-click menu
- - [ ] Support of different environment
+ - [ ] Custom layouts full support
 
 ## License
 
-The MIT License (MIT).
-
+&copy; 2017 MoeFront Studio | The MIT License (MIT).
 

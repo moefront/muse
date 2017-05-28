@@ -2,85 +2,89 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>YMPlayer 4 Demo</title>
+  <title>MUSE Player Demo</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
   <style type="text/css">
     html, body {
+      width: 100%;
+      height: 100%;
       margin: 0px;
-      font-family:  'Microsoft Yahei', 'WenQuanYi Micro Hei', 'Source sans pro';
-    }
-    
-    .container {
-     width: 80%;
-     margin: 0 auto;
-    }
 
-    .container > p {
-      padding: 0px 15px;
-      line-height: 1.5;
+      font-family: '微软雅黑', '文泉驿微米黑';
     }
 
     a {
-      color: rgb(52, 189, 207);
+      color: rgb(52,189,207);
     }
- </style>
+
+    .github {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+
+    #header {
+      width: 100%;
+      height: 64px;
+      line-height: 64px;
+
+      position: relative;
+
+      color: #fff;
+      background: #2196f3;
+      box-shadow: 0.06rem 0.06rem 0.1rem rgba(0,0,0,.2), -0.06rem 0 0.06rem rgba(0,0,0,.1);
+    }
+
+    #header h1 {
+      text-align: center;
+      margin: 0px;
+      font-size: 30px;
+      font-family: 'Pacifico';
+    }
+
+    #app {
+      display: flex;
+      justify-content: center;
+
+      margin: 20px;
+    }
+
+    #footer {
+      margin-top: 20px;
+      font-size: 14px;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-  <div id="app" class="container">
-    <h1>YMPlayer <span style="color: rgb(52, 189, 207);">4</span> Demo</h1>
+  <div id="container">
+    <div id="header">
+      <h1>MUSE: Just a simple and dilligent HTML5 Player</h1>
+      <a class="github" href="https://github.com/moefront/muse">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDIxIDc5LjE1NDkxMSwgMjAxMy8xMC8yOS0xMTo0NzoxNiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6RERCMUIwOUY4NkNFMTFFM0FBNTJFRTMzNTJEMUJDNDYiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6RERCMUIwOUU4NkNFMTFFM0FBNTJFRTMzNTJEMUJDNDYiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoTWFjaW50b3NoKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkU1MTc4QTJBOTlBMDExRTI5QTE1QkMxMDQ2QTg5MDREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkU1MTc4QTJCOTlBMDExRTI5QTE1QkMxMDQ2QTg5MDREIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+jUqS1wAAApVJREFUeNq0l89rE1EQx3e3gVJoSPzZeNEWPKgHoa0HBak0iHiy/4C3WvDmoZ56qJ7txVsPQu8qlqqHIhRKJZceesmhioQEfxTEtsoSpdJg1u/ABJ7Pmc1m8zLwgWTmzcw3L+/te+tHUeQltONgCkyCi2AEDHLsJ6iBMlgHL8FeoqokoA2j4CloRMmtwTmj7erHBXPgCWhG6a3JNXKdCiDl1cidVbXZkJoXQRi5t5BrxwoY71FzU8S4JuAIqFkJ2+BFSlEh525b/hr3+k/AklDkNsf6wTT4yv46KIMNpsy+iMdMc47HNWxbsgVcUn7FmLAzzoFAWDsBx+wVP6bUpp5ewI+DOeUx0Wd9D8F70BTGNjkWtqnhmT1JQAHcUgZd8Lo3rQb1LAT8eJVUfgGvHQigGp+V2Z0iAUUl8QH47kAA1XioxIo+bRN8OG8F/oBjwv+Z1nJgX5jpdzQDw0LCjsPmrcW7I/iHScCAEDj03FtD8A0EyuChHgg4KTlJQF3wZ7WELppnBX+dBFSVpJsOBWi1qiRgSwnOgoyD5hmuJdkWCVhTgnTvW3AgYIFrSbZGh0UW/Io5Vp+DQoK7o80pztWMemZbgxeNwCNwDbw1fIfgGZjhU6xPaJgBV8BdsMw5cbZoHsenwYFxkZzl83xTSKTiviCAfCsJLysH3POfC8m8NegyGAGfLP/VmGmfSChgXroR0RSWjEFv2J/nG84cuKFMf4sTCZqXuJd4KaXFVjEG3+tw4eXbNK/YC9oXXs3O8NY8y99L4BXY5cvLY/Bb2VZ58EOJVcB18DHJq9lRsKr8inyKGVjlmh29mtHs3AHfuhCwy1vXT/Nu2GKQt+UHsGdctyX6eQyNvc+5sfX9Dl7Pe2J/BRgAl2CpwmrsHR0AAAAASUVORK5CYII=" />
+      </a>
+    </div>
 
-    <div id="player"></div>
+    <div id="app">(・ω・) Rendering Player...</div>
 
-    <h1>Description</h1>
-    <p>This is just a simple and diligent HTML5 Audio Player. </p>
-
-    <h1>Support</h1>
-    <p>YMPlayer supports browsers supported HTML 5 Audio API, such as Internet Explorer (10+), Mozilla Firefox, Chrome, Opera as well as Microsoft Edge.</p>
-
-    <h1>Usage</h1>
-    <p>If you are a user of YMPlayer, please read <i>README.MD</i> in the project root directory, after that you will know how to render a player to your page.</p>
-    <p>If you are a developer, please refer to <a href="https://github.com/kirainmoe/ymplayer/wiki">Wiki on GitHub</a>. It will tell you details of the project exactly.</p>
-
-    <h1>Troubleshooting</h1>
-    <p>Please go to GitHub and open an issue / pull a request whenever you face a problem or have some suggestions, or contact me at <a href="mailto:kirainmoe@gmail.com">kirainmoe@gmail.com</a>.</p>
-
-    <h1>Thanks</h1>
-    <p>Thank those who have contributed to this project or solved problems: <a href="https://github.com/frank-deng">@frank-deng</a>, <a href="https://github.com/kokororin">@kokororin</a>.</p>
-    <p>Thank those rojects that make this player more easy and effective to be developed: <a href="https://yeoman.io">Yeoman</a>, <a href="https://github.com/react-webpack-generators/generator-react-webpack">generator-react-webpack</a> as well as their dependence.</p>
-    <p>Finally, thanks to all of you for your likes, <s>thanks to myself</s>.</p>
-
-    <br>
-    <footer style="text-align: center;">&copy;2016 | Built with ❤ by <a href="https://github.com/kirainmoe">@kirainmoe</a> | MIT License</footer>
+    <div id="footer">
+      &copy;2017 | Built with ❤ by <a href="https://github.com/moefront/">MoeFront Studio</a> | MIT License
+    </div>
   </div>
 
-  <script type="text/javascript" src="/assets/ymplayer.js"></script>
-
-  <script type="text/javascript">
-    YMPlayer.render([{
-      title: '僕たちはひとつの光',
-      artist: 'μ\'s',
-      cover: 'http://p3.music.126.net/_gfatO4AhgiBKDwOgrHEQg==/7706477001119945.jpg',
-      src: 'http://other.web.rg01.sycdn.kuwo.cn/resource/n2/27/71/3547184289.mp3',
-      lyric: '[00:27.540]Ah! ほのかな予感から始まり\n[00:32.970]Ah! 希望が星空駈けて\n[00:38.450]花を咲かせるにっこり笑顔は\n[00:43.920]ずっと同じさ 友情の笑顔\n[00:49.160]\n[00:49.510]忘れない いつまでも忘れない\n[00:54.940]こんなにも心がひとつになる\n[01:00.410]世界を見つけた喜び(ともに)歌おう\n[01:09.940]最後まで(僕たちはひとつ)\n[01:16.660]\n[01:17.040]小鳥の翼がついに大きくなって\n[01:25.010]旅立ちの日だよ\n[01:28.130]遠くへと広がる海の色暖かく\n[01:36.050]夢の中で描いた絵のようなんだ\n[01:40.300]切なくて時をまきもどしてみるかい?\n[01:52.490]No no no いまが最高!\n[01:58.620]\n[02:20.460]みんなと出会えたこと嬉しくて\n[02:27.090]離れたくないよ本当だよ\n[02:31.550]涙はいらない このまま踊ろう\n[02:36.980]手を振ってもっと振って\n[02:42.890]\n[02:45.370]光を追いかけてきた僕たちだから\n[02:53.190]さよならは言わない\n[02:56.320]また会おう 呼んでくれるかい?\n[03:00.300]僕たちのこと\n[03:04.320]素敵だった未来に繋がった夢\n[03:08.560]夢の未来 君と僕のLIVE&LIFE\n[03:15.430]\n[03:37.800]小鳥の翼がついに大きくなって\n[03:45.640]旅立ちの日だよ\n[03:48.760]遠くへと広がる海の色暖かく\n[03:56.730]夢の中で描いた絵のようなんだ\n[04:00.990]切なくて時をまきもどしてみるかい?\n[04:13.240]No no no いまが最高!\n[04:18.670]だってだって、いまが最高!\n[04:30.500]\n[04:31.520]Ah! ほのかな予感から始まり\n[04:37.410]Ah! 光を追いかけてきたんだよ…\n[04:48.410]',
-      translation: 'Ah! 从微小的预感开始\nAh! 希冀在星空中驰骋\n笑开花儿的真切笑容是\n亘久不变 友情的笑容\n\n无法忘却 永远铭记\n心灵能如此合而为一\n让我们（一同）歌唱发现世界的喜悦\n直到最后（我们已成为一体）\n\n小鸟终也羽翼丰满\n到了展翅翱翔的日子\n一望无垠的大海 颜色是如此温暖\n如同在梦中描绘的画\n若感到惆怅要让时光倒流吗？\nNo no no 此刻就是最好的！\n\n与大家相遇是如此幸福\n不舍别离 真的\n不必流泪 就此起舞吧\n挥舞起手 用力挥舞吧\n\n因为我们已经追上了那束光芒\n所以不需要道别\n再会之时 能否轻唤\n我们的名字？\n通往美好未来的梦想\n梦想的未来 属于你与我的LIVE&LIFE\n\n小鸟终也羽翼丰满\n到了展翅翱翔的日子\n一望无垠的大海 颜色是如此温暖\n如同在梦中描绘的画\n若感到惆怅要让时光倒流吗？\nNo no no 此刻就是最好的！\n因为因为，此刻就是最好的！\n\nAh! 从微小的预感开始\nAh! 追逐到了那束光芒……'
-    }, {
-      title: 'Stay Alive',
-      artist: '高桥李依',
-      cover: 'http://p3.music.126.net/AAq1qOhfyrClGK1mg3mGYQ==/18776360067593424.jpg',
-      src: 'http://other.web.rh01.sycdn.kuwo.cn/resource/n2/1/65/785184450.mp3',
-      lyric: '[00:15.18]未完成のパズル　どうしてだろう？何かが足りない\r\n[00:29.00]行き違いの運命　離れていくことも知りながら\r\n[00:42.73]また歩く\r\n[00:48.10]I Stay Alive　今は独り闇を彷徨(さまよ)うだけ\r\n[01:02.37]Stay　意外にも切なさが胸の中消えぬままで\r\n[01:20.20]\r\n[01:30.78]不安定な思想　離れ過ぎて　片方見えない\r\n[01:44.79]目印さえないから　ふと目を閉じては\r\n[01:58.48]また祈る\r\n[02:04.00]Oh Stay Alive　今はどんなこと思ってるのでしょう？\r\n[02:17.81]泣いていないけど　独りはやっぱり寂しくてさ\r\n[02:37.64]ずっと祈った　Stay Alive…\r\n[03:00.20]\r\n[03:13.42]未完成のパズル　うまくいかなくて\r\n[03:27.38]音もない澄んだ風に心揺らす\r\n[03:39.56]I Stay Alive　今はここで何をしてるの？\r\n[03:53.48]Stay...　意外にも切なさが胸の中消えぬままで\r\n[04:14.52]Stay Alive',
-      translation: '还未完成的拼图 不知为何仍缺失一角\n早已知晓我们因命运之路不同而终将分离\n即使如此 我依旧会踏出脚步\nI Stay Alive 如今却徘徊在无尽的黑暗之中\nStay... 悲伤于心中竟然也依旧挥之不去\n\n只因距离不安定的思想甚远 其一面之形却已然模糊不清\n没有任何目标地闭上双眼 \n再一次 轻轻地祈祷\nOh Stay Alive 如今 你正在思考着什么呢吧?\n忍住了在眼眶中打转转的泪水 但是一个人的话果然很孤独呢\n一直祈祷着 Stay Alive…\n\n还未完成的拼图 缺失的部分还未拼起来\n心在毫无声音的清风之中 慢慢摇曳\nI Stay Alive 在此处又在做着什么呢?\nStay... 悲伤于心中仍旧挥之不去\nStay Alive'
-    }, {
-      title: 'ユメ語るよりユメ歌おう',
-      artist: 'Aqours',
-      cover: 'http://p3.music.126.net/8PESpeCsbyXXBFxs5n99DA==/3252355410795469.jpg',
-      src: 'http://other.web.rh01.sycdn.kuwo.cn/resource/n1/60/54/4168389625.mp3',
-      lyric: '[00:22.41]もっとなにか探して どんどん外へ行くんだ\n[00:28.31]やってみたら 意外とハッピーみつかるもんさ\n[00:34.32]悩みながら 笑われながら\n[00:39.48]めげない 負けない ないちゃうかもね？\n[00:42.71]でもいいのさ\n[00:44.54]明日(あした)が\n[00:46.60]見えてきた\n[00:47.28]\n[00:49.11]ユメを語る言葉より ユメを語る歌にしよう\n[00:55.82]それならば今を伝えられる気がするから\n[01:01.17]ユメを語る言葉から\n[01:04.14]ユメを語る歌が生まれるんだね\n[01:09.80]ひろがるこの思いは\n[01:13.23]大好きなメロディーのつながりだよね\n[01:19.30]もう逃げないで\n[01:22.42]進むときだよ\n[01:24.67]あたらしい場所へ\n[01:28.70]Singing my song for my dream!\n[01:34.84]Singing my song for my dream!\n[01:37.80]\n[01:40.90]きっとなにか始まる\n[01:43.85]わいわいみんなのエネルギー\n[01:46.88]やってみるよ 気持ちが\n[01:49.86]ぎゅっとひとつになって\n[01:52.93]感じたいな ときめきたいな\n[01:58.80]君が 願うことを 僕も\n[02:01.32]願ってた\n[02:03.27]心は 近づいてる\n[02:07.52]それが嬉しいね\n[02:10.67]\n[02:11.28]ミライ望む言葉から ミライ望む歌になるよ\n[02:17.40]それこそが今の飛びだしたい胸の熱さ\n[02:22.59]ミライ望む言葉から ミライ望む歌があふれだしたら\n[02:31.64]とめないでよ遠くへ\n[02:34.73]大好きなメロディーと旅にでるんだ\n[02:40.42]ほら楽しくてどこまでも行こう 新しい季節(シーズン)\n[02:49.27]\n[03:01.95]そうだよね すぐには決められない\n[03:07.50]だけどさ体はなぜか踊りだして\n[03:14.36]大好きなメロディーに合わせてた\n[03:19.58]おいでよ…\n[03:22.31]おいでよ！\n[03:29.30]ユメを語る言葉より ユメを語る歌にしよう\n[03:35.71]それならば今を伝えられる気がするから\n[03:41.17]ユメを語る言葉から ユメを語る歌が生まれるんだね\n[03:49.78]ひろがるこの思いは\n[03:53.22]大好きなメロディーのつながりだよね\n[04:00.50]もう逃げないで君と僕とで進むときだよ あたらしい場所へ\n[04:18.76]Singing my song for my dream!\n[04:23.74]Singing my song for my dream!',
-      translation: '为了探寻更多事物 不断外出寻找吧\n这样尝试过后 竟感觉出乎意料的开心\n一边烦恼着 一边备受嘲笑\n别气馁 别认输 虽说或许会流泪吧？\n但也没有关系\n明天啊\n就近在眼前\n\n与其诉说梦想的话语 不如为梦想放声歌唱吧\n这样的话应该就能传达现在的心情\n诉说着梦想的话语\n然后诞生出梦想的歌曲\n这份延展开来的心情\n同最喜欢的旋律紧紧相连\n别再逃避了\n现在正是前进的时刻\n前往崭新的场所\n为自己的梦想而歌唱\n为自己的梦想而歌唱\n\n一定有什么将要开始\n大家的能量正沸腾不已\n试着动手去做吧 大家的心情\n已然紧紧相连\n好想去感受 心跳不已的悸动\n与你许下了相同的\n愿望\n彼此的心灵 更加地接近\n充满了无限的喜悦\n\n从期盼未来的话语中 诞生出期盼未来的歌曲\n这正是如今心中想要展翅高飞的热情\n从期盼未来的话语中 期盼未来的歌曲满溢而出的话\n就让它传向远方吧\n带着最喜欢的旋律踏上旅程\n让我们欢快地走向大千世界吧 在这崭新的季节\n\n就是如此 虽然无法立即下定决心\n但身体却不由自主地翩翩起舞\n同最喜欢的旋律合而为一\n快跟上吧...\n快跟上吧！\n与其诉说梦想的话语 不如为梦想放声歌唱吧\n这样的话应该就能传达现在的心情\n诉说着梦想的话语 然后诞生出梦想的歌曲\n这份延展开来的心情\n同最喜欢的旋律紧紧相连\n别再逃避了 现在正是我们共同前进的时刻 一起前往崭新的场所\n为自己的梦想而歌唱\n为自己的梦想而歌唱'
-    }], document.getElementById('player'));
+  <script>__REACT_DEVTOOLS_GLOBAL_HOOK__ = parent.__REACT_DEVTOOLS_GLOBAL_HOOK__</script>
+  <script type="text/javascript" src="/assets/muse-player.js"></script>
+  <script>
+    if (window.MUSE == undefined) {
+      document.write("<script src=\"assets/muse-player.js\"><\/script>");
+    }
   </script>
+  <script src="example.js"></script>`
 </body>
 </html>

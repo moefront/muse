@@ -16,32 +16,41 @@ const dfltPort = 8000;
  */
 function getDefaultModules() {
   return {
-    rules: [
+    preLoaders: [
       {
         test: /\.(js|jsx)$/,
         include: srcPath,
-        use: ['eslint-loader'],
-        enforce: 'pre'
-      },
+        loader: 'eslint-loader'
+      }
+    ],
+    loaders: [
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader']
+        loader: 'style-loader!css-loader'
       },
       {
         test: /\.sass/,
-        use: ['style-loader', 'css-loader', 'sass-loader?outputStyle=expanded&indentedSyntax']
+        loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded&indentedSyntax'
       },
       {
         test: /\.scss/,
-        use: ['style-loader', 'css-loader', 'sass-loader?outputStyle=expanded']
+        loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded'
+      },
+      {
+        test: /\.less/,
+        loader: 'style-loader!css-loader!less-loader'
+      },
+      {
+        test: /\.styl/,
+        loader: 'style-loader!css-loader!stylus-loader'
       },
       {
         test: /\.(png|jpg|gif|woff|woff2)$/,
-        use: ['url-loader?limit=8192']
+        loader: 'url-loader?limit=8192'
       },
       {
         test: /\.(mp4|ogg|svg)$/,
-        use: ['file-loader']
+        loader: 'file-loader'
       }
     ]
   };
