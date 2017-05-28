@@ -1,3 +1,3 @@
-import YMPlayer from './components/ymplayer.js';
+import YMPlayerProvider from './components/ymplayer.js';
 
-new YMPlayer();
+module.exports = new YMPlayerProvider();
