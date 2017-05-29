@@ -66,19 +66,23 @@ export class ControlContainerWithoutStore extends Component
     });
   }
 
-  onAudioEnded = () => {
+  onAudioEnded = (specialCheck = false) => {
     const { isLoop, currentMusicIndex, playList } = this.props.player,
           { dispatch } = this.props;
     // check loop play
-    if (!isLoop && playList.length-1 > currentMusicIndex) {
+    if ((specialCheck || !isLoop) && playList.length-1 > currentMusicIndex) {
       dispatch(PlayerActions.togglePlay(false));
       dispatch(PlayerActions.setCurrentMusic(currentMusicIndex + 1));
       setTimeout(() => dispatch(PlayerActions.togglePlay(true)), 10);
-    } else if (isLoop) {
+    } else if (!specialCheck && isLoop) {
       dispatch(PlayerActions.slideProgress(0));
     } else {
       dispatch(PlayerActions.playerStop());
     }
+  }
+
+  onAudioError = () => {
+    this.onAudioEnded(true);
   }
 
   render() {
@@ -93,6 +97,7 @@ export class ControlContainerWithoutStore extends Component
           src={ current.src }
 
           onTimeUpdate={ this.onAudioTimeUpdate }
+          onError={ this.onAudioError }
           onEnded={ this.onAudioEnded }
         >
         </audio>
