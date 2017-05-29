@@ -79,6 +79,21 @@ export class MenuContainerWithourStore extends Component {
     dispatch(PlayerActions.playerStop());
   };
 
+  onDebugModeTogglerClick = () => {
+    const { parent } = this.props;
+    if (
+      confirm(
+        '将会开启开发者模式，此模式下会显示更多调试信息并注销右键菜单以方便检查元素，若要重新激活右键菜单只能重新加载页面。\n\n' +
+          '确定要进入开发者模式吗？'
+      )
+    ) {
+      parent.player.removeEventListener(
+        'contextmenu',
+        parent.onPlayerContextMenu
+      );
+    }
+  };
+
   fixLyricOffset = val => {
     const { dispatch } = this.props, { offset } = this.props.player;
     dispatch(PlayerActions.setLyricOffset(offset + val));
@@ -96,7 +111,11 @@ export class MenuContainerWithourStore extends Component {
       <div
         className={'muse-menu' + (!isMenuOpen ? ' muse-menu__state-close' : '')}
       >
-        <div className={'muse-menu__item'} name={'stop'} onClick={this.onStopClick}>
+        <div
+          className={'muse-menu__item'}
+          name={'stop'}
+          onClick={this.onStopClick}
+        >
           <span>停止播放</span>
         </div>
         <div className={'muse-menu__item'} name={'slide-volume'}>
@@ -155,9 +174,20 @@ export class MenuContainerWithourStore extends Component {
           </span>
         </div>
 
-        <div className={'muse-menu__item'} onClick={() => {
-          window.open('https://github.com/moefront/MUSE');
-        }}>
+        <div
+          className={'muse-menu__item'}
+          name={'toggle-debug-mode'}
+          onClick={this.onDebugModeTogglerClick}
+        >
+          <span>开发者模式</span>
+        </div>
+
+        <div
+          className={'muse-menu__item'}
+          onClick={() => {
+            window.open('https://github.com/moefront/MUSE');
+          }}
+        >
           <span>MUSE Player ver.{config.MUSE_VERSION}</span>
         </div>
       </div>

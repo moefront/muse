@@ -3,16 +3,15 @@
 [![npm](https://img.shields.io/npm/v/muse-player.svg?maxAge=2592000&style=flat)]()
 [![devDependencies](https://img.shields.io/david/dev/moefront/muse.svg?maxAge=2592000&style=flat)]()
 [![license](https://img.shields.io/github/license/moefront/muse.svg?maxAge=2592000&style=flat)]()
-[![downloads](https://img.shields.io/github/downloads/moefront/muse/total.svg&style=flat)]()
 
 
 MUSE is a simple and diligent HTML5 audio player made with ❤ :)
 
-[中文文档](https://github.com/moefront/muse/wiki)
+[中文文档](https://github.com/moefront/muse/wiki) [Old version](https://github.com/moefront/muse/tree/v4-legacy)
 
 ## Demo
 
-Have a look at [https://moefront.github.io/muse/dist](https://moefront.github.io/muse/dist).
+Have a look at [here](https://moefront.github.io/muse/dist).
 
 ## Tech Stack
 

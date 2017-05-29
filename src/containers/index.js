@@ -18,6 +18,8 @@ export default class PlayerContainer extends Component
     layout: PropTypes.string.isRequired
   };
 
+  _store = store;
+
   constructor(props) {
     super(props);
 
@@ -30,6 +32,9 @@ export default class PlayerContainer extends Component
     });
     // CHANGE_PLAYER_LAYOUT
     dispatch(PlayerActions.changePlayerLayout(layout));
+
+    // export this instance to window.MUSE
+    window.MUSE._instances[this.props.id] = this;
   }
 
   render() {

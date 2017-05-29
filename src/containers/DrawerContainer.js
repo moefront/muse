@@ -221,15 +221,20 @@ export class DrawerContainerWithoutStore extends Component
       }
 
       let transf = String(targetOffset + 'px');
-      this.lrcHold.setAttribute('style', 'transform: translateY(-' + transf + ');'
-  				+ '-webkit-transform: translateY(-' + transf + ');'
-  				+ '-moz-transform: translateY(-' + transf + ');'
-  				+ '-ms-transform: translateY(-' + transf + ');');
+      this.setTransform(transf);
     }
   }
 
   updateLyricContainerDOMState(index) {
+    this.setTransform('0px');
     this.lrcContainer.setAttribute('data-current-index', index);
+  }
+
+  setTransform(transf) {
+    this.lrcHold.setAttribute('style', 'transform: translateY(-' + transf + ');'
+    + '-webkit-transform: translateY(-' + transf + ');'
+    + '-moz-transform: translateY(-' + transf + ');'
+    + '-ms-transform: translateY(-' + transf + ');');
   }
 
   /*
