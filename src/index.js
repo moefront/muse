@@ -99,6 +99,11 @@ export const MuseDOM = {
   },
   /* MUSE Player API end */
 
+  destroy(id) {
+    const parent = document.getElementById(id).parentNode;
+    ReactDOM.unmountComponentAtNode(parent);
+  },
+
   render(playList, node, options) {
     if (options === undefined || !options.layout) {
       options = {};
