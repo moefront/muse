@@ -15,11 +15,11 @@ fullscreen() {
   .muse-lyric__translation {
     font-size: 16px;
   }
-  
+
   .muse-drawer.muse-drawer__state-close  {
     padding: 30% 15px 10px 15px;
   }
-  
+
   .muse-lyric__state-active .muse-lyric__text {
     font-size: 32px!important;
   }
@@ -338,7 +338,7 @@ Y8P 888  888  888  "Y88888  88888P'  "Y8888          "Y88888 888    "Y888888  "Y
     }
     .muse-lyric__text, .muse-lyric__translation {
       display: block;
-      
+
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none;
@@ -346,7 +346,7 @@ Y8P 888  888  888  "Y88888  88888P'  "Y8888          "Y88888 888    "Y888888  "Y
       user-select: none;
     }
     .muse-lyric__text {
-      color: darken(#fff, 5%);
+      color: darken(#fff, 25%);
       transition(.1s font-weight);
     }
     .muse-lyric__translation {
@@ -354,8 +354,7 @@ Y8P 888  888  888  "Y88888  88888P'  "Y8888          "Y88888 888    "Y888888  "Y
       font-size: 13px;
     }
     .muse-lyric__state-active {
-      font-size: 20px;
-      font-weight: bold;
+      color: #fff;
 
       .muse-lyric__text, .muse-lyric__translation {
         color: #fff;
@@ -451,10 +450,7 @@ Y8P 888  888  888  "Y88888  88888P'  "Y8888          "Y88888 888    "Y888888  "Y
     background: transparent;
 
     .muse-drawer__lyric li {
-      text-shadow: 1px 2px 10px #000;
-    }
-    .muse-lyric__translation {
-      color: #fff;
+      text-shadow: 1px 2px 2px #000;
     }
 
     .muse-drawer__lyric, .muse-drawer__playList {
@@ -476,71 +472,71 @@ Y8P 888  888  888  "Y88888  88888P'  "Y8888          "Y88888 888    "Y888888  "Y
  */
 .muse-menu {
   width: 200px;
-  
+
   font-size: 14px;
   background: #fff;
   color: #888;
 
   position: fixed;
   z-index: 20;
-  
+
   visibility: normal;
   opacity: 1;
-  
+
   box-shadow: 0.06rem 0.06rem 0.1rem rgba(0,0,0,.2), -0.06rem 0 0.06rem rgba(0,0,0,.1);
 
   transition(.1s opacity ease-out);
-  
+
   &.muse-menu__state-close {
     visibility: hidden;
     opacity: 0;
   }
-  
+
   .muse-menu__item {
     width: 100%;
     padding: 10px;
     cursor: pointer;
     transition(.3s all ease-out);
   }
-  
+
   .muse-menu__item:hover {
     color: #fff;
     background: rgb(66, 129, 244);
   }
-  
+
   .muse-volume {
     width:100%;
     height: 3px;
     background: rgb(55, 141, 59);
-    
+
     margin-top: 10px;
-    
+
     .muse-volume__container {
       width: calc(100% - 8px);
       height: 100%;
     }
-    
+
     .muse-volume__current {
       @extends .muse-progress .muse-progress__played;
     }
-    
+
     .muse-volume__handle {
       @extends .muse-progress .muse-progress__handle;
     }
   } //.muse-volume
   .muse-menu__offset span {
     display: inline-block;
-    
+
     width: 48%;
     height: 25px;
     line-height: 19px;
     padding: 3px 0px;
     margin-top: 3px;
-    
+
     color: rgb(138, 194, 73);
-    
+
     transition(.3s all);
-    
+
     &:hover {
       color: #000;
     }

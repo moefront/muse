@@ -1,6 +1,6 @@
 {
   "name": "muse-player",
-  "version": "5.0.8",
+  "version": "5.0.9",
   "description": "Just a simple and dilligent HTML5 Audio Player written in React.",
   "main": "dist/assets/muse-player.js",
   "scripts": {
@@ -77,9 +77,6 @@
     "react-dom": "^15.0.0",
     "react-redux": "^5.0.4",
     "redux": "^3.6.0",
-    "redux-devtools": "^3.3.2",
-    "redux-devtools-dock-monitor": "^1.1.1",
-    "redux-devtools-log-monitor": "^1.2.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
     "webpack-bundle-analyzer": "^2.8.2"

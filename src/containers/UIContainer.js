@@ -10,7 +10,6 @@ import SelectorContainer from './SelectorContainer';
 import DrawerContainer from './DrawerContainer';
 import MenuContainer from './MenuContainer';
 
-import DevToolsContainer from './DevToolsContainer';
 // Components
 import { Cover, Progress } from '../components';
 
@@ -171,7 +170,6 @@ export class UIContainerWithoutStore extends Component {
         <MenuContainer store={store} parent={this} />
         <DrawerContainer store={store} currentTime={this.state.currentTime} />
         <ControlContainer parent={this} store={store} />
-        {process.env.NODE_ENV == 'production' ? '' : <DevToolsContainer />}
       </div>
     );
   }

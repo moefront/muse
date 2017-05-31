@@ -2,18 +2,14 @@
 
 import 'core-js/fn/object/assign';
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { AppContainer } from 'react-hot-loader';
-
+import { render as reactDOMRender, unmountComponentAtNode } from 'react-dom';
 import { PlayerActions } from './actions';
 import PlayerContainer from './containers';
 
 const render = (Component, node) => {
   // Render the main component into the dom
-  ReactDOM.render(
-    <AppContainer>
-      {Component}
-    </AppContainer>,
+  reactDOMRender(
+    Component,
     node
   );
 };
@@ -102,7 +98,7 @@ export const MuseDOM = {
   /* MUSE Player life cycle */
   destroy(id) {
     const parent = document.getElementById(id).parentNode;
-    ReactDOM.unmountComponentAtNode(parent);
+    unmountComponentAtNode(parent);
   },
 
   render(playList, node, options) {
