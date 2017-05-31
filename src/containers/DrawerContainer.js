@@ -53,7 +53,7 @@ export class DrawerContainerWithoutStore extends Component
     this.unsubscriber = this.props.store.subscribe(this.subscriber);
     this.parseLyric(this.props.player.playList[this.props.player.currentMusicIndex]);
   }
-  componentWillUnMount() {
+  componentWillUnmount() {
     this.unsubscriber();
   }
   componentWillReceiveProps(nextProps) {

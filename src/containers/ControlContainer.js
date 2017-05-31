@@ -44,7 +44,7 @@ export class ControlContainerWithoutStore extends Component
     this.unsubscriber = this.props.store.subscribe(this.subscriber);
   }
 
-  componentWillUnMount() {
+  componentWillUnmount() {
     this.unsubscriber();
   }
 

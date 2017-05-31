@@ -25,7 +25,7 @@ export class MenuContainerWithourStore extends Component {
     this.increaseOffset.addEventListener('click', this.onIncreaseOffsetClick);
     this.decreaseOffset.addEventListener('click', this.onDecreaseOffsetClick);
   }
-  componentWillUnMount() {
+  componentWillUnmount() {
     this.volume.removeEventListener('click', this.onVolumeContainerClick);
 
     this.increaseOffset.removeEventListener(

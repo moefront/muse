@@ -99,6 +99,7 @@ export const MuseDOM = {
   },
   /* MUSE Player API end */
 
+  /* MUSE Player life cycle */
   destroy(id) {
     const parent = document.getElementById(id).parentNode;
     ReactDOM.unmountComponentAtNode(parent);

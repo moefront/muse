@@ -51,8 +51,9 @@ export class UIContainerWithoutStore extends Component {
     applyMiddleware('afterRender', instance);
   }
 
-  componentWillUnMount() {
+  componentWillUnmount() {
     window.removeEventListener('resize', this.onWindowResize);
+
     this.player.removeEventListener('contextmenu', this.onPlayerContextMenu);
     this.player.removeEventListener('touchstart', this.onMobileTouchStart);
     this.player.removeEventListener('touchend', this.onMobileTouchEnd);
