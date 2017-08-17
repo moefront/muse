@@ -4,11 +4,13 @@ $lightColor = #f8bbd0;
 
 .muse-player.muse-layout-landscape {
 	width: 100%;
-	height: 370px;
+	height: 70px;
 	position: relative;
 	
 	background: $primaryColor;
 	box-shadow: 0.06rem 0.06rem 0.1rem rgba(0,0,0,.2), -0.06rem 0 0.06rem rgba(0,0,0,.1);
+	
+	transition(.5s all ease-in-out);
 
 	.muse-cover {
 		width: 70px;
@@ -20,7 +22,7 @@ $lightColor = #f8bbd0;
 	.muse-progress {
 		background: $secondaryColor;
 		position: absolute;
-		top: 0px;
+		top: -1px;
 	}
 
 	.muse-progress__played {
@@ -65,6 +67,7 @@ $lightColor = #f8bbd0;
 		}
 		
 		&.muse-drawer__state-close {
+			height: 0px;
 			background: $primaryColor;
 		}
 		
@@ -92,5 +95,15 @@ $lightColor = #f8bbd0;
 	
 	.muse-drawer .muse-drawer__playList .muse-playList__item.muse-playList__item-state-playing {
 		border-left: 3px solid $lightColor;
+	}
+	
+	.muse-lyric__text, .muse-lyric__translation {
+		color: darken(#fff, 8%)!important;
+	}
+	
+	.muse-lyric__state-active {
+		color: #fff!important;
+		font-size: 20px;
+		font-weight: bold;
 	}
 }

@@ -18,7 +18,7 @@ export const player = (
     currentMusicIndex: 0,
     currentLyricIndex: -1,
     playList: [],
-    playerLayout: 'default',
+    playerLayout: 'muse-layout-default',
     playerInstance: undefined
   },
   action

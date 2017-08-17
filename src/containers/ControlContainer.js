@@ -49,6 +49,21 @@ export class ControlContainerWithoutStore extends Component
   }
 
   /* event listeners */
+  onControllerClick = () => {
+    const { playerLayout, isDrawerOpen } = this.props.player,
+          { dispatch } = this.props;
+    if (playerLayout == 'muse-layout-landscape') {
+      const dom = parent.player.ref;
+      if (isDrawerOpen) {
+        dom.style.height = '70px';
+      } else {
+        dom.style.height = '370px';
+      }
+      
+      dispatch(PlayerActions.toggleDrawer(!isDrawerOpen));
+    }
+  }
+
   onPlayBtnClick = () => {
     const { dispatch } = this.props,
           { isPlaying } = this.props.player;
@@ -66,10 +81,11 @@ export class ControlContainerWithoutStore extends Component
     });
   }
 
-  onAudioEnded = (specialCheck = false) => {
+  onAudioEnded = (proxy, e, specialCheck = false) => {
     const { isLoop, currentMusicIndex, playList } = this.props.player,
           { dispatch } = this.props;
-    // check loop play
+
+    // check loop
     if ((specialCheck || !isLoop) && playList.length-1 > currentMusicIndex) {
       dispatch(PlayerActions.togglePlay(false));
       dispatch(PlayerActions.setCurrentMusic(currentMusicIndex + 1));
@@ -82,7 +98,7 @@ export class ControlContainerWithoutStore extends Component
   }
 
   onAudioError = () => {
-    this.onAudioEnded(true);
+    this.onAudioEnded(false, false, true);
   }
 
   render() {
@@ -90,7 +106,10 @@ export class ControlContainerWithoutStore extends Component
     const current = playList[currentMusicIndex];
 
     return (
-      <div className={ 'muse-controller' }>
+      <div
+          className={ 'muse-controller' }
+          onClick={ this.onControllerClick }
+      >
         <audio
           preload={ 'no' }
           ref={ ref => this.audio = ref }
