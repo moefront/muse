@@ -1,10 +1,14 @@
 /*eslint no-console:0 */
 
 import 'core-js/fn/object/assign';
+
 import React from 'react';
 import { render as reactDOMRender, unmountComponentAtNode } from 'react-dom';
+
 import { PlayerActions } from './actions';
 import PlayerContainer from './containers';
+
+import { LandscapeLayoutConstructor } from './utils/LandscapeLayout';
 
 const render = (Component, node) => {
   // Render the main component into the dom
@@ -95,6 +99,13 @@ export const MuseDOM = {
   },
   /* MUSE Player API end */
 
+  /* Middleware related */
+  registerMiddleware(hook, func) {
+    if (!this._middlewares[hook])
+      return;
+    this._middlewares[hook].push(func);
+  },
+
   /* MUSE Player life cycle */
   destroy(id) {
     const parent = document.getElementById(id).parentNode;
@@ -130,6 +141,8 @@ export const MuseDOM = {
 };
 
 window.MUSE = window.YMPlayer = MuseDOM;
+
+LandscapeLayoutConstructor();
 
 export PlayerContainer from './containers';
 export default MuseDOM;

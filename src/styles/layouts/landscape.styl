@@ -11,6 +11,10 @@ $lightColor = #f8bbd0;
 	box-shadow: 0.06rem 0.06rem 0.1rem rgba(0,0,0,.2), -0.06rem 0 0.06rem rgba(0,0,0,.1);
 	
 	transition(.5s all ease-in-out);
+	
+	&.muse-root__state-drawer-open {
+		height: 370px;
+	}
 
 	.muse-cover {
 		width: 70px;
@@ -19,6 +23,7 @@ $lightColor = #f8bbd0;
 		position: static;
 	}
 
+	/* Progress */
 	.muse-progress {
 		background: $secondaryColor;
 		position: absolute;
@@ -33,6 +38,7 @@ $lightColor = #f8bbd0;
 		border: 2px solid $lightColor;
 	}
 
+	/* Controller */
 	.muse-controller {
 		width: calc(100% - 70px);
 		height: 70px;
@@ -49,6 +55,8 @@ $lightColor = #f8bbd0;
 		display: none;
 	}
 	
+
+	/* Drawer & Lyric */
 	.muse-drawer {
 		width: 100%;
 		height: 300px;
@@ -82,6 +90,7 @@ $lightColor = #f8bbd0;
 		
 		.muse-drawer__playList {
 			width: 35%;
+			height: 100%;
 			position: static;
 			float: left;
 			
@@ -105,5 +114,20 @@ $lightColor = #f8bbd0;
 		color: #fff!important;
 		font-size: 20px;
 		font-weight: bold;
+	}
+	
+	/* Responsive */
+	&[responsive='650px'] {
+		.muse-drawer {
+			overflow-x: scroll;
+		}
+		
+		.muse-drawer__container {
+			width: 200%;
+		}
+		
+		.muse-drawer__playList, .muse-drawer__lyric {
+			width: 50%;
+		}
 	}
 }

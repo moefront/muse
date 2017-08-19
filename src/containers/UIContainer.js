@@ -48,6 +48,7 @@ export class UIContainerWithoutStore extends Component {
 
     this.unsubscriber = this.props.store.subscribe(this.subscriber);
     applyMiddleware('afterRender', instance);
+    applyMiddleware('onPlayerResize', instance);
   }
 
   componentWillUnmount() {
@@ -66,8 +67,8 @@ export class UIContainerWithoutStore extends Component {
       return document.fullscreenElement
         ? true
         : document.webkitFullscreenElement
-            ? true
-            : document.mozFullscreenElement ? true : false;
+          ? true
+          : document.mozFullscreenElement ? true : false;
     },
       eleFSState = getFullscreenState(),
       { isFullscreen } = this.props.player,
@@ -78,10 +79,10 @@ export class UIContainerWithoutStore extends Component {
         const state = player.requestFullscreen
           ? player.requestFullscreen() || true
           : player.webkitRequestFullscreen
-              ? player.webkitRequestFullscreen() || true
-              : player.mozRequestFullscreen
-                  ? player.mozRequestFullscreen() || true
-                  : false;
+            ? player.webkitRequestFullscreen() || true
+            : player.mozRequestFullscreen
+              ? player.mozRequestFullscreen() || true
+              : false;
 
         if (!state) {
           throw 'It seems that your browser does not support HTML5 Fullscreen Feature.';
@@ -91,8 +92,8 @@ export class UIContainerWithoutStore extends Component {
       document.exitFullscreen
         ? document.exitFullscreen()
         : document.webkitExitFullscreen
-            ? document.webkitExitFullscreen()
-            : document.mozExitFullscreen ? document.mozExitFullscreen() : '';
+          ? document.webkitExitFullscreen()
+          : document.mozExitFullscreen ? document.mozExitFullscreen() : '';
     } else {
       return;
     }
@@ -135,7 +136,7 @@ export class UIContainerWithoutStore extends Component {
   };
 
   onWindowResize = e => {
-    applyMiddleware('onPlayerResize', this.props.player.instance, e);
+    applyMiddleware('onPlayerResize', this.props.player.playerInstance, e);
   };
 
   destroyPlayerMenu = e => {
@@ -149,13 +150,22 @@ export class UIContainerWithoutStore extends Component {
   };
 
   render() {
-    const { playList, currentMusicIndex, playerLayout } = this.props.player,
+    const {
+      playList,
+      currentMusicIndex,
+      playerLayout,
+      isDrawerOpen
+    } = this.props.player,
       { id, store } = this.props,
       cover = playList[currentMusicIndex].cover;
 
     return (
       <div
-        className={'muse-player ' + playerLayout}
+        className={
+          'muse-player ' +
+          playerLayout +
+          (isDrawerOpen ? ' muse-root__state-drawer-open' : '')
+        }
         id={id}
         ref={ref => (this.player = ref)}
       >

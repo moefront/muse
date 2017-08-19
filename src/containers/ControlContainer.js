@@ -53,13 +53,6 @@ export class ControlContainerWithoutStore extends Component
     const { playerLayout, isDrawerOpen } = this.props.player,
           { dispatch } = this.props;
     if (playerLayout == 'muse-layout-landscape') {
-      const dom = parent.player.ref;
-      if (isDrawerOpen) {
-        dom.style.height = '70px';
-      } else {
-        dom.style.height = '370px';
-      }
-      
       dispatch(PlayerActions.toggleDrawer(!isDrawerOpen));
     }
   }
