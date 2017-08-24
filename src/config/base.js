@@ -2,5 +2,5 @@
 
 // Settings configured here will be merged into the final config object.
 export default {
-	MUSE_VERSION: '5.1.3'
+	MUSE_VERSION: '5.1.4'
 }
