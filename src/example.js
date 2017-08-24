@@ -35,4 +35,6 @@ var playList = [{
   translation: '\n将所有的思绪 藏于心中\n不知不觉季节已流转变换\n\n曾抬头仰望的梦想（blue sky）\n总有一天要去往那片天空\n\n如今（growing）生根发芽\n（blooming）茁壮成长\n若能成为盛开得最为灿烂的花朵\n想要以此向你传达这份夏意（shining）\n\n敞开双臂拥抱\n这份高扬 强烈 炽热 悠远的阳光吧\n尽管似乎还没有能好好传达\n\n在心中更多地感受\n这份高扬 强烈 炽热 悠远而炫目的阳光\n放松身心 好好享受这份夏意\n将明日当作那梦想中的向日葵吧\n\n紧握着竭尽全力为之努力的梦想\n今天也追逐着光芒前行\n\n因为你在身旁（no fear）\n原谅了我的不争气\n\n如今（wake up）睁开双眼\n（start up）展翅飞翔\n随风前行 开始旅途\n想要与你寻找夏日的气息\n\n也曾有过悲伤的日子\n仍然不回首地向前奔跑\n也曾有过快乐的日子\n将这份快乐转化为向未来前进的动力吧\n\n敞开双臂拥抱\n这份高扬 强烈 炽热 悠远的阳光吧\n尽管似乎还没有能好好传达\n\n在心中更多地感受\n这份高扬 强烈 炽热 悠远而炫目的阳光\n放松身心 好好享受这份夏意\n将明日当作那梦想中的向日葵吧\n\n（爱与勇气）心在doki！doki！\n（想要传达）与你happy！happy！\n（去寻找吧）sunflower！smiling！\n（绝不忘记）与你相遇的季节——'
 }];
 
-var player = MUSE.render(playList, document.getElementById("app"));
+var player = MUSE.render(playList, document.getElementById("app"), {
+  layout: 'muse-layout-landscape'
+});

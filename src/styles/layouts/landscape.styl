@@ -2,6 +2,16 @@ $primaryColor = #e91e63;
 $secondaryColor = #c2185b;
 $lightColor = #f8bbd0;
 
+fullscreen() {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  
+  .muse-drawer {
+  	height: calc(100% - 70px);
+  }
+}
+
 .muse-player.muse-layout-landscape {
 	width: 100%;
 	height: 70px;
@@ -130,4 +140,15 @@ $lightColor = #f8bbd0;
 			width: 50%;
 		}
 	}
+}
+
+/* fullscreen related */
+.muse-player.muse-layout-landscape:-webkit-full-screen {
+  fullscreen();
+}
+.muse-player.muse-layout-landscape:-moz-full-screen {
+  fullscreen();
+}
+.muse-player.muse-layout-landscape:full-screen {
+  fullscreen();
 }
