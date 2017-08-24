@@ -2,7 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-export class LyricItemContainerWithoutStore extends Component
+@connect(
+  state => ({
+    player: state.player
+  })
+)
+export default class LyricItemContainer extends Component
 {
   static propTypes = {
     timeline: PropTypes.number.isRequired,
@@ -40,9 +45,3 @@ export class LyricItemContainerWithoutStore extends Component
     );
   }
 }
-
-export default connect(state => {
-  return {
-    player: state.player
-  };
-})(LyricItemContainerWithoutStore);

@@ -14,86 +14,99 @@ export const ADD_MUSIC_TO_LIST       = 'ADD_MUSIC_TO_LIST';
 export const REMOVE_MUSIC_FROM_LIST  = 'REMOVE_MUSIC_FROM_LIST';
 export const CHANGE_PLAYER_LAYOUT    = 'CHANGE_PLAYER_LAYOUT';
 export const PUSH_PLAYER_INSTANCE    = 'PUSH_PLAYER_INSTANCE';
+export const CREATE_PLAYER_STORE     = 'CREATE_PLAYER_STORE';
 
-export const togglePlay = (playState) => {
+export const togglePlay = (playState, id) => {
   return {
     type: TOGGLE_PLAY,
+    id,
     playState
   };
 };
 
-export const toggleLoop = (loopState) => {
+export const toggleLoop = (loopState, id) => {
   return {
     type: TOGGLE_LOOP,
+    id,
     loopState
   };
 };
 
-export const toggleMenu = (menuState) => {
+export const toggleMenu = (menuState, id) => {
   return {
     type: TOGGLE_MENU,
+    id,
     menuState
   };
 };
 
-export const toggleDrawer = (drawerState) => {
+export const toggleDrawer = (drawerState, id) => {
   return {
     type: TOGGLE_DRAWER,
+    id,
     drawerState
   };
 };
 
-export const toggleFullscreen = (fullscreenState) => {
+export const toggleFullscreen = (fullscreenState, id) => {
   return {
     type: TOGGLE_FULLSCREEN,
+    id,
     fullscreenState
   }
 };
 
-export const togglePanel = (panel) => {
+export const togglePanel = (panel, id) => {
   return {
     type: TOGGLE_PANEL,
+    id,
     panel
   }
 };
 
-export const playerStop = () => {
+export const playerStop = (id) => {
   return {
-    type: PLAYER_STOP
+    type: PLAYER_STOP,
+    id
   };
 };
 
-export const slideVolume = (volume) => {
+export const slideVolume = (volume, id) => {
   return {
     type: SLIDE_VOLUME,
+    id,
     volume
   };
 };
 
-export const slideProgress = (progress) => {
+export const slideProgress = (progress, id) => {
   return {
     type: SLIDE_PROPGRESS,
+    id,
     progress
   };
 };
 
-export const setCurrentMusic = (index) => {
+export const setCurrentMusic = (index, id) => {
   return {
     type: SET_CURRENT_MUSIC,
+    id,
     index
   };
 };
 
-export const setLyricOffset = (offset) => {
+export const setLyricOffset = (offset, id) => {
   return {
     type: SET_LYRIC_OFFSET,
+    id,
     offset
   };
 };
 
-export const setCurrentLyric = (index) => {
+export const setCurrentLyric = (index, id) => {
   return {
     type: SET_CURRENT_LYRIC,
+    id,
     index
   };
 };
@@ -105,30 +118,65 @@ export const addMusicToList = (item = {
   src: undefined,
   lyric: undefined,
   translation: undefined
-}) => {
+}, id) => {
   return {
     type: ADD_MUSIC_TO_LIST,
+    id,
     item
   };
 };
 
-export const removeMusicFromList = (index) => {
+export const removeMusicFromList = (index, id) => {
   return {
     type: REMOVE_MUSIC_FROM_LIST,
+    id,
     index
   };
 };
 
-export const changePlayerLayout = (layout) => {
+export const changePlayerLayout = (layout, id) => {
   return {
     type: CHANGE_PLAYER_LAYOUT,
+    id,
     layout
   };
 };
 
-export const pushPlayerInstance = (instance) => {
+export const pushPlayerInstance = (instance, id) => {
   return {
     type: PUSH_PLAYER_INSTANCE,
+    id,
     instance
   };
+};
+
+export const createPlayerStore = (state, id) => {
+  let defaultState = {
+    isPlaying: false,
+    isLoop: false,
+    isDrawerOpen: false,
+    isMenuOpen: false,
+    isFullscreen: false,
+
+    volume: 1,
+    offset: 0,
+    currentTime: undefined,
+    currentPanel: 'lyric',
+    duration: undefined,
+
+    currentMusicIndex: 0,
+    currentLyricIndex: -1,
+    playList: [],
+    playerLayout: 'muse-layout-default',
+    playerInstance: undefined
+  };
+
+  return {
+    type: CREATE_PLAYER_STORE,
+    id,
+    state: {
+      ...defaultState,
+      ...state
+    }
+  }
 };

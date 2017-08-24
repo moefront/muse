@@ -9,13 +9,19 @@ import { getRect } from '../utils';
 // config
 import config from '../config/base';
 
-export class MenuContainerWithourStore extends Component {
+@connect(state => ({
+  player: state.player
+}))
+export default class MenuContainer extends Component {
+  id = undefined;
+
   static propTypes = {
     store: PropTypes.object.isRequired
   };
 
   constructor(props) {
     super(props);
+    this.id = props.id;
   }
 
   /* life cycles */
@@ -41,14 +47,16 @@ export class MenuContainerWithourStore extends Component {
   /* event listeners */
   onLoopTogglerClick = e => {
     e.stopPropagation();
-    const { dispatch } = this.props, { isLoop } = this.props.player;
-    dispatch(PlayerActions.toggleLoop(!isLoop));
+    const { dispatch } = this.props,
+      { isLoop } = this.props.player[this.id];
+    dispatch(PlayerActions.toggleLoop(!isLoop, this.id));
   };
 
   onFullscreenTogglerClick = e => {
     e.stopPropagation();
-    const { dispatch } = this.props, { isFullscreen } = this.props.player;
-    dispatch(PlayerActions.toggleFullscreen(!isFullscreen));
+    const { dispatch } = this.props,
+      { isFullscreen } = this.props.player[this.id];
+    dispatch(PlayerActions.toggleFullscreen(!isFullscreen, this.id));
   };
 
   onVolumeContainerClick = e => {
@@ -57,7 +65,7 @@ export class MenuContainerWithourStore extends Component {
     const rect = getRect(this.volume),
       { dispatch } = this.props,
       vol = (e.clientX - rect.left) / this.volume.offsetWidth;
-    dispatch(PlayerActions.slideVolume(vol > 1 ? 1 : vol));
+    dispatch(PlayerActions.slideVolume(vol > 1 ? 1 : vol, this.id));
   };
 
   onIncreaseOffsetClick = e => {
@@ -76,7 +84,7 @@ export class MenuContainerWithourStore extends Component {
     const { dispatch } = this.props;
     e.preventDefault();
     e.stopPropagation();
-    dispatch(PlayerActions.playerStop());
+    dispatch(PlayerActions.playerStop(this.id));
   };
 
   onDebugModeTogglerClick = () => {
@@ -95,8 +103,9 @@ export class MenuContainerWithourStore extends Component {
   };
 
   fixLyricOffset = val => {
-    const { dispatch } = this.props, { offset } = this.props.player;
-    dispatch(PlayerActions.setLyricOffset(offset + val));
+    const { dispatch } = this.props,
+      { offset } = this.props.player[this.id];
+    dispatch(PlayerActions.setLyricOffset(offset + val, this.id));
   };
 
   render() {
@@ -106,7 +115,7 @@ export class MenuContainerWithourStore extends Component {
       isFullscreen,
       volume,
       offset
-    } = this.props.player;
+    } = this.props.player[this.id];
     return (
       <div
         className={'muse-menu' + (!isMenuOpen ? ' muse-menu__state-close' : '')}
@@ -194,9 +203,3 @@ export class MenuContainerWithourStore extends Component {
     );
   }
 }
-
-export default connect(state => {
-  return {
-    player: state.player
-  };
-})(MenuContainerWithourStore);

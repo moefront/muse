@@ -7,44 +7,52 @@ import { PlayerActions } from '../actions';
 // Icons
 import { PrevButton, NextButton } from '../sources/icons';
 
-export class SelectorContainerWithoutStore extends Component
+@connect(
+  state => ({
+    player: state.player
+  })
+)
+export default class SelectorContainer extends Component
 {
+  id = undefined;
+
   constructor(props) {
     super(props);
+    this.id = props.id;
   }
 
   /* event listeners */
   onPrevButtonClick = () => {
     const { dispatch } = this.props,
-          { playList, currentMusicIndex } = this.props.player;
+          { playList, currentMusicIndex } = this.props.player[this.id];
 
-    dispatch(PlayerActions.togglePlay(false));
+    dispatch(PlayerActions.togglePlay(false, this.id));
 
     if (currentMusicIndex - 1 >= 0) {
-      dispatch(PlayerActions.setCurrentMusic(currentMusicIndex - 1));
+      dispatch(PlayerActions.setCurrentMusic(currentMusicIndex - 1, this.id));
     } else {
-      dispatch(PlayerActions.setCurrentMusic(playList.length - 1));
+      dispatch(PlayerActions.setCurrentMusic(playList.length - 1, this.id));
     }
 
     setTimeout(() => {
-      dispatch(PlayerActions.togglePlay(true));
+      dispatch(PlayerActions.togglePlay(true, this.id));
     }, 0);
   }
 
   onNextButtonClick = () => {
     const { dispatch } = this.props,
-          { playList, currentMusicIndex } = this.props.player;
+          { playList, currentMusicIndex } = this.props.player[this.id];
 
-    dispatch(PlayerActions.togglePlay(false));
+    dispatch(PlayerActions.togglePlay(false, this.id));
 
     if (currentMusicIndex + 1 < playList.length) {
-      dispatch(PlayerActions.setCurrentMusic(currentMusicIndex + 1));
+      dispatch(PlayerActions.setCurrentMusic(currentMusicIndex + 1, this.id));
     } else {
-      dispatch(PlayerActions.setCurrentMusic(0));
+      dispatch(PlayerActions.setCurrentMusic(0, this.id));
     }
 
     setTimeout(() => {
-      dispatch(PlayerActions.togglePlay(true));
+      dispatch(PlayerActions.togglePlay(true, this.id));
     }, 0);
   }
 
@@ -69,9 +77,3 @@ export class SelectorContainerWithoutStore extends Component
     );
   }
 }
-
-export default connect(state => {
-  return {
-    player: state.player
-  };
-})(SelectorContainerWithoutStore);

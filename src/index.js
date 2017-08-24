@@ -12,10 +12,7 @@ import { LandscapeLayoutConstructor } from './utils/LandscapeLayout';
 
 const render = (Component, node) => {
   // Render the main component into the dom
-  reactDOMRender(
-    Component,
-    node
-  );
+  reactDOMRender(Component, node);
 };
 
 export const MuseDOM = {
@@ -50,66 +47,70 @@ export const MuseDOM = {
   },
   getReducerState(id, key) {
     const instance = this.getInstance(id);
-    return instance._store.getState().player[key];
+    return instance._store.getState().player[id][key];
   },
 
   // Player action APIs
   // These APIs are connected to PlayerActions. Dispatching all of them should have an ID of player instance.
   play(id) {
-    this.dispatchAction(id, this.actions.togglePlay(true));
+    this.dispatchAction(id, this.actions.togglePlay(true, id));
   },
   pause(id) {
-    this.dispatchAction(id, this.actions.togglePlay(false));
+    this.dispatchAction(id, this.actions.togglePlay(false, id));
   },
   stop(id) {
-    this.dispatchAction(id, this.actions.playerStop());
+    this.dispatchAction(id, this.actions.playerStop(id));
   },
 
   togglePlay(id) {
     const state = this.getReducerState(id, 'isPlaying');
-    this.dispatchAction(id, this.actions.togglePlay(!state));
+    this.dispatchAction(id, this.actions.togglePlay(!state, id));
   },
   toggleLoop(id) {
     const state = this.getReducerState(id, 'isLoop');
-    this.dispatchAction(id, this.actions.toggleLoop(!state));
+    this.dispatchAction(id, this.actions.toggleLoop(!state, id));
   },
   toggleDrawer(id) {
     const state = this.getReducerState(id, 'idDrawerOpen');
-    this.dispatchAction(id, this.actions.toggleDrawer(!state));
+    this.dispatchAction(id, this.actions.toggleDrawer(!state, id));
   },
   togglePanel(id, panel) {
-    this.dispatchAction(id, this.actions.togglePanel(panel));
+    this.dispatchAction(id, this.actions.togglePanel(panel, id));
   },
 
   setCurrentMusic(id, index) {
-    this.dispatchAction(id, this.actions.setCurrentMusic(index));
+    this.dispatchAction(id, this.actions.setCurrentMusic(index, id));
   },
   setLyricOffset(id, offset) {
-    this.dispatchAction(id, this.actions.setLyricOffset(offset));
+    this.dispatchAction(id, this.actions.setLyricOffset(offset, id));
   },
 
   addMusicToList(id, item) {
-    this.dispatchAction(id, this.actions.addMusicToList(item));
+    this.dispatchAction(id, this.actions.addMusicToList(item, id));
   },
   removeMusicFromList(id, index) {
-    this.dispatchAction(id, this.actions.removeMusicFromList(index));
+    this.dispatchAction(id, this.actions.removeMusicFromList(index, id));
   },
   changePlayerLayout(id, layout) {
-    this.dispatchAction(id, this.actions.changePlayerLayout(layout));
+    this.dispatchAction(id, this.actions.changePlayerLayout(layout, id));
   },
   /* MUSE Player API end */
 
   /* Middleware related */
   registerMiddleware(hook, func) {
-    if (!this._middlewares[hook])
-      return;
+    if (!this._middlewares[hook]) return;
     this._middlewares[hook].push(func);
   },
 
   /* MUSE Player life cycle */
   destroy(id) {
     const parent = document.getElementById(id).parentNode;
+    let listLength = this.getReducerState(id, 'playList').length;
     unmountComponentAtNode(parent);
+    while (listLength--)
+    {
+      this.removeMusicFromList(id, 0);
+    }
   },
 
   render(playList, node, options) {
@@ -118,12 +119,17 @@ export const MuseDOM = {
       options.layout = 'muse-layout-default';
     }
 
-    const playerID = 'muse-player-' + Date.parse(new Date()),
-      props = {
-        id: playerID,
-        playList,
-        ...options
-      },
+    const playerID =
+      'muse-player-' +
+      Date.parse(new Date()) +
+      '-' +
+      Math.ceil(Math.random() * 233);
+
+    const props = {
+      id: playerID,
+      playList,
+      ...options
+    },
       Component = <PlayerContainer {...props} />;
     let muse = {
       component: Component,

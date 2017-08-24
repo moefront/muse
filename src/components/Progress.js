@@ -20,8 +20,11 @@ class Progress extends Component
     dispatch: PropTypes.func.isRequired
   }
 
+  id = undefined;
+
   constructor(props) {
     super(props);
+    this.id = props.id;
   }
 
   /* life cycles */
@@ -39,7 +42,8 @@ class Progress extends Component
           target = event.clientX,
           width = this.progress.offsetWidth;
     dispatch(PlayerActions.slideProgress(
-      ((target - rect.left) / width) * duration
+      ((target - rect.left) / width) * duration,
+      this.id
     ));
   }
 
@@ -60,7 +64,8 @@ class Progress extends Component
           target = event.clientX,
           width = this.progress.offsetWidth;
     dispatch(PlayerActions.slideProgress(
-      ((target - rect.left) / width) * duration
+      ((target - rect.left) / width) * duration,
+      this.id
     ));
   }
   onHandlerMouseUp = () => {
@@ -78,7 +83,8 @@ class Progress extends Component
           target = event.touches[0].clientX,
           width = this.progress.offsetWidth;
     dispatch(PlayerActions.slideProgress(
-      ((target - rect.left) / width) * duration
+      ((target - rect.left) / width) * duration,
+      this.id
     ));
   }
   onHandlerTouchEnd = () => {

@@ -19,11 +19,17 @@ import '../styles/MUSE.styl';
 // Utils
 import { applyMiddleware } from '../utils';
 
-export class UIContainerWithoutStore extends Component {
+@connect(state => ({
+  player: state.player
+}))
+export default class UIContainer extends Component
+{
   touchTimer = undefined;
+  id = undefined;
 
   constructor(props) {
     super(props);
+    this.id = props.id;
     this.state = {
       currentTime: 0,
       duration: 0
@@ -36,9 +42,9 @@ export class UIContainerWithoutStore extends Component {
       instance = {
         component: this,
         ref: this.player,
-        id: this.props.id
+        id: this.id
       };
-    dispatch(PlayerActions.pushPlayerInstance(instance));
+    dispatch(PlayerActions.pushPlayerInstance(instance, this.id));
 
     window.addEventListener('resize', this.onWindowResize);
 
@@ -71,7 +77,7 @@ export class UIContainerWithoutStore extends Component {
           : document.mozFullscreenElement ? true : false;
     },
       eleFSState = getFullscreenState(),
-      { isFullscreen } = this.props.player,
+      { isFullscreen } = this.props.player[this.id],
       { player } = this;
 
     if (eleFSState != isFullscreen && isFullscreen) {
@@ -102,7 +108,8 @@ export class UIContainerWithoutStore extends Component {
 
   /* event listeners */
   onMobileTouchStart = e => {
-    if (this.props.store.getState().player.isMenuOpen) {
+    const state = this.props.store.getState().player[this.id];
+    if (state.isMenuOpen) {
       return;
     }
 
@@ -119,7 +126,7 @@ export class UIContainerWithoutStore extends Component {
     e.preventDefault();
     e.stopPropagation();
 
-    dispatch(PlayerActions.toggleMenu(true));
+    dispatch(PlayerActions.toggleMenu(true, this.id));
 
     // set position
     const menuElement = this.player.querySelector('.muse-menu');
@@ -136,7 +143,11 @@ export class UIContainerWithoutStore extends Component {
   };
 
   onWindowResize = e => {
-    applyMiddleware('onPlayerResize', this.props.player.playerInstance, e);
+    applyMiddleware(
+      'onPlayerResize',
+      this.props.player[this.id].playerInstance,
+      e
+    );
   };
 
   destroyPlayerMenu = e => {
@@ -144,7 +155,7 @@ export class UIContainerWithoutStore extends Component {
 
     e.preventDefault();
 
-    dispatch(PlayerActions.toggleMenu(false));
+    dispatch(PlayerActions.toggleMenu(false, this.id));
 
     document.body.removeEventListener('click', this.destroyPlayerMenu);
   };
@@ -155,7 +166,7 @@ export class UIContainerWithoutStore extends Component {
       currentMusicIndex,
       playerLayout,
       isDrawerOpen
-    } = this.props.player,
+    } = this.props.player[this.id],
       { id, store } = this.props,
       cover = playList[currentMusicIndex].cover;
 
@@ -169,24 +180,19 @@ export class UIContainerWithoutStore extends Component {
         id={id}
         ref={ref => (this.player = ref)}
       >
-        <Cover cover={cover} />
+        <Cover cover={cover} id={id} />
         <Progress
           currentTime={this.state.currentTime}
           duration={this.state.duration}
           dispatch={this.props.dispatch}
+          id={id}
         />
 
-        <SelectorContainer parent={this} />
-        <MenuContainer store={store} parent={this} />
-        <DrawerContainer store={store} currentTime={this.state.currentTime} />
-        <ControlContainer parent={this} store={store} />
+        <SelectorContainer parent={this} id={id} />
+        <MenuContainer store={store} parent={this} id={id} />
+        <DrawerContainer store={store} currentTime={this.state.currentTime} id={id} />
+        <ControlContainer parent={this} store={store} id={id} />
       </div>
     );
   }
 }
-
-export default connect(state => {
-  return {
-    player: state.player
-  };
-})(UIContainerWithoutStore);

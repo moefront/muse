@@ -8,5 +8,8 @@
     "dev": {
       "plugins": ["react-hot-loader/babel"]
     }
-  }
+  },
+  "plugins": [
+  	"transform-decorators-legacy"
+  ]
 }

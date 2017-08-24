@@ -22,19 +22,19 @@ export default class PlayerContainer extends Component
 
   constructor(props) {
     super(props);
+  }
 
-    const { layout, playList } = props,
+  componentWillMount() {
+    const { layout, playList, id } = this.props,
           { dispatch } = store;
-
-    // ADD_MUSIC_TO_LIST
-    playList.forEach(single => {
-      dispatch(PlayerActions.addMusicToList(single));
-    });
-    // CHANGE_PLAYER_LAYOUT
-    dispatch(PlayerActions.changePlayerLayout(layout));
+    // register instance
+    dispatch(PlayerActions.createPlayerStore({
+      playerLayout: layout,
+      playList: playList
+    }, id));
 
     // export this instance to window.MUSE
-    window.MUSE._instances[this.props.id] = this;
+    window.MUSE._instances[id] = this;
   }
 
   render() {
