@@ -8,7 +8,11 @@ import { render as reactDOMRender, unmountComponentAtNode } from 'react-dom';
 import { PlayerActions } from './actions';
 import PlayerContainer from './containers';
 
-import { LandscapeLayoutConstructor } from './utils/LandscapeLayout';
+// This is an example for custom layouts inside the project.
+// Alternatively, you can also requires your layout file outside.
+// Read the wiki and find out how to extend your MUSE Player.
+import './layouts/landscape/landscape.styl';
+import { construct as landscapeLayoutConstructor } from './layouts/landscape/construct';
 
 const render = (Component, node) => {
   // Render the main component into the dom
@@ -97,8 +101,13 @@ export const MuseDOM = {
   /* MUSE Player API end */
 
   /* Middleware related */
+  registerLayout(name, construct) {
+    this._layouts.push(name);
+    construct();
+  },
   registerMiddleware(hook, func) {
-    if (!this._middlewares[hook]) return;
+    if (!this._middlewares[hook])
+      return;
     this._middlewares[hook].push(func);
   },
 
@@ -148,7 +157,8 @@ export const MuseDOM = {
 
 window.MUSE = window.YMPlayer = MuseDOM;
 
-LandscapeLayoutConstructor();
+// layout register
+MuseDOM.registerLayout('muse-layout-landscape', landscapeLayoutConstructor);
 
 export PlayerContainer from './containers';
 export default MuseDOM;

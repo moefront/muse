@@ -7,6 +7,6 @@ const adjustPlayerSize = (instance) => {
 	dom.removeAttribute('responsive');
 };
 
-export const LandscapeLayoutConstructor = () => {
+export const construct = () => {
 	window.MUSE.registerMiddleware('onPlayerResize', adjustPlayerSize);
 };

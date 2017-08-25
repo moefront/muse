@@ -16,7 +16,7 @@
       height: 100%;
       margin: 0px;
 
-      font-family: '微软雅黑', '文泉驿微米黑';
+      font-family: 'STHeiti', '微软雅黑', '文泉驿微米黑';
     }
 
     a {
@@ -27,6 +27,11 @@
       position: absolute;
       top: 10px;
       right: 10px;
+    }
+
+    .change-layout-container {
+      padding: 20px 0px;
+      text-align: center;
     }
 
     #header {
@@ -72,7 +77,11 @@
     </div>
 
     <div id="app">(・ω・) Rendering Player...</div>
-    <div id="app2"></div>
+    <div class="change-layout-container">
+      <button id="change-layout-btn">
+        Change player layout to <span id="layout-item">landscape</span>
+      </button>
+    </div>
 
     <div id="footer">
       &copy;2017 | Built with ❤ by <a href="https://github.com/moefront/">MoeFront Studio</a> | MIT License
@@ -86,6 +95,24 @@
       document.write("<script src=\"assets/muse-player.js\"><\/script>");
     }
   </script>
-  <script src="example.js"></script>`
+  <script src="example.js"></script>
+
+  <script type="text/javascript">
+    // change layout bind
+    var currentLayout = 'default', nextLayout = 'landscape';
+    document.getElementById('change-layout-btn').addEventListener('click', function() {
+      if (!window.MUSE) {
+        console.log('Please wait while MUSE is rendering...');
+      }
+
+      if (currentLayout == 'default') {
+        currentLayout = 'landscape', nextLayout = 'default';
+      } else if (currentLayout == 'landscape') {
+        currentLayout = 'default', nextLayout = 'landscape';
+      }
+      MUSE.changePlayerLayout(player.id, 'muse-layout-' + currentLayout);
+      document.getElementById('layout-item').innerHTML = nextLayout;
+    });
+  </script>
 </body>
 </html>
