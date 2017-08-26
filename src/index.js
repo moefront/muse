@@ -106,18 +106,18 @@ export const MuseDOM = {
     construct();
   },
   registerMiddleware(hook, func) {
-    if (!this._middlewares[hook])
-      return;
+    if (!this._middlewares[hook]) return;
     this._middlewares[hook].push(func);
   },
 
   /* MUSE Player life cycle */
-  destroy(id) {
-    const parent = document.getElementById(id).parentNode;
+  destroy(id, par = undefined) {
+    const parent = par == undefined
+      ? document.getElementById(id).parentNode
+      : par;
     let listLength = this.getReducerState(id, 'playList').length;
     unmountComponentAtNode(parent);
-    while (listLength--)
-    {
+    while (listLength--) {
       this.removeMusicFromList(id, 0);
     }
   },

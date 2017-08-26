@@ -22,6 +22,9 @@ export default class PlayerContainer extends Component
 
   constructor(props) {
     super(props);
+    if (typeof window != undefined) {
+      window.MUSE._instances[props.id] = this;
+    }
   }
 
   componentWillMount() {
@@ -32,9 +35,6 @@ export default class PlayerContainer extends Component
       playerLayout: layout,
       playList: playList
     }, id));
-
-    // export this instance to window.MUSE
-    window.MUSE._instances[id] = this;
   }
 
   render() {

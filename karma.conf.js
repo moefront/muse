@@ -6,7 +6,18 @@ process.env.NODE_ENV = 'test';
 module.exports = function(config) {
   config.set({
     basePath: '',
-    browsers: [ 'PhantomJS' ],
+    browsers: [ 'ChromeHeadless' ],
+    customLaunchers: {
+      ChromeHeadless: {
+        base: 'Chrome',
+        flags: [
+          '--no-sandbox',
+          '--headless',
+          '--disable-gpu',
+          ' --remote-debugging-port=23366'
+        ]
+      }
+    },
     files: [
       'test/loadtests.js'
     ],

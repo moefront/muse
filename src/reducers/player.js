@@ -150,7 +150,7 @@ export const player = (state = {}, action) => {
         ...state,
         [id]: {
           ...state[id],
-          playList: [...state.playList, action.item]
+          playList: [...state[id].playList, action.item]
         }
       };
 
