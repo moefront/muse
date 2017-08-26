@@ -1,5 +1,7 @@
 <h1 align="center">MUSE</h1>
 
+[![Build Status](https://travis-ci.org/moefront/muse.svg?branch=master)](https://travis-ci.org/moefront/muse)
+[![Coverage Status](https://coveralls.io/repos/github/moefront/muse/badge.svg?branch=master)](https://coveralls.io/github/moefront/muse?branch=master)
 [![npm](https://img.shields.io/npm/v/muse-player.svg?style=flat)]()
 [![devDependencies](https://img.shields.io/david/dev/moefront/muse.svg?style=flat)]()
 [![license](https://img.shields.io/github/license/moefront/muse.svg?style=flat)]()
