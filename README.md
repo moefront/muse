@@ -28,7 +28,7 @@ Have a look at [here](https://moefront.github.io/muse/dist).
 
 ### Install via Package Manager
 
-MUSE is avaliable in [npmjs](https://www.npmjs.com/package/muse-player). You can install it by both **npm** and **yarn**.
+MUSE is available in [npmjs](https://www.npmjs.com/package/muse-player). You can install it by both **npm** and **yarn**.
 
 ```shell
 $ yarn add muse-player  # using yarn
