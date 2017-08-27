@@ -41,6 +41,7 @@ module.exports = function(config) {
       reporters: [
         { type: 'html', subdir: 'report-html' },
         { type: 'lcovonly', subdir: '.', file: 'report-lcovonly.txt' },
+        { type: 'text' }
       ]
     }
   });

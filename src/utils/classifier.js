@@ -18,7 +18,7 @@ export const remove = (element, className) => {
 
 export const has = (element, className) => {
   if (element.classList) {
-    return element.classList.has(className);
+    return element.classList.contains(className);
   } else {
     return (element.getAttribute('class').indexOf(className) != -1);
   }
