@@ -60,14 +60,14 @@ export default class SelectorContainer extends Component
     return (
       <div className={ 'muse-selector' }>
         <div
-          className={ 'muse-selector__previtem' }
+          className={ 'muse-selector_prev' }
           title={ '上一首 (Previous)' }
           onClick={ this.onPrevButtonClick }
         >
           <PrevButton />
         </div>
         <div
-          className={ 'muse-selector__nextitem' }
+          className={ 'muse-selector_next' }
           title={ '下一首 (Next)' }
           onClick={ this.onNextButtonClick }
         >
