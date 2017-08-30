@@ -158,6 +158,7 @@ window.MuseDOM.render();
 
 Projects related to MUSE below can help you construct MUSE Player on your site easily. Thanks for their hard working!
 
+ - **muse-json-generator** by [@kokororin](https;//github.com/kokororin): https://github.com/moefront/muse-json-generator
  - **typecho-plugin-ymplayer** by [@kokororin](https;//github.com/kokororin): https://github.com/kokororin/typecho-plugin-ymplayer
 
 ## Troubleshooting

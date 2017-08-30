@@ -36,7 +36,8 @@ export default class DrawerContainer extends Component {
     super(props);
     this.id = props.id;
     this.state = {
-      current: props.player[this.id].playList[props.player[this.id].currentMusicIndex],
+      current:
+        props.player[this.id].playList[props.player[this.id].currentMusicIndex],
       lrcComponents: []
     };
   }
@@ -53,7 +54,7 @@ export default class DrawerContainer extends Component {
                                             888
                                        Y8b d88P
                                         "Y88P"
-  */
+                                        */
   componentWillMount() {
     const state = this.props.player[this.id];
     this.parseLyric(state.playList[state.currentMusicIndex]);
@@ -99,7 +100,7 @@ export default class DrawerContainer extends Component {
   88888888 Y88  88P 88888888 888  888 888         888 888 "Y8888b. 888   88888888 888  888 88888888 888     "Y8888b.
   Y8b.      Y8bd8P  Y8b.     888  888 Y88b.       888 888      X88 Y88b. Y8b.     888  888 Y8b.     888          X88
    "Y8888    Y88P    "Y8888  888  888  "Y888      888 888  88888P'  "Y888 "Y8888  888  888  "Y8888  888      88888P'
-  */
+   */
   toggleDrawerState = e => {
     e.preventDefault();
     e.stopPropagation();
@@ -128,9 +129,9 @@ export default class DrawerContainer extends Component {
   888  "Y88888 888     888  "Y8888P      888  888 "Y888888 888  888  "Y88888 888  "Y8888  888
            888
       Y8b d88P
-       "Y88P"   */
+      "Y88P"   */
   parseLyric = current => {
-    if (current.lyric == undefined) {
+    if (current.lyric == undefined && current.lrc == undefined) {
       this.setState({
         current,
         lrcComponents: null
@@ -138,16 +139,13 @@ export default class DrawerContainer extends Component {
       return;
     }
 
-    const lyrics = lyricParser(current.lyric);
+    const lyrics = lyricParser(
+      current.lyric || current.lrc,
+      current.translation
+    );
     let lrcComponents = [],
-      key = 0,
-      translation = [];
+      key = 0;
     this.lrcRefs = []; // reset
-
-    // inject translation if exists
-    if (current.translation != undefined) {
-      translation = current.translation.split('\n');
-    }
 
     lyrics.lyric.forEach(lyric => {
       lrcComponents.push(
@@ -156,23 +154,22 @@ export default class DrawerContainer extends Component {
           index={key++}
           timeline={lyric.timeline}
           text={lyric.text}
-          translation={translation != [] ? translation[key - 1] : undefined}
+          translation={lyric.translation ? lyric.translation : ''}
         />
       );
     });
-    
+
     this.setState({
       current: current,
       lrcComponents: lrcComponents
     });
-
   };
 
   /**
-   * synchronize lyric when time update
-   * @param  {Object} obj
-   * @return {void}
-   */
+    * synchronize lyric when time update
+    * @param  {Object} obj
+    * @return {void}
+    */
   synchronizeLyric(obj) {
     const { currentTime } = obj,
       { offset } = this.props.player[this.id],
@@ -180,7 +177,10 @@ export default class DrawerContainer extends Component {
     let current = currentTime + offset, // fix timeline offset
       index = Number(this.lrcContainer.getAttribute('data-current-index'));
 
-    if (this.state.lrcComponents == null || this.state.lrcComponents.length == 0) {
+    if (
+      this.state.lrcComponents == null ||
+      this.state.lrcComponents.length == 0
+    ) {
       return;
     }
 
