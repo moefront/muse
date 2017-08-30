@@ -176,6 +176,9 @@ export default class DrawerContainer extends Component {
       refs = this.state.lrcComponents;
     let current = currentTime + offset, // fix timeline offset
       index = Number(this.lrcContainer.getAttribute('data-current-index'));
+    if (index >= refs.length) {
+      index = 0;      // reset index
+    }
 
     if (
       this.state.lrcComponents == null ||
