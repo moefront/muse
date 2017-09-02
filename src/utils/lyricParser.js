@@ -26,7 +26,11 @@ export const lyricParser = (rawLyric, rawTranslation) => {
   if (!raw || typeof raw != 'string') {
     return false;
   }
-  if (rawTranslation.match(/\[(\d{1,2}):(\d|[0-5]\d)(\.\d+)?\]/)) {
+
+  if (
+    rawTranslation &&
+    rawTranslation.match(/\[(\d{1,2}):(\d|[0-5]\d)(\.\d+)?\]/)
+  ) {
     transVersion = 1;
   }
   // simplified version of lyric: [time1][time2]lyric
@@ -83,38 +87,39 @@ export const lyricParser = (rawLyric, rawTranslation) => {
   });
 
   /* Translation parse block */
-  rawTranslation = rawTranslation.replace(/\\n/g, '\n').replace(/\\r/g, '\r');
+  if (rawTranslation) {
+    rawTranslation = rawTranslation.replace(/\\n/g, '\n').replace(/\\r/g, '\r');
 
-  lines = String(rawTranslation).split('\n');
-  lines.forEach(index => {
-    if (index.match(/\[ti:|ar:|al:\.*]/g)) return;
+    lines = String(rawTranslation).split('\n');
+    lines.forEach(index => {
+      if (index.match(/\[ti:|ar:|al:\.*]/g)) return;
 
-    // translation author
-    if (index.match(/\[by:(.*)\]/g)) {
-      res.transAuthor = /\[by:(.*)\]/g.exec(index)[1];
-      return;
-    }
+      // translation author
+      if (index.match(/\[by:(.*)\]/g)) {
+        res.transAuthor = /\[by:(.*)\]/g.exec(index)[1];
+        return;
+      }
 
-    switch (transVersion) {
-      // lines
-      case 0:
-        transArr.push(index);
-        break;
-
-      // simplified
-      case 1:
-        if (!index)
+      switch (transVersion) {
+        // lines
+        case 0:
+          transArr.push(index);
           break;
 
-        const match = /\[(\d{1,2}):(\d|[0-5]\d)(\.\d+)?\](.*)/g.exec(index),
-        timeline = calcTime(match);
-        transArr.push({
-          timeline: timeline,
-          text: match[4]
-        });
-        break;
-    }
-  });
+        // simplified
+        case 1:
+          if (!index) break;
+
+          const match = /\[(\d{1,2}):(\d|[0-5]\d)(\.\d+)?\](.*)/g.exec(index),
+            timeline = calcTime(match);
+          transArr.push({
+            timeline: timeline,
+            text: match[4]
+          });
+          break;
+      }
+    });
+  }
 
   // sort lyrics
   const cmp = (a, b) => a.timeline - b.timeline;
