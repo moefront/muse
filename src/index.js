@@ -5,14 +5,16 @@ import 'core-js/fn/object/assign';
 import React from 'react';
 import { render as reactDOMRender, unmountComponentAtNode } from 'react-dom';
 
-import { PlayerActions } from './actions';
 import PlayerContainer from './containers';
+import { PlayerInstancesModel } from './models';
 
 // This is an example for custom layouts inside the project.
 // Alternatively, you can also requires your layout file outside.
 // Read the wiki and find out how to extend your MUSE Player.
 import './layouts/landscape/landscape.styl';
 import { construct as landscapeLayoutConstructor } from './layouts/landscape/construct';
+
+const store = new PlayerInstancesModel();
 
 const render = (Component, node) => {
   // Render the main component into the dom
@@ -37,66 +39,62 @@ export const MuseDOM = {
     onPlayerResize: []
   },
 
-  actions: PlayerActions,
-
   /* MUSE Player API start */
-  // high-level APIs: dispatchAction(), getInstance(), getReducerState()
+  // high-level APIs: getInstance(), getState(), changeState()
   // Warning: these APIs are directly related to Component, you'd better not use them unless you need.
-  dispatchAction(id, action) {
-    const instance = this.getInstance(id);
-    instance._store.dispatch(action);
-  },
   getInstance(id) {
     return this._instances[id] ? this._instances[id] : null;
   },
-  getReducerState(id, key) {
-    const instance = this.getInstance(id);
-    return instance._store.getState().player[id][key];
+  getState(id, key) {
+    return store.getInstance(id)[key];
+  },
+  changeState(id, key, val) {
+    return store.getInstance(id)[key] = val;
   },
 
   // Player action APIs
   // These APIs are connected to PlayerActions. Dispatching all of them should have an ID of player instance.
   play(id) {
-    this.dispatchAction(id, this.actions.togglePlay(true, id));
+    store.getInstance(id).togglePlay(true);
   },
   pause(id) {
-    this.dispatchAction(id, this.actions.togglePlay(false, id));
+    store.getInstance(id).togglePlay(false);
   },
   stop(id) {
-    this.dispatchAction(id, this.actions.playerStop(id));
+    store.getInstance(id).playerStop();
   },
 
   togglePlay(id) {
-    const state = this.getReducerState(id, 'isPlaying');
-    this.dispatchAction(id, this.actions.togglePlay(!state, id));
+    store.getInstance(id).togglePlay();
   },
   toggleLoop(id) {
-    const state = this.getReducerState(id, 'isLoop');
-    this.dispatchAction(id, this.actions.toggleLoop(!state, id));
+    store.getInstance(id).toggleLoop();
   },
   toggleDrawer(id) {
-    const state = this.getReducerState(id, 'idDrawerOpen');
-    this.dispatchAction(id, this.actions.toggleDrawer(!state, id));
+    store.getInstance(id).toggleDrawer();
   },
   togglePanel(id, panel) {
-    this.dispatchAction(id, this.actions.togglePanel(panel, id));
+    store.getInstance(id).togglePanel(panel);
   },
 
   setCurrentMusic(id, index) {
-    this.dispatchAction(id, this.actions.setCurrentMusic(index, id));
+    setTimeout(() => store.getInstance(id).togglePlay(false), 0);
+    store.getInstance(id).setCurrentMusic(index);
+    setTimeout(() => store.getInstance(id).togglePlay(true), 10);
   },
   setLyricOffset(id, offset) {
-    this.dispatchAction(id, this.actions.setLyricOffset(offset, id));
+    store.getInstance(id).setLyricOffset(offset);
   },
 
   addMusicToList(id, item) {
-    this.dispatchAction(id, this.actions.addMusicToList(item, id));
+    store.getInstance(id).addMusicToList(item);
   },
+
   removeMusicFromList(id, index) {
-    this.dispatchAction(id, this.actions.removeMusicFromList(index, id));
+    store.getInstance(id).removeMusicFromList(index);
   },
   changePlayerLayout(id, layout) {
-    this.dispatchAction(id, this.actions.changePlayerLayout(layout, id));
+    store.getInstance(id).changePlayerLayout(layout);
   },
   /* MUSE Player API end */
 
@@ -115,7 +113,7 @@ export const MuseDOM = {
     const parent = par == undefined
       ? document.getElementById(id).parentNode
       : par;
-    let listLength = this.getReducerState(id, 'playList').length;
+    let listLength = this.getState(id, 'playList').length;
     unmountComponentAtNode(parent);
     while (listLength--) {
       this.removeMusicFromList(id, 0);
@@ -139,7 +137,7 @@ export const MuseDOM = {
       playList,
       ...options
     },
-      Component = <PlayerContainer {...props} />;
+      Component = <PlayerContainer store={store} {...props} />;
     let muse = {
       component: Component,
       ref: undefined,

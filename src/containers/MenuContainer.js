@@ -1,17 +1,12 @@
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
-import { connect } from 'react-redux';
-
-// Actions
-import { PlayerActions } from '../actions';
+import { observer } from 'mobx-react';
 // Utils
 import { getRect } from '../utils';
 // config
 import config from '../config/base';
 
-@connect(state => ({
-  player: state.player
-}))
+@observer
 export default class MenuContainer extends Component {
   id = undefined;
 
@@ -47,25 +42,23 @@ export default class MenuContainer extends Component {
   /* event listeners */
   onLoopTogglerClick = e => {
     e.stopPropagation();
-    const { dispatch } = this.props,
-      { isLoop } = this.props.player[this.id];
-    dispatch(PlayerActions.toggleLoop(!isLoop, this.id));
+    const { store } = this.props;
+    store.toggleLoop();
   };
 
   onFullscreenTogglerClick = e => {
     e.stopPropagation();
-    const { dispatch } = this.props,
-      { isFullscreen } = this.props.player[this.id];
-    dispatch(PlayerActions.toggleFullscreen(!isFullscreen, this.id));
+    const { store } = this.props;
+    store.toggleFullscreen();
   };
 
   onVolumeContainerClick = e => {
     e.preventDefault();
     e.stopPropagation();
     const rect = getRect(this.volume),
-      { dispatch } = this.props,
+      { store } = this.props,
       vol = (e.clientX - rect.left) / this.volume.offsetWidth;
-    dispatch(PlayerActions.slideVolume(vol > 1 ? 1 : vol, this.id));
+    store.slideVolume(vol > 1 ? 1 : vol);
   };
 
   onIncreaseOffsetClick = e => {
@@ -81,10 +74,10 @@ export default class MenuContainer extends Component {
   };
 
   onStopClick = e => {
-    const { dispatch } = this.props;
+    const { store } = this.props;
     e.preventDefault();
     e.stopPropagation();
-    dispatch(PlayerActions.playerStop(this.id));
+    store.playerStop();
   };
 
   onDebugModeTogglerClick = () => {
@@ -103,9 +96,8 @@ export default class MenuContainer extends Component {
   };
 
   fixLyricOffset = val => {
-    const { dispatch } = this.props,
-      { offset } = this.props.player[this.id];
-    dispatch(PlayerActions.setLyricOffset(offset + val, this.id));
+    const { store } = this.props;
+    store.setLyricOffset(val);
   };
 
   render() {
@@ -115,7 +107,7 @@ export default class MenuContainer extends Component {
       isFullscreen,
       volume,
       offset
-    } = this.props.player[this.id];
+    } = this.props.store;
     return (
       <div
         className={'muse-menu' + (!isMenuOpen ? ' muse-menu__state-close' : '')}

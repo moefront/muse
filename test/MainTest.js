@@ -50,7 +50,7 @@ describe('API', function() {
 
   it('should change playing state after calling MUSE.togglePlay()', function() {
     MUSE.togglePlay(this.id);
-    expect(MUSE.getReducerState(this.id, 'isPlaying')).to.equal(true);
+    expect(MUSE.getState(this.id, 'isPlaying')).to.equal(true);
   });
 
   it('should add new items after calling MUSE.addMusicToList()', function() {
@@ -67,7 +67,7 @@ describe('API', function() {
         '在梦想的途中与你相遇\n从那时起 我的内心就怦然有了预感\n不断地膨胀着\n\n这首仍未有人知道的歌\n希望有一天 能让全世界都听到\n我一直期盼着 于是有了与你的相遇\n\n我要把这份不输给任何人的心情\n一下子填满 全部合在一起\n时间啊动起来吧Final Countdown！ (10, 9, 8, 7, 6, 5,)\n还有5秒！ (4, 3, 2, 1 —— Ready Go！)\n\n那些闪闪发光的被称为希望的和那些心跳不已的\n让这个世界因此不停来回运转着\n昨天已经变成今天 又变成了明天 变成了未来 又成为了永远\n收集全世界的勇气 向前进\n\n手牵手 肩并肩 一直都是最棒的Girls！Girls！\n在这个最喜欢的地方 和你一起奏响梦想\n\n梦想的花蕾 悄然间绽放\n希望我视为珍宝的一切 永远都不会枯萎凋谢\n一个人坚强的培育它长大\n\n一直想传达自己真正的心情\n不过却不是现在 现在我的梦想还不够强大\n总有一天想要一直追寻下去 你曾那么说过 (可是呢)\n\n我的这份心情比任何人都热忱\n已经迫不及待 踏出最初一步\n时间开始运转 Final Countdown！\n(Sing！ Sing！ Sing！ Sing！ Sing Girls！)\n现在马上(4, 3, 2, 1 ―― Ready Go！)\n\n那些犹豫 那些不安 那些挫折 那些焦躁感\n让我不由得热泪盈眶 止不住地往外流\n尽管如此那些温柔的耀眼的眷恋的一切 给了我莫大的鼓舞\n让我深刻地体会到 还有朋友在我身边\n\n手心相叠 齐声呐喊 一直追逐梦想的Girls！Girls！\n在这对你而言很重要的地方 想和你一起放声歌唱\n\n在这紧紧封锁的最后的门扉(遥不可及)\n得以重获自由的是什么？(是什么？)\n\n把梦想的地图全部拼在一体\n找到那把名为音乐(羁绊)的魔法钥匙\n(Sing！ Sing！ Sing！ Sing Girls！)\n\n那些闪闪发光的 被称为梦想的 被称为希望的和那些心跳不已的\n让这个世界因此不停来回运转着\n昨天已经变成今天 又变成了明天 变成了未来 又成为了永远\n时间啊 愿停在这一刻\n\n手牵手 肩并肩 一直都是最棒的Girls！Girls！\n在这个最喜欢的地方 和你一起奏响梦想 Sing Girls\n'
     };
     MUSE.addMusicToList(this.id, item);
-    expect(JSON.stringify(MUSE.getReducerState(this.id, 'playList'))).to.equal(
+    expect(JSON.stringify(MUSE.getState(this.id, 'playList'))).to.equal(
       JSON.stringify([playList[0], item])
     );
   });

@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { PropTypes } from 'prop-types';
+
+import {  autorun } from 'mobx';
+import { observer } from 'mobx-react';
 // icons
 import { PlayButton, PauseButton } from '../sources/icons';
-// actions
-import { PlayerActions } from '../actions/';
 
-@connect(
-  state => ({
-    player: state.player
-  })
-)
+@observer
 export default class ControlContainer extends Component
 {
+  static propTypes = {
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+      .isRequired,
+    store: PropTypes.object.isRequired
+  };
+
   id = undefined;
 
   constructor(props) {
@@ -21,35 +24,32 @@ export default class ControlContainer extends Component
 
   /* store subscribers */
   subscriber = () => {
-    const { store } = this.props;
-    const state = store.getState().player[this.id],
-          { dispatch } = this.props,
-          { audio } = this;
-
+    const { store } = this.props,
+      { audio } = this,
+      { currentTime, volume } = store;
     // toggle play
-    if (!audio.paused != state.isPlaying) {
-      if (state.isPlaying) {
-        setTimeout(() => audio.play(), 0);
+    if (!audio.paused != store.isPlaying) {
+      if (store.isPlaying) {
+        audio.play();
       } else {
-        setTimeout(() => audio.pause(), 0);
+        audio.pause();
       }
       return;
     }
-
     // slide progress
-    if (state.currentTime != undefined) {
-      audio.currentTime = state.currentTime;
-      dispatch(PlayerActions.slideProgress(undefined, this.id)); // reset state
+    if (currentTime != undefined) {
+      audio.currentTime = currentTime;
+      store.slideProgress(undefined); // reset state
     }
 
     // change volume
-    audio.volume = state.volume;
+    audio.volume = volume;
   }
   unsubscriber = undefined
 
   /* component life cycles */
-  componentWillMount() {
-    this.unsubscriber = this.props.store.subscribe(this.subscriber);
+  componentDidMount() {
+    this.unsubscriber = autorun(this.subscriber);
   }
 
   componentWillUnmount() {
@@ -58,17 +58,16 @@ export default class ControlContainer extends Component
 
   /* event listeners */
   onControllerClick = () => {
-    const { playerLayout, isDrawerOpen } = this.props.player[this.id],
-          { dispatch } = this.props;
+    const { playerLayout } = this.props.store,
+          { store } = this.props;
     if (playerLayout == 'muse-layout-landscape') {
-      dispatch(PlayerActions.toggleDrawer(!isDrawerOpen, this.id));
+      store.toggleDrawer();
     }
   }
 
   onPlayBtnClick = () => {
-    const { dispatch } = this.props,
-          { isPlaying } = this.props.player[this.id];
-    dispatch(PlayerActions.togglePlay(!isPlaying, this.id));
+    const { store } = this.props;
+    store.togglePlay();
   }
 
   onAudioTimeUpdate = () => {
@@ -83,18 +82,16 @@ export default class ControlContainer extends Component
   }
 
   onAudioEnded = (proxy, e, specialCheck = false) => {
-    const { isLoop, currentMusicIndex, playList } = this.props.player[this.id],
-          { dispatch } = this.props;
+    const { store } = this.props,
+      { isLoop, currentMusicIndex, playList } = store;
 
     // check loop
     if ((specialCheck || !isLoop) && playList.length-1 > currentMusicIndex) {
-      dispatch(PlayerActions.togglePlay(false, this.id));
-      dispatch(PlayerActions.setCurrentMusic(currentMusicIndex + 1, this.id));
-      setTimeout(() => dispatch(PlayerActions.togglePlay(true, this.id)), 10);
+      store.setCurrentMusic(currentMusicIndex + 1);
     } else if (!specialCheck && isLoop) {
-      dispatch(PlayerActions.slideProgress(0, this.id));
+      store.slideProgress(0);
     } else {
-      dispatch(PlayerActions.playerStop(this.id));
+      store.playerStop();
     }
   }
 
@@ -103,7 +100,7 @@ export default class ControlContainer extends Component
   }
 
   render() {
-    const { isPlaying, playList, currentMusicIndex } = this.props.player[this.id];
+    const { isPlaying, playList, currentMusicIndex } = this.props.store;
     const current = playList[currentMusicIndex];
 
     return (

@@ -20,8 +20,8 @@ Have a look at [here](https://moefront.github.io/muse/dist).
 
  - react
  - react-dom
- - redux
- - react-redux
+ - mobx
+ - mobx-react
  - stylus
 
 ## Installation
@@ -49,7 +49,8 @@ Click ```Clone or download``` then choose ```Download ZIP```, or redirect to rel
 
 ## Features
 
- - Build with React.js and Redux
+ - Build with React.js and Mobx
+ - Both Mobx version(main) & Redux version(before 5.2.7)
  - Full lyric support
  - Lyric offset fixing
  - Right-click menu is finally supported

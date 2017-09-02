@@ -1,16 +1,12 @@
 // React
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-// Redux
-import { Provider } from 'react-redux';
-import { configureStore } from '../stores';
-
-import { PlayerActions } from '../actions';
-
+// Mobx
+import { observer } from 'mobx-react';
+// Container
 import UIContainer from './UIContainer';
 
-const store = configureStore();
-
+@observer
 export default class PlayerContainer extends Component
 {
   static propTypes = {
@@ -18,33 +14,32 @@ export default class PlayerContainer extends Component
     layout: PropTypes.string.isRequired
   };
 
-  _store = store;
+  _store = undefined;
 
   constructor(props) {
     super(props);
+
+    this._store = props.store;
     if (typeof window != undefined) {
       window.MUSE._instances[props.id] = this;
     }
   }
 
   componentWillMount() {
-    const { layout, playList, id } = this.props,
-          { dispatch } = store;
+    const { layout, playList, id, store } = this.props;
     // register instance
-    dispatch(PlayerActions.createPlayerStore({
+    store.createPlayerInstance({
       playerLayout: layout,
       playList: playList
-    }, id));
+    }, id);
   }
 
   render() {
     return (
-      <Provider store={ store }>
-        <UIContainer
-          store={ store }
-          id={ this.props.id }
-        />
-      </Provider>
+      <UIContainer
+        store={ this.props.store.getInstance(this.props.id) }
+        id={ this.props.id }
+      />
     );
   }
 }

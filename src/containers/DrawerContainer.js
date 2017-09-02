@@ -10,20 +10,17 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { autorun } from 'mobx';
+import { observer } from 'mobx-react';
 
 // Container
 import LyricItemContainer from './LyricItemContainer';
-// Actions
-import { PlayerActions } from '../actions';
 // Utils
 import { lyricParser, classifier } from '../utils';
 // icons
 import { LyricToggler, PlayListToggler } from '../sources/icons';
 
-@connect(state => ({
-  player: state.player
-}))
+@observer
 export default class DrawerContainer extends Component {
   id = undefined;
 
@@ -36,8 +33,7 @@ export default class DrawerContainer extends Component {
     super(props);
     this.id = props.id;
     this.state = {
-      current:
-        props.player[this.id].playList[props.player[this.id].currentMusicIndex],
+      current: this.props.store.playList[this.props.store.currentMusicIndex],
       lrcComponents: []
     };
   }
@@ -56,9 +52,11 @@ export default class DrawerContainer extends Component {
                                         "Y88P"
                                         */
   componentWillMount() {
-    const state = this.props.player[this.id];
+    const state = this.props.store;
     this.parseLyric(state.playList[state.currentMusicIndex]);
-    this.unsubscriber = this.props.store.subscribe(this.subscriber);
+  }
+  componentDidMount() {
+    this.unsubscriber = autorun(this.subscriber);
   }
   componentWillUnmount() {
     this.unsubscriber();
@@ -79,10 +77,10 @@ export default class DrawerContainer extends Component {
    */
   subscriber = () => {
     const { store } = this.props,
-      newState = store.getState();
+      newState = store;
     const current =
-      newState.player[this.id].playList[
-        newState.player[this.id].currentMusicIndex
+      newState.playList[
+        newState.currentMusicIndex
       ];
     if (current != this.state.current) {
       this.parseLyric(current);
@@ -105,17 +103,16 @@ export default class DrawerContainer extends Component {
     e.preventDefault();
     e.stopPropagation();
 
-    const { dispatch } = this.props,
-      { isDrawerOpen } = this.props.player[this.id];
-    dispatch(PlayerActions.toggleDrawer(!isDrawerOpen, this.id));
+    const { store } = this.props;
+    store.toggleDrawer();
   };
 
   togglePanel = (panel, e) => {
     e.preventDefault();
     e.stopPropagation();
 
-    const { dispatch } = this.props;
-    dispatch(PlayerActions.togglePanel(panel, this.id));
+    const { store } = this.props;
+    store.togglePanel(panel);
   };
 
   /*
@@ -172,7 +169,7 @@ export default class DrawerContainer extends Component {
     */
   synchronizeLyric(obj) {
     const { currentTime } = obj,
-      { offset } = this.props.player[this.id],
+      { offset } = this.props.store,
       refs = this.state.lrcComponents;
     let current = currentTime + offset, // fix timeline offset
       index = Number(this.lrcContainer.getAttribute('data-current-index'));
@@ -288,8 +285,7 @@ export default class DrawerContainer extends Component {
   888     "Y8888  888  888  "Y88888  "Y8888  888
   */
   renderPlayList() {
-    const { playList, currentMusicIndex } = this.props.player[this.id],
-      { dispatch } = this.props;
+    const { playList, currentMusicIndex } = this.props.store;
     let list = [],
       key = 0;
 
@@ -297,9 +293,9 @@ export default class DrawerContainer extends Component {
       e.preventDefault();
       e.stopPropagation();
 
-      dispatch(PlayerActions.togglePlay(false, this.id));
-      dispatch(PlayerActions.setCurrentMusic(key, this.id));
-      setTimeout(() => dispatch(PlayerActions.togglePlay(true, this.id)), 0);
+      this.props.store.togglePlay(false, this.id);
+      this.props.store.setCurrentMusic(key, this.id);
+      setTimeout(() => this.props.store.togglePlay(true), 0);
     };
 
     playList.forEach(single => {
@@ -327,7 +323,7 @@ export default class DrawerContainer extends Component {
   }
 
   render() {
-    const { isDrawerOpen, currentPanel } = this.props.player[this.id];
+    const { isDrawerOpen, currentPanel } = this.props.store;
     return (
       <div
         className={
