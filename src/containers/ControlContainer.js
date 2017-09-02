@@ -87,7 +87,9 @@ export default class ControlContainer extends Component
 
     // check loop
     if ((specialCheck || !isLoop) && playList.length-1 > currentMusicIndex) {
+      setTimeout(() => store.togglePlay(false), 0);
       store.setCurrentMusic(currentMusicIndex + 1);
+      setTimeout(() => store.togglePlay(true), 10);
     } else if (!specialCheck && isLoop) {
       store.slideProgress(0);
     } else {
