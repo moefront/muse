@@ -1,4 +1,5 @@
 import { observable, action } from 'mobx';
+import { applyMiddleware } from '../utils';
 
 export default class PlayerModel {
 	@observable id = undefined;
@@ -28,39 +29,44 @@ export default class PlayerModel {
 
 	@action
 	togglePlay(state = undefined) {
-		if (state != undefined) {
-			return (this.isPlaying = state);
-		}
-		return (this.isPlaying = !this.isPlaying);
+		this.isPlaying = state == undefined ? !this.isPlaying : state;
+		applyMiddleware('onTogglePlay', this, {
+			isPlaying: this.isPlaying
+		});
+		return this.isPlaying;
 	}
 
 	@action
-	toggleLoop(state) {
-		if (state != undefined) {
-			return (this.isLoop = state);
-		}
-		return (this.isLoop = !this.isLoop);
+	toggleLoop(state = undefined) {
+		this.isLoop = state == undefined ? !this.isLoop : state;
+		return this.isLoop;
 	}
 
 	@action
-	toggleDrawer(state) {
-		if (state != undefined) {
-			return (this.isDrawerOpen = state);
-		}
-		return (this.isDrawerOpen = !this.isDrawerOpen);
+	toggleDrawer(state = undefined) {
+		this.isDrawerOpen = state == undefined ? !this.isDrawerOpen : state;
+		applyMiddleware('onToggleDrawer', this, {
+			isDrawerOpen: this.isDrawerOpen
+		});
+		return this.isDrawerOpen;
 	}
 
 	@action
 	toggleMenu(state = undefined) {
-		if (state != undefined) {
-			return (this.isMenuOpen = state);
-		}
-		return (this.isMenuOpen = !this.isMenuOpen);
+		this.isMenuOpen = state == undefined ? !this.isMenuOpen : state;
+		applyMiddleware('onToggleMenu', this, {
+			isMenuOpen: this.isMenuOpen
+		});
+		return this.isMenuOpen;
 	}
 
 	@action
-	toggleFullscreen() {
-		return (this.isFullscreen = !this.isFullscreen);
+	toggleFullscreen(state = undefined) {
+		this.isFullscreen = state == undefined ? !this.isFullscreen : state;
+		applyMiddleware('onToggleFullscreen', this, {
+			isFullscreen: this.isFullscreen
+		});
+		return this.isFullscreen;
 	}
 
 	@action
@@ -91,7 +97,11 @@ export default class PlayerModel {
 
 	@action
 	setCurrentMusic(index) {
-		return (this.currentMusicIndex = index);
+		this.currentMusicIndex = index;
+		applyMiddleware('onMusicChange', this, {
+			index: index,
+			detail: this.playList[index]
+		});
 	}
 
 	@action
