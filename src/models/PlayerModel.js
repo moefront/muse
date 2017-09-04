@@ -12,6 +12,7 @@ export default class PlayerModel {
 
 	@observable volume = 1;
 	@observable offset = 0;
+	@observable playRate = 1;
 	@observable duration = undefined;
 	@observable currentTime = 0;
 	@observable currentPanel = 'lyric';
@@ -88,6 +89,16 @@ export default class PlayerModel {
 	@action
 	setLyricOffset(offset) {
 		return (this.offset += offset);
+	}
+
+	@action
+	setPlayRate(rate) {
+		this.playRate = parseFloat(this.playRate);
+		rate = parseFloat(rate);
+		if (this.playRate + rate <= 0 || this.playRate + rate >= 4) {
+			return false;
+		}
+		this.playRate = parseFloat(this.playRate + rate).toFixed(1);
 	}
 
 	@action

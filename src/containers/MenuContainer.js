@@ -25,6 +25,14 @@ export default class MenuContainer extends Component {
 
     this.increaseOffset.addEventListener('click', this.onIncreaseOffsetClick);
     this.decreaseOffset.addEventListener('click', this.onDecreaseOffsetClick);
+    this.increasePlayRate.addEventListener(
+      'click',
+      this.onIncreasePlayRateClick
+    );
+    this.decreasePlayRate.addEventListener(
+      'click',
+      this.onDecreasePlayRateClick
+    );
   }
   componentWillUnmount() {
     this.volume.removeEventListener('click', this.onVolumeContainerClick);
@@ -36,6 +44,15 @@ export default class MenuContainer extends Component {
     this.decreaseOffset.removeEventListener(
       'click',
       this.onDecreaseOffsetClick
+    );
+
+    this.increasePlayRate.removeEventListener(
+      'click',
+      this.onIncreasePlayRateClick
+    );
+    this.decreasePlayRate.removeEventListener(
+      'click',
+      this.onDecreasePlayRateClick
     );
   }
 
@@ -64,13 +81,25 @@ export default class MenuContainer extends Component {
   onIncreaseOffsetClick = e => {
     e.preventDefault();
     e.stopPropagation();
-    this.fixLyricOffset(0.5);
+    this.props.store.setLyricOffset(0.5);
   };
 
   onDecreaseOffsetClick = e => {
     e.preventDefault();
     e.stopPropagation();
-    this.fixLyricOffset(-0.5);
+    this.props.store.setLyricOffset(-0.5);
+  };
+
+  onIncreasePlayRateClick = e => {
+    e.preventDefault();
+    e.stopPropagation();
+    this.props.store.setPlayRate(0.1);
+  };
+
+  onDecreasePlayRateClick = e => {
+    e.preventDefault();
+    e.stopPropagation();
+    this.props.store.setPlayRate(-0.1);
   };
 
   onStopClick = e => {
@@ -95,17 +124,13 @@ export default class MenuContainer extends Component {
     }
   };
 
-  fixLyricOffset = val => {
-    const { store } = this.props;
-    store.setLyricOffset(val);
-  };
-
   render() {
     const {
       isMenuOpen,
       isLoop,
       isFullscreen,
       volume,
+      playRate,
       offset
     } = this.props.store;
     return (
@@ -152,6 +177,28 @@ export default class MenuContainer extends Component {
               - 延后 0.5s
             </span>
           </div>
+        </div>
+
+        <div className={'muse-menu__item'} name={'set-play-rate'}>
+          <span>播放速度({playRate} 倍)</span>
+          <span className={'muse-menu__playrate-container'}>
+            <a
+              href={'#'}
+              name={'increasePlayRate'}
+              ref={ref => (this.increasePlayRate = ref)}
+              className={playRate >= 3.9 ? 'muse-menu__playrate-disabled' : ''}
+            >
+              +
+            </a>
+            <a
+              href={'#'}
+              name={'decreasePlayRate'}
+              ref={ref => (this.decreasePlayRate = ref)}
+              className={playRate <= 0.1 ? 'muse-menu__playrate-disabled' : ''}
+            >
+              -
+            </a>
+          </span>
         </div>
 
         <div

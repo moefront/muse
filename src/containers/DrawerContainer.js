@@ -78,10 +78,7 @@ export default class DrawerContainer extends Component {
   subscriber = () => {
     const { store } = this.props,
       newState = store;
-    const current =
-      newState.playList[
-        newState.currentMusicIndex
-      ];
+    const current = newState.playList[newState.currentMusicIndex];
     if (current != this.state.current) {
       this.parseLyric(current);
       this.updateLyricContainerDOMState(0);
@@ -174,7 +171,7 @@ export default class DrawerContainer extends Component {
     let current = currentTime + offset, // fix timeline offset
       index = Number(this.lrcContainer.getAttribute('data-current-index'));
     if (index >= refs.length) {
-      index = 0;      // reset index
+      index = 0; // reset index
     }
 
     if (
@@ -184,7 +181,13 @@ export default class DrawerContainer extends Component {
       return;
     }
 
-    if (index == -1 && current > refs[0].props.timeline) {
+    /* Todo: optimize the complexity */
+    if (
+      current > refs[index + 1].props.timeline &&
+      current < refs[index + 2].props.timeline
+    ) {
+      this.updateLyricContainerDOMState(index + 1);
+    } else if (index == -1 && current > refs[0].props.timeline) {
       this.updateLyricContainerDOMState(0);
     } else if (index == refs.length - 1) {
       return;
@@ -222,19 +225,15 @@ export default class DrawerContainer extends Component {
     index = Number(this.lrcContainer.getAttribute('data-current-index'));
 
     // remove active element class
-    let currentActive = this.lrcContainer.querySelectorAll(
+    let currentActive = this.lrcContainer.querySelector(
       '.muse-lyric__item.muse-lyric__state-active'
     ),
       nextActive = this.lrcContainer.querySelector(
         '.muse-lyric__item[data-lyric-item-id="' + index + '"]'
       );
-    if (currentActive[0] && currentActive[0] != nextActive) {
-      currentActive.forEach
-        ? currentActive.forEach(ele =>
-            classifier.remove(ele, 'muse-lyric__state-active')
-          )
-        : classifier.remove(currentActive[0], 'muse-lyric__state-active');
-    }
+    if (currentActive)
+      classifier.remove(currentActive, 'muse-lyric__state-active');
+
     if (index != -1 && nextActive != null) {
       classifier.add(nextActive, 'muse-lyric__state-active');
       // change container position

@@ -26,7 +26,7 @@ export default class ControlContainer extends Component
   subscriber = () => {
     const { store } = this.props,
       { audio } = this,
-      { currentTime, volume } = store;
+      { currentTime, volume, playRate } = store;
     // toggle play
     if (!audio.paused != store.isPlaying) {
       if (store.isPlaying) {
@@ -41,9 +41,12 @@ export default class ControlContainer extends Component
       audio.currentTime = currentTime;
       store.slideProgress(undefined); // reset state
     }
-
     // change volume
     audio.volume = volume;
+    // switch playBack rate
+    if (audio.playbackRate != playRate) {
+      audio.playbackRate = playRate;
+    }
   }
   unsubscriber = undefined
 

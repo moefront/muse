@@ -510,6 +510,7 @@ Y8P 888  888  888  "Y88888  88888P'  "Y8888          "Y88888 888    "Y888888  "Y
   .muse-menu__item {
     width: 100%;
     padding: 10px;
+    font-size: 13px;
     cursor: pointer;
     transition(.3s all ease-out);
   }
@@ -553,6 +554,22 @@ Y8P 888  888  888  "Y88888  88888P'  "Y8888          "Y88888 888    "Y888888  "Y
     transition(.3s all);
 
     &:hover {
+      color: #000;
+    }
+  }
+  
+  .muse-menu__playrate-container {
+    float: right;
+    a {
+      color: rgb(138, 194, 73);
+      font-size: 16px;
+      display: inline-block;
+      text-decoration: none;
+      padding: 0px 8px;
+      margin: -10px 0px;
+    }
+    
+    .muse-menu__playrate-disabled {
       color: #000;
     }
   }
