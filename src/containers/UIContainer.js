@@ -19,14 +19,11 @@ import '../styles/MUSE.styl';
 import { applyMiddleware } from '../utils';
 
 @observer
-export default class UIContainer extends Component
-{
+export default class UIContainer extends Component {
   static propTypes = {
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
-      .isRequired,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     store: PropTypes.object.isRequired
   };
-
 
   @observable touchTimer = undefined;
   id = undefined;
@@ -145,11 +142,7 @@ export default class UIContainer extends Component
   };
 
   onWindowResize = e => {
-    applyMiddleware(
-      'onPlayerResize',
-      this.props.store.playerInstance,
-      e
-    );
+    applyMiddleware('onPlayerResize', this.props.store.playerInstance, e);
   };
 
   destroyPlayerMenu = e => {
@@ -188,8 +181,17 @@ export default class UIContainer extends Component
 
         <SelectorContainer parent={this} id={id} store={this.props.store} />
         <MenuContainer store={store} parent={this} id={id} />
-        <ControlContainer parent={this} store={store} id={id} />
-        <DrawerContainer store={store} currentTime={this.state.currentTime} id={id} />
+        <ControlContainer
+          parent={this}
+          store={store}
+          id={id}
+          accuracy={this.props.accuracy}
+        />
+        <DrawerContainer
+          store={store}
+          currentTime={this.state.currentTime}
+          id={id}
+        />
       </div>
     );
   }

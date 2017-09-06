@@ -141,6 +141,11 @@ export default class DrawerContainer extends Component {
       key = 0;
     this.lrcRefs = []; // reset
 
+    // set lyric offset automatically
+    const offset = Number(parseFloat(lyrics.offset / 1000).toFixed(1)),
+      curOffset = this.props.store.offset;
+    this.props.store.setLyricOffset(Number(offset - curOffset));
+
     lyrics.lyric.forEach(lyric => {
       lrcComponents.push(
         <LyricItemContainer
@@ -183,10 +188,12 @@ export default class DrawerContainer extends Component {
 
     /* Todo: optimize the complexity */
     if (
+      index + 1 < refs.length &&
       current > refs[index + 1].props.timeline &&
+      index + 2 < refs.length &&
       current < refs[index + 2].props.timeline
     ) {
-      this.updateLyricContainerDOMState(index + 1);
+      this.updateLyricContainerDOMState(++index);
     } else if (index == -1 && current > refs[0].props.timeline) {
       this.updateLyricContainerDOMState(0);
     } else if (index == refs.length - 1) {
@@ -196,32 +203,35 @@ export default class DrawerContainer extends Component {
         // find prev
         for (let i = index; i >= 0; i--) {
           if (i == 0) {
-            this.updateLyricContainerDOMState(-1);
+            index = -1;
             break;
           } else if (
             current >= refs[i].props.timeline &&
             current < refs[i + 1].props.timeline
           ) {
-            this.updateLyricContainerDOMState(i);
+            index = i;
             break;
           } // else if
         } // for
+        this.updateLyricContainerDOMState(index);
       } else if (current > refs[index + 1].props.timeline) {
         for (let i = index; i < refs.length; i++) {
           if (i == refs.length) {
-            this.updateLyricContainerDOMState(refs.length);
+            index = refs.length;
             break;
           } else if (
             current >= refs[i].props.timeline &&
             refs[i + 1] &&
             current < refs[i + 1].props.timeline
           ) {
-            this.updateLyricContainerDOMState(i);
+            index = i;
             break;
           } // else if
         } // for
+        this.updateLyricContainerDOMState(index);
       } // else if
     } // end lyric progress check
+
     index = Number(this.lrcContainer.getAttribute('data-current-index'));
 
     // remove active element class

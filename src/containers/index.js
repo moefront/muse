@@ -35,10 +35,12 @@ export default class PlayerContainer extends Component
   }
 
   render() {
+    const { accuracy } = this.props;
     return (
       <UIContainer
         store={ this.props.store.getInstance(this.props.id) }
         id={ this.props.id }
+        accuracy={ accuracy ? accuracy : false }
       />
     );
   }

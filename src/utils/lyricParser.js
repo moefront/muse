@@ -15,6 +15,7 @@ export const lyricParser = (rawLyric, rawTranslation) => {
   let res = {
     author: undefined,
     transAuthor: undefined,
+    offset: 0,
     lyric: []
   },
     raw = rawLyric,
@@ -54,6 +55,15 @@ export const lyricParser = (rawLyric, rawTranslation) => {
     if (index.match(/\[by:(.*)\]/g)) {
       res.author = /\[by:(.*)\]/g.exec(index)[1];
       return;
+    }
+
+    // lyric offset
+    if (index.indexOf('offset') != -1) {
+      const tmp = /\[offset:(.*?)\]/g.exec(index);
+      if (tmp) {
+        res.offset = tmp[1];
+        return;
+      }
     }
 
     let tags, texts;

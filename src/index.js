@@ -36,7 +36,8 @@ export const MuseDOM = {
     onToggleDrawer: [],
     onTogglePlay: [],
 
-    onPlayerResize: []
+    onPlayerResize: [],
+    onLyricUpdate: []
   },
 
   /* MUSE Player API start */
@@ -121,8 +122,11 @@ export const MuseDOM = {
   },
 
   render(playList, node, options) {
-    if (options === undefined || !options.layout) {
+    if (options === undefined) {
       options = {};
+    }
+
+    if (!options.layout) {
       options.layout = 'muse-layout-default';
     }
 
