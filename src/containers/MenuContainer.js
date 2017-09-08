@@ -65,7 +65,15 @@ export default class MenuContainer extends Component {
 
   onFullscreenTogglerClick = e => {
     e.stopPropagation();
-    const { store } = this.props;
+    const { store, parent } = this.props;
+
+    // firefox compatibility
+    if (parent.player.mozRequestFullScreen) {
+      parent.getFullscreenState()
+        ? document.mozCancelFullScreen()
+        : parent.player.mozRequestFullScreen();
+    }
+
     store.toggleFullscreen();
   };
 

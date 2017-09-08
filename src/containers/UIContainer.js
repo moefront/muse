@@ -52,6 +52,10 @@ export default class UIContainer extends Component {
     this.player.addEventListener('contextmenu', this.onPlayerContextMenu);
     this.player.addEventListener('touchstart', this.onMobileTouchStart);
     this.player.addEventListener('touchend', this.onMobileTouchEnd);
+    this.player.addEventListener(
+      'webkitfullscreenchange',
+      this.onFullscreenChange
+    );
 
     this.unsubscriber = autorun(this.subscriber);
     applyMiddleware('afterRender', instance);
@@ -68,16 +72,17 @@ export default class UIContainer extends Component {
     this.unsubscriber();
   }
 
+  getFullscreenState = () => {
+    return document.fullscreenElement
+      ? true
+      : document.webkitFullscreenElement
+        ? true
+        : document.mozFullScreenElement ? true : false;
+  };
+
   /* fullscreen related store subscribers */
   subscriber = () => {
-    const getFullscreenState = () => {
-      return document.fullscreenElement
-        ? true
-        : document.webkitFullscreenElement
-          ? true
-          : document.mozFullscreenElement ? true : false;
-    },
-      eleFSState = getFullscreenState(),
+    const eleFSState = this.getFullscreenState(),
       { isFullscreen } = this.props.store,
       { player } = this;
 
@@ -87,12 +92,9 @@ export default class UIContainer extends Component {
           ? player.requestFullscreen() || true
           : player.webkitRequestFullscreen
             ? player.webkitRequestFullscreen() || true
-            : player.mozRequestFullscreen
-              ? player.mozRequestFullscreen() || true
               : false;
-
-        if (!state) {
-          throw 'It seems that your browser does not support HTML5 Fullscreen Feature.';
+        if (!state && !player.mozRequestFullScreen) {
+          throw 'It seems that your browser does not support HTML5 Fullscreen feature.';
         }
       }, 10);
     } else if (eleFSState != isFullscreen && !isFullscreen) {
@@ -100,7 +102,7 @@ export default class UIContainer extends Component {
         ? document.exitFullscreen()
         : document.webkitExitFullscreen
           ? document.webkitExitFullscreen()
-          : document.mozExitFullscreen ? document.mozExitFullscreen() : '';
+          : document.mozCancelFullScreen ? document.mozCancelFullScreen() : '';
     } else {
       return;
     }
@@ -145,6 +147,14 @@ export default class UIContainer extends Component {
     applyMiddleware('onPlayerResize', this.props.store.playerInstance, e);
   };
 
+  onFullscreenChange = () => {
+    const currentState = this.getFullscreenState(),
+      storedState = this.props.store.isFullscreen;
+    if (currentState != storedState) {
+      this.props.store.toggleFullscreen(currentState);
+    }
+  };
+
   destroyPlayerMenu = e => {
     e.preventDefault();
     this.props.store.toggleMenu(false);
@@ -175,7 +185,7 @@ export default class UIContainer extends Component {
         <Progress
           currentTime={this.state.currentTime}
           duration={this.state.duration}
-          store={this.props.store}
+          store={store}
           id={id}
         />
 

@@ -75,6 +75,4 @@ var playList = [
   }
 ];
 
-window.player = window.MUSE.render(playList, document.getElementById('app'), {
-  accuracy: true
-});
+window.player = window.MUSE.render(playList, document.getElementById('app'));
