@@ -293,6 +293,7 @@ Y8P 888  888  888  "Y88888  88888P'  "Y8888          "Y88888 888    "Y888888  "Y
 
   position: absolute;
   bottom: 70px;
+  z-index: 10;
   opacity: 1;
 
   transition(.5s all ease-in-out);
@@ -560,17 +561,17 @@ Y8P 888  888  888  "Y88888  88888P'  "Y8888          "Y88888 888    "Y888888  "Y
   
   .muse-menu__playrate-container {
     float: right;
-    a {
-      color: rgb(138, 194, 73);
+    & > a {
+      color: rgb(138, 194, 73) !important;
       font-size: 16px;
       display: inline-block;
-      text-decoration: none;
+      text-decoration: none !important;
       padding: 0px 8px;
       margin: -10px 0px;
     }
     
     .muse-menu__playrate-disabled {
-      color: #000;
+      color: #000!important;
     }
   }
 }

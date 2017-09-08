@@ -56,6 +56,10 @@ export default class UIContainer extends Component {
       'webkitfullscreenchange',
       this.onFullscreenChange
     );
+    this.player.addEventListener(
+      'mozfullscreenchange',
+      this.onFullscreenChange
+    );
 
     this.unsubscriber = autorun(this.subscriber);
     applyMiddleware('afterRender', instance);
@@ -68,6 +72,14 @@ export default class UIContainer extends Component {
     this.player.removeEventListener('contextmenu', this.onPlayerContextMenu);
     this.player.removeEventListener('touchstart', this.onMobileTouchStart);
     this.player.removeEventListener('touchend', this.onMobileTouchEnd);
+    this.player.removeEventListener(
+      'webkitfullscreenchange',
+      this.onFullscreenChange
+    );
+    this.player.removeEventListener(
+      'mozfullscreenchange',
+      this.onFullscreenChange
+    );
 
     this.unsubscriber();
   }
@@ -92,7 +104,7 @@ export default class UIContainer extends Component {
           ? player.requestFullscreen() || true
           : player.webkitRequestFullscreen
             ? player.webkitRequestFullscreen() || true
-              : false;
+            : false;
         if (!state && !player.mozRequestFullScreen) {
           throw 'It seems that your browser does not support HTML5 Fullscreen feature.';
         }

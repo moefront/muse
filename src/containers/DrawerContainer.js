@@ -101,6 +101,7 @@ export default class DrawerContainer extends Component {
     e.stopPropagation();
 
     const { store } = this.props;
+    store.togglePanel('lyric');
     store.toggleDrawer();
   };
 
