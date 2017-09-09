@@ -250,6 +250,7 @@ Y8P 888  888  888  "Y88888  88888P'  "Y8888          88888P'  "Y8888  888  "Y888
   position: absolute;
   top: 50%;
   z-index: 12;
+  pointer-events: none;
 
   transform(translateY(-50%));
 
@@ -259,6 +260,7 @@ Y8P 888  888  888  "Y88888  88888P'  "Y8888          88888P'  "Y8888  888  "Y888
     text-align: center;
     display: inline-block;
     cursor: pointer;
+    pointer-events: auto;
 
     svg {
       width: 30px;
@@ -385,6 +387,7 @@ Y8P 888  888  888  "Y88888  88888P'  "Y8888          "Y88888 888    "Y888888  "Y
     display: inline-block;
 
     position: absolute;
+    z-index: 13;
     left: calc(100% + 24px);
     
     &::-webkit-scrollbar {
@@ -566,12 +569,13 @@ Y8P 888  888  888  "Y88888  88888P'  "Y8888          "Y88888 888    "Y888888  "Y
       font-size: 16px;
       display: inline-block;
       text-decoration: none !important;
+      border: 0px !important;
       padding: 0px 8px;
       margin: -10px 0px;
     }
     
     .muse-menu__playrate-disabled {
-      color: #000!important;
+      color: #000 !important;
     }
   }
 }
