@@ -139,8 +139,10 @@ export default class MenuContainer extends Component {
       isFullscreen,
       volume,
       playRate,
-      offset
+      offset,
+      parent
     } = this.props.store;
+
     return (
       <div
         className={'muse-menu' + (!isMenuOpen ? ' muse-menu__state-close' : '')}
@@ -241,10 +243,14 @@ export default class MenuContainer extends Component {
         <div
           className={'muse-menu__item'}
           onClick={() => {
-            window.open('https://github.com/moefront/MUSE');
+            window.open('https://github.com/moefront/muse');
           }}
         >
-          <span>MUSE Player ver.{config.MUSE_VERSION}</span>
+          <span>
+            {config.MUSE_VERSION != parent.latest
+              ? '发现新版本：MUSE ' + parent.latest
+              : 'MUSE Player ver.' + config.MUSE_VERSION}
+          </span>
         </div>
       </div>
     );

@@ -23,8 +23,11 @@ export default class PlayerModel {
 	@observable playerLayout = 'muse-layout-default';
 	@observable playerInstance = undefined;
 
-	constructor(options, id) {
+	@observable parent = undefined;
+
+	constructor(options, id, parent) {
 		this.id = id;
+		this.parent = parent;
 		Object.keys(options).forEach(key => (this[key] = options[key]));
 	}
 

@@ -16,7 +16,7 @@ import { observer } from 'mobx-react';
 // Container
 import LyricItemContainer from './LyricItemContainer';
 // Utils
-import { lyricParser, classifier } from '../utils';
+import { lyricParser, classifier, applyMiddleware } from '../utils';
 // icons
 import { LyricToggler, PlayListToggler } from '../sources/icons';
 
@@ -172,13 +172,15 @@ export default class DrawerContainer extends Component {
     */
   synchronizeLyric(obj) {
     const { currentTime } = obj,
-      { offset } = this.props.store,
+      { offset, instance } = this.props.store,
       refs = this.state.lrcComponents;
     let current = currentTime + offset, // fix timeline offset
       index = Number(this.lrcContainer.getAttribute('data-current-index'));
     if (index >= refs.length) {
       index = 0; // reset index
     }
+
+    const prevIndex = index;
 
     if (
       this.state.lrcComponents == null ||
@@ -235,29 +237,39 @@ export default class DrawerContainer extends Component {
 
     index = Number(this.lrcContainer.getAttribute('data-current-index'));
 
-    // remove active element class
-    let currentActive = this.lrcContainer.querySelector(
-      '.muse-lyric__item.muse-lyric__state-active'
-    ),
-      nextActive = this.lrcContainer.querySelector(
-        '.muse-lyric__item[data-lyric-item-id="' + index + '"]'
-      );
-    if (currentActive)
-      classifier.remove(currentActive, 'muse-lyric__state-active');
+    if (prevIndex != index) {
+      // remove active element class
+      let currentActive = this.lrcContainer.querySelector(
+        '.muse-lyric__item.muse-lyric__state-active'
+      ),
+        nextActive = this.lrcContainer.querySelector(
+          '.muse-lyric__item[data-lyric-item-id="' + index + '"]'
+        );
+      if (currentActive)
+        classifier.remove(currentActive, 'muse-lyric__state-active');
 
-    if (index != -1 && nextActive != null) {
-      classifier.add(nextActive, 'muse-lyric__state-active');
-      // change container position
-      let boxHeight = this.lrcContainer.offsetHeight,
-        targetOffset =
-          nextActive.offsetTop -
-          Math.abs(boxHeight - nextActive.offsetHeight) / 2;
-      if (targetOffset < 0) {
-        targetOffset = 0;
+      if (index != -1 && nextActive != null) {
+        classifier.add(nextActive, 'muse-lyric__state-active');
+        // change container position
+        let boxHeight = this.lrcContainer.offsetHeight,
+          targetOffset =
+            nextActive.offsetTop -
+            Math.abs(boxHeight - nextActive.offsetHeight) / 2;
+        if (targetOffset < 0) {
+          targetOffset = 0;
+        }
+
+        let transf = String(targetOffset + 'px');
+        this.setTransform(transf);
       }
-
-      let transf = String(targetOffset + 'px');
-      this.setTransform(transf);
+      // respond API
+      if (index != -1) {
+        applyMiddleware('onLyricUpdate', instance, {
+          timeline: refs[index].props.timeline,
+          text: refs[index].props.text,
+          translation: refs[index].props.translation
+        });
+      }
     }
   }
 

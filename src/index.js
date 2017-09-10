@@ -7,6 +7,7 @@ import { render as reactDOMRender, unmountComponentAtNode } from 'react-dom';
 
 import PlayerContainer from './containers';
 import { PlayerInstancesModel } from './models';
+import config from './config/base';
 
 // This is an example for custom layouts inside the project.
 // Alternatively, you can also requires your layout file outside.
@@ -40,6 +41,8 @@ export const MuseDOM = {
     onLyricUpdate: []
   },
 
+  _version: config.MUSE_VERSION,
+
   /* MUSE Player API start */
   // high-level APIs: getInstance(), getState(), changeState()
   // Warning: these APIs are directly related to Component, you'd better not use them unless you need.
@@ -50,7 +53,7 @@ export const MuseDOM = {
     return store.getInstance(id)[key];
   },
   changeState(id, key, val) {
-    return store.getInstance(id)[key] = val;
+    return (store.getInstance(id)[key] = val);
   },
 
   // Player action APIs
@@ -108,6 +111,10 @@ export const MuseDOM = {
     if (!this._middlewares[hook]) return;
     this._middlewares[hook].push(func);
   },
+  destroyMiddleware(hook, func) {
+    const cmp = (ele) => ele == func;
+    this._middlewares[hook].splice(this._middlewares[hook].find(cmp));
+  },
 
   /* MUSE Player life cycle */
   destroy(id, par = undefined) {
@@ -154,6 +161,25 @@ export const MuseDOM = {
     }
 
     return muse;
+  },
+
+  checkMUSEUpdate() {
+    fetch('https://raw.githubusercontent.com/moefront/muse/master/package.json')
+      .then(res => res.json())
+      .then(data => {
+        if (data.version > MuseDOM._version) {
+          // outdated
+          if (Number(parseFloat(data.version) - parseFloat(MuseDOM._version)) >= 0.1) {
+            console.warn(
+              'Tips: You are using an outdated version of MUSE.\n' +
+              'The latest version of MUSE is ' + data.version + ', ' +
+              'while you are using ' + MuseDOM._version + '.\n' +
+              'Please consider upgrading your player: https://github.com/moefront/muse'
+            );
+          }
+          store.setLatestVersion(data.version);
+        }
+      });
   }
 };
 
@@ -161,6 +187,11 @@ window.MUSE = window.YMPlayer = MuseDOM;
 
 // layout register
 MuseDOM.registerLayout('muse-layout-landscape', landscapeLayoutConstructor);
+
+// check update
+if (window && window.fetch) {
+  MuseDOM.checkMUSEUpdate();
+}
 
 export PlayerContainer from './containers';
 export default MuseDOM;
