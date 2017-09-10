@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-
-// Actions
-import { PlayerActions } from '../actions';
+import { PropTypes } from 'prop-types';
+import { observable, autorun } from 'mobx';
+import { observer } from 'mobx-react';
 
 // Containers
 import ControlContainer from './ControlContainer';
@@ -19,12 +18,14 @@ import '../styles/MUSE.styl';
 // Utils
 import { applyMiddleware } from '../utils';
 
-@connect(state => ({
-  player: state.player
-}))
-export default class UIContainer extends Component
-{
-  touchTimer = undefined;
+@observer
+export default class UIContainer extends Component {
+  static propTypes = {
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    store: PropTypes.object.isRequired
+  };
+
+  @observable touchTimer = undefined;
   id = undefined;
 
   constructor(props) {
@@ -38,21 +39,29 @@ export default class UIContainer extends Component
 
   /* life cycles */
   componentDidMount() {
-    const { dispatch } = this.props.store,
+    const { store } = this.props,
       instance = {
         component: this,
         ref: this.player,
         id: this.id
       };
-    dispatch(PlayerActions.pushPlayerInstance(instance, this.id));
+    store.pushPlayerInstance(instance, this.id);
 
     window.addEventListener('resize', this.onWindowResize);
 
     this.player.addEventListener('contextmenu', this.onPlayerContextMenu);
     this.player.addEventListener('touchstart', this.onMobileTouchStart);
     this.player.addEventListener('touchend', this.onMobileTouchEnd);
+    this.player.addEventListener(
+      'webkitfullscreenchange',
+      this.onFullscreenChange
+    );
+    this.player.addEventListener(
+      'mozfullscreenchange',
+      this.onFullscreenChange
+    );
 
-    this.unsubscriber = this.props.store.subscribe(this.subscriber);
+    this.unsubscriber = autorun(this.subscriber);
     applyMiddleware('afterRender', instance);
     applyMiddleware('onPlayerResize', instance);
   }
@@ -63,21 +72,30 @@ export default class UIContainer extends Component
     this.player.removeEventListener('contextmenu', this.onPlayerContextMenu);
     this.player.removeEventListener('touchstart', this.onMobileTouchStart);
     this.player.removeEventListener('touchend', this.onMobileTouchEnd);
+    this.player.removeEventListener(
+      'webkitfullscreenchange',
+      this.onFullscreenChange
+    );
+    this.player.removeEventListener(
+      'mozfullscreenchange',
+      this.onFullscreenChange
+    );
 
     this.unsubscriber();
   }
 
+  getFullscreenState = () => {
+    return document.fullscreenElement
+      ? true
+      : document.webkitFullscreenElement
+        ? true
+        : document.mozFullScreenElement ? true : false;
+  };
+
   /* fullscreen related store subscribers */
   subscriber = () => {
-    const getFullscreenState = () => {
-      return document.fullscreenElement
-        ? true
-        : document.webkitFullscreenElement
-          ? true
-          : document.mozFullscreenElement ? true : false;
-    },
-      eleFSState = getFullscreenState(),
-      { isFullscreen } = this.props.player[this.id],
+    const eleFSState = this.getFullscreenState(),
+      { isFullscreen } = this.props.store,
       { player } = this;
 
     if (eleFSState != isFullscreen && isFullscreen) {
@@ -86,12 +104,9 @@ export default class UIContainer extends Component
           ? player.requestFullscreen() || true
           : player.webkitRequestFullscreen
             ? player.webkitRequestFullscreen() || true
-            : player.mozRequestFullscreen
-              ? player.mozRequestFullscreen() || true
-              : false;
-
-        if (!state) {
-          throw 'It seems that your browser does not support HTML5 Fullscreen Feature.';
+            : false;
+        if (!state && !player.mozRequestFullScreen) {
+          throw 'It seems that your browser does not support HTML5 Fullscreen feature.';
         }
       }, 10);
     } else if (eleFSState != isFullscreen && !isFullscreen) {
@@ -99,16 +114,17 @@ export default class UIContainer extends Component
         ? document.exitFullscreen()
         : document.webkitExitFullscreen
           ? document.webkitExitFullscreen()
-          : document.mozExitFullscreen ? document.mozExitFullscreen() : '';
+          : document.mozCancelFullScreen ? document.mozCancelFullScreen() : '';
     } else {
       return;
     }
   };
+
   unsubscriber = undefined;
 
   /* event listeners */
   onMobileTouchStart = e => {
-    const state = this.props.store.getState().player[this.id];
+    const state = this.props.store;
     if (state.isMenuOpen) {
       return;
     }
@@ -121,12 +137,9 @@ export default class UIContainer extends Component
   };
 
   onPlayerContextMenu = e => {
-    const { dispatch } = this.props.store;
-
     e.preventDefault();
     e.stopPropagation();
-
-    dispatch(PlayerActions.toggleMenu(true, this.id));
+    this.props.store.toggleMenu(true);
 
     // set position
     const menuElement = this.player.querySelector('.muse-menu');
@@ -143,20 +156,20 @@ export default class UIContainer extends Component
   };
 
   onWindowResize = e => {
-    applyMiddleware(
-      'onPlayerResize',
-      this.props.player[this.id].playerInstance,
-      e
-    );
+    applyMiddleware('onPlayerResize', this.props.store.playerInstance, e);
+  };
+
+  onFullscreenChange = () => {
+    const currentState = this.getFullscreenState(),
+      storedState = this.props.store.isFullscreen;
+    if (currentState != storedState) {
+      this.props.store.toggleFullscreen(currentState);
+    }
   };
 
   destroyPlayerMenu = e => {
-    const { dispatch } = this.props.store;
-
     e.preventDefault();
-
-    dispatch(PlayerActions.toggleMenu(false, this.id));
-
+    this.props.store.toggleMenu(false);
     document.body.removeEventListener('click', this.destroyPlayerMenu);
   };
 
@@ -166,7 +179,7 @@ export default class UIContainer extends Component
       currentMusicIndex,
       playerLayout,
       isDrawerOpen
-    } = this.props.player[this.id],
+    } = this.props.store,
       { id, store } = this.props,
       cover = playList[currentMusicIndex].cover;
 
@@ -184,14 +197,23 @@ export default class UIContainer extends Component
         <Progress
           currentTime={this.state.currentTime}
           duration={this.state.duration}
-          dispatch={this.props.dispatch}
+          store={store}
           id={id}
         />
 
-        <SelectorContainer parent={this} id={id} />
+        <SelectorContainer parent={this} id={id} store={this.props.store} />
         <MenuContainer store={store} parent={this} id={id} />
-        <DrawerContainer store={store} currentTime={this.state.currentTime} id={id} />
-        <ControlContainer parent={this} store={store} id={id} />
+        <ControlContainer
+          parent={this}
+          store={store}
+          id={id}
+          accuracy={this.props.accuracy}
+        />
+        <DrawerContainer
+          store={store}
+          currentTime={this.state.currentTime}
+          id={id}
+        />
       </div>
     );
   }

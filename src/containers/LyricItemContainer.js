@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { observer } from 'mobx-react';
 
-@connect(
-  state => ({
-    player: state.player
-  })
-)
+@observer
 export default class LyricItemContainer extends Component
 {
   static propTypes = {

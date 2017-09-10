@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-
-// Actions
-import { PlayerActions } from '../actions';
+import { PropTypes } from 'prop-types';
+import { observer } from 'mobx-react';
 
 // Icons
 import { PrevButton, NextButton } from '../sources/icons';
 
-@connect(
-  state => ({
-    player: state.player
-  })
-)
+@observer
 export default class SelectorContainer extends Component
 {
+  static propTypes = {
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+      .isRequired,
+    store: PropTypes.object.isRequired
+  };
+
   id = undefined;
 
   constructor(props) {
@@ -23,51 +23,47 @@ export default class SelectorContainer extends Component
 
   /* event listeners */
   onPrevButtonClick = () => {
-    const { dispatch } = this.props,
-          { playList, currentMusicIndex } = this.props.player[this.id];
+    const { store } = this.props,
+          { playList, currentMusicIndex } = store;
 
-    dispatch(PlayerActions.togglePlay(false, this.id));
+    setTimeout(() => store.togglePlay(false), 0);
 
     if (currentMusicIndex - 1 >= 0) {
-      dispatch(PlayerActions.setCurrentMusic(currentMusicIndex - 1, this.id));
+      store.setCurrentMusic(currentMusicIndex - 1);
     } else {
-      dispatch(PlayerActions.setCurrentMusic(playList.length - 1, this.id));
+      store.setCurrentMusic(playList.length - 1);
     }
 
-    setTimeout(() => {
-      dispatch(PlayerActions.togglePlay(true, this.id));
-    }, 0);
+    setTimeout(() => store.togglePlay(true), 10);
   }
 
   onNextButtonClick = () => {
-    const { dispatch } = this.props,
-          { playList, currentMusicIndex } = this.props.player[this.id];
+    const { store } = this.props,
+          { playList, currentMusicIndex } = store;
 
-    dispatch(PlayerActions.togglePlay(false, this.id));
+    setTimeout(() => store.togglePlay(false), 0);
 
     if (currentMusicIndex + 1 < playList.length) {
-      dispatch(PlayerActions.setCurrentMusic(currentMusicIndex + 1, this.id));
+      store.setCurrentMusic(currentMusicIndex + 1);
     } else {
-      dispatch(PlayerActions.setCurrentMusic(0, this.id));
+      store.setCurrentMusic(0);
     }
 
-    setTimeout(() => {
-      dispatch(PlayerActions.togglePlay(true, this.id));
-    }, 0);
+    setTimeout(() => store.togglePlay(true), 10);
   }
 
   render() {
     return (
       <div className={ 'muse-selector' }>
         <div
-          className={ 'muse-selector__prev' }
+          className={ 'muse-selector_prev' }
           title={ '上一首 (Previous)' }
           onClick={ this.onPrevButtonClick }
         >
           <PrevButton />
         </div>
         <div
-          className={ 'muse-selector__next' }
+          className={ 'muse-selector_next' }
           title={ '下一首 (Next)' }
           onClick={ this.onNextButtonClick }
         >

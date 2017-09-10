@@ -250,15 +250,17 @@ Y8P 888  888  888  "Y88888  88888P'  "Y8888          88888P'  "Y8888  888  "Y888
   position: absolute;
   top: 50%;
   z-index: 12;
+  pointer-events: none;
 
   transform(translateY(-50%));
 
-  .muse-selector__prev, .muse-selector__next {
+  .muse-selector_prev, .muse-selector_next {
     width: 30px;
     height: 30px;
     text-align: center;
     display: inline-block;
     cursor: pointer;
+    pointer-events: auto;
 
     svg {
       width: 30px;
@@ -268,7 +270,7 @@ Y8P 888  888  888  "Y88888  88888P'  "Y8888          88888P'  "Y8888  888  "Y888
     }
   }
 
-  .muse-selector__next {
+  .muse-selector_next {
     float: right;
   }
 } //.muse-selector
@@ -293,11 +295,13 @@ Y8P 888  888  888  "Y88888  88888P'  "Y8888          "Y88888 888    "Y888888  "Y
 
   position: absolute;
   bottom: 70px;
+  z-index: 10;
   opacity: 1;
 
   transition(.5s all ease-in-out);
 
   .muse-drawer__container {
+    z-index: 15;
     transition(.3s all ease-in-out);
   }
 
@@ -383,6 +387,7 @@ Y8P 888  888  888  "Y88888  88888P'  "Y8888          "Y88888 888    "Y888888  "Y
     display: inline-block;
 
     position: absolute;
+    z-index: 13;
     left: calc(100% + 24px);
     
     &::-webkit-scrollbar {
@@ -509,6 +514,7 @@ Y8P 888  888  888  "Y88888  88888P'  "Y8888          "Y88888 888    "Y888888  "Y
   .muse-menu__item {
     width: 100%;
     padding: 10px;
+    font-size: 13px;
     cursor: pointer;
     transition(.3s all ease-out);
   }
@@ -553,6 +559,23 @@ Y8P 888  888  888  "Y88888  88888P'  "Y8888          "Y88888 888    "Y888888  "Y
 
     &:hover {
       color: #000;
+    }
+  }
+  
+  .muse-menu__playrate-container {
+    float: right;
+    & > a {
+      color: rgb(138, 194, 73) !important;
+      font-size: 16px;
+      display: inline-block;
+      text-decoration: none !important;
+      border: 0px !important;
+      padding: 0px 8px;
+      margin: -10px 0px;
+    }
+    
+    .muse-menu__playrate-disabled {
+      color: #000 !important;
     }
   }
 }

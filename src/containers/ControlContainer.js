@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { PropTypes } from 'prop-types';
+
+import { autorun } from 'mobx';
+import { observer } from 'mobx-react';
 // icons
 import { PlayButton, PauseButton } from '../sources/icons';
-// actions
-import { PlayerActions } from '../actions/';
 
-@connect(
-  state => ({
-    player: state.player
-  })
-)
-export default class ControlContainer extends Component
-{
+@observer
+export default class ControlContainer extends Component {
+  static propTypes = {
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    store: PropTypes.object.isRequired
+  };
+
   id = undefined;
 
   constructor(props) {
@@ -21,124 +22,133 @@ export default class ControlContainer extends Component
 
   /* store subscribers */
   subscriber = () => {
-    const { store } = this.props;
-    const state = store.getState().player[this.id],
-          { dispatch } = this.props,
-          { audio } = this;
-
+    const { store } = this.props,
+      { audio } = this,
+      { currentTime, volume, playRate } = store;
     // toggle play
-    if (!audio.paused != state.isPlaying) {
-      if (state.isPlaying) {
-        setTimeout(() => audio.play(), 0);
+    if (!audio.paused != store.isPlaying) {
+      if (store.isPlaying) {
+        audio.play();
       } else {
-        setTimeout(() => audio.pause(), 0);
+        audio.pause();
       }
       return;
     }
-
     // slide progress
-    if (state.currentTime != undefined) {
-      audio.currentTime = state.currentTime;
-      dispatch(PlayerActions.slideProgress(undefined, this.id)); // reset state
+    if (currentTime != undefined) {
+      audio.currentTime = currentTime;
+      store.slideProgress(undefined); // reset state
     }
-
     // change volume
-    audio.volume = state.volume;
-  }
-  unsubscriber = undefined
+    audio.volume = volume;
+    // switch playBack rate
+    if (audio.playbackRate != playRate) {
+      audio.playbackRate = playRate;
+    }
+  };
+  unsubscriber = undefined;
 
   /* component life cycles */
-  componentWillMount() {
-    this.unsubscriber = this.props.store.subscribe(this.subscriber);
+  componentDidMount() {
+    const { accuracy } = this.props;
+    this.unsubscriber = autorun(this.subscriber);
+
+    // bind audio timeupdate handler
+    if (accuracy) {
+      this.intervaler = window.setInterval(
+        this.onAudioTimeUpdate,
+        accuracy === true ? 80 : accuracy
+      );
+    } else {
+      this.audio.addEventListener('timeupdate', this.onAudioTimeUpdate);
+    }
   }
 
   componentWillUnmount() {
     this.unsubscriber();
+    if (this.intervaler) {
+      window.clearInterval(this.intervaler);
+    } else {
+      this.audio.removeEventListener('timeupdate', this.onAudioTimeUpdate);
+    }
   }
 
   /* event listeners */
   onControllerClick = () => {
-    const { playerLayout, isDrawerOpen } = this.props.player[this.id],
-          { dispatch } = this.props;
+    const { playerLayout } = this.props.store,
+      { store } = this.props;
     if (playerLayout == 'muse-layout-landscape') {
-      dispatch(PlayerActions.toggleDrawer(!isDrawerOpen, this.id));
+      store.toggleDrawer();
     }
-  }
+  };
 
   onPlayBtnClick = () => {
-    const { dispatch } = this.props,
-          { isPlaying } = this.props.player[this.id];
-    dispatch(PlayerActions.togglePlay(!isPlaying, this.id));
-  }
+    const { store } = this.props;
+    store.togglePlay();
+  };
 
   onAudioTimeUpdate = () => {
     // synchronize play progress
     const { currentTime, duration } = this.audio,
-          { parent } = this.props;
+      { parent } = this.props;
     parent.setState({
       ...parent.state,
       currentTime: currentTime,
       duration: duration
     });
-  }
+  };
 
   onAudioEnded = (proxy, e, specialCheck = false) => {
-    const { isLoop, currentMusicIndex, playList } = this.props.player[this.id],
-          { dispatch } = this.props;
+    const { store } = this.props,
+      { isLoop, currentMusicIndex, playList } = store;
 
     // check loop
-    if ((specialCheck || !isLoop) && playList.length-1 > currentMusicIndex) {
-      dispatch(PlayerActions.togglePlay(false, this.id));
-      dispatch(PlayerActions.setCurrentMusic(currentMusicIndex + 1, this.id));
-      setTimeout(() => dispatch(PlayerActions.togglePlay(true, this.id)), 10);
+    if ((specialCheck || !isLoop) && playList.length - 1 > currentMusicIndex) {
+      setTimeout(() => store.togglePlay(false), 0);
+      store.setCurrentMusic(currentMusicIndex + 1);
+      setTimeout(() => store.togglePlay(true), 10);
     } else if (!specialCheck && isLoop) {
-      dispatch(PlayerActions.slideProgress(0, this.id));
+      store.slideProgress(0);
     } else {
-      dispatch(PlayerActions.playerStop(this.id));
+      store.playerStop();
     }
-  }
+  };
 
   onAudioError = () => {
     this.onAudioEnded(false, false, true);
-  }
+  };
 
   render() {
-    const { isPlaying, playList, currentMusicIndex } = this.props.player[this.id];
+    const { isPlaying, playList, currentMusicIndex } = this.props.store;
     const current = playList[currentMusicIndex];
 
     return (
-      <div
-          className={ 'muse-controller' }
-          onClick={ this.onControllerClick }
-      >
+      <div className={'muse-controller'} onClick={this.onControllerClick}>
         <audio
-          preload={ 'no' }
-          ref={ ref => this.audio = ref }
-          src={ current.src }
+          preload={'no'}
+          ref={ref => (this.audio = ref)}
+          src={current.src}
+          onError={this.onAudioError}
+          onEnded={this.onAudioEnded}
+        />
 
-          onTimeUpdate={ this.onAudioTimeUpdate }
-          onError={ this.onAudioError }
-          onEnded={ this.onAudioEnded }
-        >
-        </audio>
+        <div className={'muse-controller__container'}>
+          <div className={'muse-musicDetail'}>
+            <h1 className={'muse-musicDetail__title'} title={current.title}>
+              {current.title}
 
-        <div className={ 'muse-controller__container' }>
-          <div className={ 'muse-musicDetail' } >
-            <h1 className={ 'muse-musicDetail__title' } title={ current.title }>
-              { current.title }
-
-              <small className={ 'muse-musicDetail__artist' } title={ current.artist }>
-                { current.artist }
+              <small
+                className={'muse-musicDetail__artist'}
+                title={current.artist}
+              >
+                {current.artist}
               </small>
             </h1>
           </div>
 
-          <div className={ 'muse-playControl' }>
-            <button
-              className={ 'muse-btn__play' }
-              onClick={ this.onPlayBtnClick }
-            >
-              { isPlaying ? <PauseButton /> : <PlayButton /> }
+          <div className={'muse-playControl'}>
+            <button className={'muse-btn__play'} onClick={this.onPlayBtnClick}>
+              {isPlaying ? <PauseButton /> : <PlayButton />}
             </button>
           </div>
         </div>

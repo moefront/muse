@@ -10,20 +10,17 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { autorun } from 'mobx';
+import { observer } from 'mobx-react';
 
 // Container
 import LyricItemContainer from './LyricItemContainer';
-// Actions
-import { PlayerActions } from '../actions';
 // Utils
-import { lyricParser, classifier } from '../utils';
+import { lyricParser, classifier, applyMiddleware } from '../utils';
 // icons
 import { LyricToggler, PlayListToggler } from '../sources/icons';
 
-@connect(state => ({
-  player: state.player
-}))
+@observer
 export default class DrawerContainer extends Component {
   id = undefined;
 
@@ -36,7 +33,7 @@ export default class DrawerContainer extends Component {
     super(props);
     this.id = props.id;
     this.state = {
-      current: props.player[this.id].playList[props.player[this.id].currentMusicIndex],
+      current: this.props.store.playList[this.props.store.currentMusicIndex],
       lrcComponents: []
     };
   }
@@ -53,11 +50,13 @@ export default class DrawerContainer extends Component {
                                             888
                                        Y8b d88P
                                         "Y88P"
-  */
+                                        */
   componentWillMount() {
-    const state = this.props.player[this.id];
+    const state = this.props.store;
     this.parseLyric(state.playList[state.currentMusicIndex]);
-    this.unsubscriber = this.props.store.subscribe(this.subscriber);
+  }
+  componentDidMount() {
+    this.unsubscriber = autorun(this.subscriber);
   }
   componentWillUnmount() {
     this.unsubscriber();
@@ -78,11 +77,8 @@ export default class DrawerContainer extends Component {
    */
   subscriber = () => {
     const { store } = this.props,
-      newState = store.getState();
-    const current =
-      newState.player[this.id].playList[
-        newState.player[this.id].currentMusicIndex
-      ];
+      newState = store;
+    const current = newState.playList[newState.currentMusicIndex];
     if (current != this.state.current) {
       this.parseLyric(current);
       this.updateLyricContainerDOMState(0);
@@ -99,22 +95,22 @@ export default class DrawerContainer extends Component {
   88888888 Y88  88P 88888888 888  888 888         888 888 "Y8888b. 888   88888888 888  888 88888888 888     "Y8888b.
   Y8b.      Y8bd8P  Y8b.     888  888 Y88b.       888 888      X88 Y88b. Y8b.     888  888 Y8b.     888          X88
    "Y8888    Y88P    "Y8888  888  888  "Y888      888 888  88888P'  "Y888 "Y8888  888  888  "Y8888  888      88888P'
-  */
+   */
   toggleDrawerState = e => {
     e.preventDefault();
     e.stopPropagation();
 
-    const { dispatch } = this.props,
-      { isDrawerOpen } = this.props.player[this.id];
-    dispatch(PlayerActions.toggleDrawer(!isDrawerOpen, this.id));
+    const { store } = this.props;
+    store.togglePanel('lyric');
+    store.toggleDrawer();
   };
 
   togglePanel = (panel, e) => {
     e.preventDefault();
     e.stopPropagation();
 
-    const { dispatch } = this.props;
-    dispatch(PlayerActions.togglePanel(panel, this.id));
+    const { store } = this.props;
+    store.togglePanel(panel);
   };
 
   /*
@@ -128,9 +124,9 @@ export default class DrawerContainer extends Component {
   888  "Y88888 888     888  "Y8888P      888  888 "Y888888 888  888  "Y88888 888  "Y8888  888
            888
       Y8b d88P
-       "Y88P"   */
+      "Y88P"   */
   parseLyric = current => {
-    if (current.lyric == undefined) {
+    if (current.lyric == undefined && current.lrc == undefined) {
       this.setState({
         current,
         lrcComponents: null
@@ -138,16 +134,18 @@ export default class DrawerContainer extends Component {
       return;
     }
 
-    const lyrics = lyricParser(current.lyric);
+    const lyrics = lyricParser(
+      current.lyric || current.lrc,
+      current.translation
+    );
     let lrcComponents = [],
-      key = 0,
-      translation = [];
+      key = 0;
     this.lrcRefs = []; // reset
 
-    // inject translation if exists
-    if (current.translation != undefined) {
-      translation = current.translation.split('\n');
-    }
+    // set lyric offset automatically
+    const offset = Number(parseFloat(lyrics.offset / 1000).toFixed(1)),
+      curOffset = this.props.store.offset;
+    this.props.store.setLyricOffset(Number(offset - curOffset));
 
     lyrics.lyric.forEach(lyric => {
       lrcComponents.push(
@@ -156,35 +154,50 @@ export default class DrawerContainer extends Component {
           index={key++}
           timeline={lyric.timeline}
           text={lyric.text}
-          translation={translation != [] ? translation[key - 1] : undefined}
+          translation={lyric.translation ? lyric.translation : ''}
         />
       );
     });
-    
+
     this.setState({
       current: current,
       lrcComponents: lrcComponents
     });
-
   };
 
   /**
-   * synchronize lyric when time update
-   * @param  {Object} obj
-   * @return {void}
-   */
+    * synchronize lyric when time update
+    * @param  {Object} obj
+    * @return {void}
+    */
   synchronizeLyric(obj) {
     const { currentTime } = obj,
-      { offset } = this.props.player[this.id],
+      { offset, instance } = this.props.store,
       refs = this.state.lrcComponents;
     let current = currentTime + offset, // fix timeline offset
       index = Number(this.lrcContainer.getAttribute('data-current-index'));
+    if (index >= refs.length) {
+      index = 0; // reset index
+    }
 
-    if (this.state.lrcComponents == null || this.state.lrcComponents.length == 0) {
+    const prevIndex = index;
+
+    if (
+      this.state.lrcComponents == null ||
+      this.state.lrcComponents.length == 0
+    ) {
       return;
     }
 
-    if (index == -1 && current > refs[0].props.timeline) {
+    /* Todo: optimize the complexity */
+    if (
+      index + 1 < refs.length &&
+      current > refs[index + 1].props.timeline &&
+      index + 2 < refs.length &&
+      current < refs[index + 2].props.timeline
+    ) {
+      this.updateLyricContainerDOMState(++index);
+    } else if (index == -1 && current > refs[0].props.timeline) {
       this.updateLyricContainerDOMState(0);
     } else if (index == refs.length - 1) {
       return;
@@ -193,61 +206,70 @@ export default class DrawerContainer extends Component {
         // find prev
         for (let i = index; i >= 0; i--) {
           if (i == 0) {
-            this.updateLyricContainerDOMState(-1);
+            index = -1;
             break;
           } else if (
             current >= refs[i].props.timeline &&
             current < refs[i + 1].props.timeline
           ) {
-            this.updateLyricContainerDOMState(i);
+            index = i;
             break;
           } // else if
         } // for
+        this.updateLyricContainerDOMState(index);
       } else if (current > refs[index + 1].props.timeline) {
         for (let i = index; i < refs.length; i++) {
           if (i == refs.length) {
-            this.updateLyricContainerDOMState(refs.length);
+            index = refs.length;
             break;
           } else if (
             current >= refs[i].props.timeline &&
             refs[i + 1] &&
             current < refs[i + 1].props.timeline
           ) {
-            this.updateLyricContainerDOMState(i);
+            index = i;
             break;
           } // else if
         } // for
+        this.updateLyricContainerDOMState(index);
       } // else if
     } // end lyric progress check
+
     index = Number(this.lrcContainer.getAttribute('data-current-index'));
 
-    // remove active element class
-    let currentActive = this.lrcContainer.querySelectorAll(
-      '.muse-lyric__item.muse-lyric__state-active'
-    ),
-      nextActive = this.lrcContainer.querySelector(
-        '.muse-lyric__item[data-lyric-item-id="' + index + '"]'
-      );
-    if (currentActive[0] && currentActive[0] != nextActive) {
-      currentActive.forEach
-        ? currentActive.forEach(ele =>
-            classifier.remove(ele, 'muse-lyric__state-active')
-          )
-        : classifier.remove(currentActive[0], 'muse-lyric__state-active');
-    }
-    if (index != -1 && nextActive != null) {
-      classifier.add(nextActive, 'muse-lyric__state-active');
-      // change container position
-      let boxHeight = this.lrcContainer.offsetHeight,
-        targetOffset =
-          nextActive.offsetTop -
-          Math.abs(boxHeight - nextActive.offsetHeight) / 2;
-      if (targetOffset < 0) {
-        targetOffset = 0;
-      }
+    if (prevIndex != index) {
+      // remove active element class
+      let currentActive = this.lrcContainer.querySelector(
+        '.muse-lyric__item.muse-lyric__state-active'
+      ),
+        nextActive = this.lrcContainer.querySelector(
+          '.muse-lyric__item[data-lyric-item-id="' + index + '"]'
+        );
+      if (currentActive)
+        classifier.remove(currentActive, 'muse-lyric__state-active');
 
-      let transf = String(targetOffset + 'px');
-      this.setTransform(transf);
+      if (index != -1 && nextActive != null) {
+        classifier.add(nextActive, 'muse-lyric__state-active');
+        // change container position
+        let boxHeight = this.lrcContainer.offsetHeight,
+          targetOffset =
+            nextActive.offsetTop -
+            Math.abs(boxHeight - nextActive.offsetHeight) / 2;
+        if (targetOffset < 0) {
+          targetOffset = 0;
+        }
+
+        let transf = String(targetOffset + 'px');
+        this.setTransform(transf);
+      }
+      // respond API
+      if (index != -1) {
+        applyMiddleware('onLyricUpdate', instance, {
+          timeline: refs[index].props.timeline,
+          text: refs[index].props.text,
+          translation: refs[index].props.translation
+        });
+      }
     }
   }
 
@@ -285,8 +307,7 @@ export default class DrawerContainer extends Component {
   888     "Y8888  888  888  "Y88888  "Y8888  888
   */
   renderPlayList() {
-    const { playList, currentMusicIndex } = this.props.player[this.id],
-      { dispatch } = this.props;
+    const { playList, currentMusicIndex } = this.props.store;
     let list = [],
       key = 0;
 
@@ -294,9 +315,9 @@ export default class DrawerContainer extends Component {
       e.preventDefault();
       e.stopPropagation();
 
-      dispatch(PlayerActions.togglePlay(false, this.id));
-      dispatch(PlayerActions.setCurrentMusic(key, this.id));
-      setTimeout(() => dispatch(PlayerActions.togglePlay(true, this.id)), 0);
+      this.props.store.togglePlay(false, this.id);
+      this.props.store.setCurrentMusic(key, this.id);
+      setTimeout(() => this.props.store.togglePlay(true), 0);
     };
 
     playList.forEach(single => {
@@ -324,7 +345,7 @@ export default class DrawerContainer extends Component {
   }
 
   render() {
-    const { isDrawerOpen, currentPanel } = this.props.player[this.id];
+    const { isDrawerOpen, currentPanel } = this.props.store;
     return (
       <div
         className={

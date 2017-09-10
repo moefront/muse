@@ -1,6 +1,11 @@
-<h1 align="center">MUSE</h1>
+<h1 align="center">
+	<img src="favicon.png" alt="MUSE" />
+</h1>
 
+[![Build Status](https://travis-ci.org/moefront/muse.svg?branch=master)](https://travis-ci.org/moefront/muse)
+[![Coverage Status](https://coveralls.io/repos/github/moefront/muse/badge.svg?branch=master)](https://coveralls.io/github/moefront/muse?branch=master)
 [![npm](https://img.shields.io/npm/v/muse-player.svg?style=flat)]()
+![npm download](https://img.shields.io/npm/dm/muse-player.svg)
 [![devDependencies](https://img.shields.io/david/dev/moefront/muse.svg?style=flat)]()
 [![license](https://img.shields.io/github/license/moefront/muse.svg?style=flat)]()
 ![built by](https://img.shields.io/badge/built_by-MoeFront-ff69b4.svg)
@@ -8,7 +13,7 @@
 
 MUSE is a simple and diligent HTML5 audio player made with ❤ :)
 
-[中文文档](https://github.com/moefront/muse/wiki) [Old version](https://github.com/moefront/muse/tree/v4-legacy)
+[中文文档](https://github.com/moefront/muse/wiki/MUSE-5:-Getting-Start) / [Redux build](https://github.com/moefront/muse/tree/v5-redux) / [Old version](https://github.com/moefront/muse/tree/v4-legacy)
 
 ## Demo
 
@@ -18,15 +23,15 @@ Have a look at [here](https://moefront.github.io/muse/dist).
 
  - react
  - react-dom
- - redux
- - react-redux
+ - mobx
+ - mobx-react
  - stylus
 
 ## Installation
 
 ### Install via Package Manager
 
-MUSE is avaliable in [npmjs](https://www.npmjs.com/package/muse-player). You can install it by both **npm** and **yarn**.
+MUSE is available in [npmjs](https://www.npmjs.com/package/muse-player). You can install it by both **npm** and **yarn**.
 
 ```shell
 $ yarn add muse-player  # using yarn
@@ -47,7 +52,8 @@ Click ```Clone or download``` then choose ```Download ZIP```, or redirect to rel
 
 ## Features
 
- - Build with React.js and Redux
+ - Build with React.js and Mobx
+ - Both Mobx version(main) & Redux version(before 5.2.7)
  - Full lyric support
  - Lyric offset fixing
  - Right-click menu is finally supported
@@ -93,6 +99,21 @@ MUSE.render([{
 	// ......
 }], document.getElementById('player'));
 ```
+
+---
+
+### Generating music JSON from Netease Cloud Music automatically
+
+First have ```muse-json-generator``` installed. You can install it from npm. Also you should know the music's Netease Cloud Music ID that you want to add.
+
+```shell
+$ npm install -g muse-json-generator
+$ muse 2333666 id1 id2 ...
+```
+
+Then you will find a ```playlist.json``` on your workspace, which contains the detials(title, artist, lyric, cover, src, translation) of your target.
+
+For more detail, see https://github.com/moefront/muse-json-generator .
 
 ---
 
@@ -156,7 +177,9 @@ window.MuseDOM.render();
 
 Projects related to MUSE below can help you construct MUSE Player on your site easily. Thanks for their hard working!
 
+ - **muse-json-generator** by [@kokororin](https;//github.com/kokororin): https://github.com/moefront/muse-json-generator
  - **typecho-plugin-ymplayer** by [@kokororin](https;//github.com/kokororin): https://github.com/kokororin/typecho-plugin-ymplayer
+ - **muse-plugin-desktop-lyric**: https://github.com/kirainmoe/muse-plugin-desktop-lyric
 
 ## Troubleshooting
 
@@ -178,13 +201,10 @@ You can find a detailed documentation about APIs, methods, specification, etc. o
 --- | --- | --- | --- | --- |
 IE 10+ ✔ | Chrome 24.0+ ✔ | Firefox 24.0+ ✔ | Opera 15.0+ ✔ | Safari 7.0+ ✔ |
 
-## What's not working
-
-Currently everything is OK on my dev environment.
-
 ## Todo list
 
- - [ ] Custom layouts full support
+ - [x] Custom layouts full support
+ - [ ] Documents for developing (plugins, themes...)
 
 ## License
 

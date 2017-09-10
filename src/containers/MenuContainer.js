@@ -1,17 +1,12 @@
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
-import { connect } from 'react-redux';
-
-// Actions
-import { PlayerActions } from '../actions';
+import { observer } from 'mobx-react';
 // Utils
 import { getRect } from '../utils';
 // config
 import config from '../config/base';
 
-@connect(state => ({
-  player: state.player
-}))
+@observer
 export default class MenuContainer extends Component {
   id = undefined;
 
@@ -30,6 +25,14 @@ export default class MenuContainer extends Component {
 
     this.increaseOffset.addEventListener('click', this.onIncreaseOffsetClick);
     this.decreaseOffset.addEventListener('click', this.onDecreaseOffsetClick);
+    this.increasePlayRate.addEventListener(
+      'click',
+      this.onIncreasePlayRateClick
+    );
+    this.decreasePlayRate.addEventListener(
+      'click',
+      this.onDecreasePlayRateClick
+    );
   }
   componentWillUnmount() {
     this.volume.removeEventListener('click', this.onVolumeContainerClick);
@@ -42,49 +45,76 @@ export default class MenuContainer extends Component {
       'click',
       this.onDecreaseOffsetClick
     );
+
+    this.increasePlayRate.removeEventListener(
+      'click',
+      this.onIncreasePlayRateClick
+    );
+    this.decreasePlayRate.removeEventListener(
+      'click',
+      this.onDecreasePlayRateClick
+    );
   }
 
   /* event listeners */
   onLoopTogglerClick = e => {
     e.stopPropagation();
-    const { dispatch } = this.props,
-      { isLoop } = this.props.player[this.id];
-    dispatch(PlayerActions.toggleLoop(!isLoop, this.id));
+    const { store } = this.props;
+    store.toggleLoop();
   };
 
   onFullscreenTogglerClick = e => {
     e.stopPropagation();
-    const { dispatch } = this.props,
-      { isFullscreen } = this.props.player[this.id];
-    dispatch(PlayerActions.toggleFullscreen(!isFullscreen, this.id));
+    const { store, parent } = this.props;
+
+    // firefox compatibility
+    if (parent.player.mozRequestFullScreen) {
+      parent.getFullscreenState()
+        ? document.mozCancelFullScreen()
+        : parent.player.mozRequestFullScreen();
+    }
+
+    store.toggleFullscreen();
   };
 
   onVolumeContainerClick = e => {
     e.preventDefault();
     e.stopPropagation();
     const rect = getRect(this.volume),
-      { dispatch } = this.props,
+      { store } = this.props,
       vol = (e.clientX - rect.left) / this.volume.offsetWidth;
-    dispatch(PlayerActions.slideVolume(vol > 1 ? 1 : vol, this.id));
+    store.slideVolume(vol > 1 ? 1 : vol);
   };
 
   onIncreaseOffsetClick = e => {
     e.preventDefault();
     e.stopPropagation();
-    this.fixLyricOffset(0.5);
+    this.props.store.setLyricOffset(0.5);
   };
 
   onDecreaseOffsetClick = e => {
     e.preventDefault();
     e.stopPropagation();
-    this.fixLyricOffset(-0.5);
+    this.props.store.setLyricOffset(-0.5);
+  };
+
+  onIncreasePlayRateClick = e => {
+    e.preventDefault();
+    e.stopPropagation();
+    this.props.store.setPlayRate(0.1);
+  };
+
+  onDecreasePlayRateClick = e => {
+    e.preventDefault();
+    e.stopPropagation();
+    this.props.store.setPlayRate(-0.1);
   };
 
   onStopClick = e => {
-    const { dispatch } = this.props;
+    const { store } = this.props;
     e.preventDefault();
     e.stopPropagation();
-    dispatch(PlayerActions.playerStop(this.id));
+    store.playerStop();
   };
 
   onDebugModeTogglerClick = () => {
@@ -102,20 +132,17 @@ export default class MenuContainer extends Component {
     }
   };
 
-  fixLyricOffset = val => {
-    const { dispatch } = this.props,
-      { offset } = this.props.player[this.id];
-    dispatch(PlayerActions.setLyricOffset(offset + val, this.id));
-  };
-
   render() {
     const {
       isMenuOpen,
       isLoop,
       isFullscreen,
       volume,
-      offset
-    } = this.props.player[this.id];
+      playRate,
+      offset,
+      parent
+    } = this.props.store;
+
     return (
       <div
         className={'muse-menu' + (!isMenuOpen ? ' muse-menu__state-close' : '')}
@@ -162,6 +189,28 @@ export default class MenuContainer extends Component {
           </div>
         </div>
 
+        <div className={'muse-menu__item'} name={'set-play-rate'}>
+          <span>播放速度({playRate} 倍)</span>
+          <span className={'muse-menu__playrate-container'}>
+            <a
+              href={'#'}
+              name={'increasePlayRate'}
+              ref={ref => (this.increasePlayRate = ref)}
+              className={playRate >= 3.9 ? 'muse-menu__playrate-disabled' : ''}
+            >
+              +
+            </a>
+            <a
+              href={'#'}
+              name={'decreasePlayRate'}
+              ref={ref => (this.decreasePlayRate = ref)}
+              className={playRate <= 0.1 ? 'muse-menu__playrate-disabled' : ''}
+            >
+              -
+            </a>
+          </span>
+        </div>
+
         <div
           className={'muse-menu__item'}
           name={'toggle-loop'}
@@ -194,10 +243,14 @@ export default class MenuContainer extends Component {
         <div
           className={'muse-menu__item'}
           onClick={() => {
-            window.open('https://github.com/moefront/MUSE');
+            window.open('https://github.com/moefront/muse');
           }}
         >
-          <span>MUSE Player ver.{config.MUSE_VERSION}</span>
+          <span>
+            {config.MUSE_VERSION != parent.latest
+              ? '发现新版本：MUSE ' + parent.latest
+              : 'MUSE Player ver.' + config.MUSE_VERSION}
+          </span>
         </div>
       </div>
     );

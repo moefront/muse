@@ -1,3 +1,5 @@
+@import '../../styles/mixins.styl';
+
 $primaryColor = #e91e63;
 $secondaryColor = #c2185b;
 $lightColor = #f8bbd0;
@@ -20,7 +22,7 @@ fullscreen() {
 	background: $primaryColor;
 	box-shadow: 0.06rem 0.06rem 0.1rem rgba(0,0,0,.2), -0.06rem 0 0.06rem rgba(0,0,0,.1);
 	
-	transition(.5s all ease-in-out);
+	transition(.5s all ease-in-out)!important;
 	
 	&.muse-root__state-drawer-open {
 		height: 370px;
