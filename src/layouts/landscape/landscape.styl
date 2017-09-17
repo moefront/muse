@@ -128,10 +128,22 @@ fullscreen() {
 		font-weight: bold;
 	}
 	
+	&[data-length='1'] {
+		.muse-drawer__container {
+			width: 100%!important;
+		}		
+		.muse-drawer__lyric {
+			width: 100%!important;
+		}
+		.muse-drawer__playList {
+			display: none;
+		}
+	}
+	
 	/* Responsive */
 	&[responsive='650px'] {
 		.muse-drawer {
-			overflow-x: scroll;
+			overflow-x: auto;
 		}
 		
 		.muse-drawer__container {

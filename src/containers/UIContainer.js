@@ -192,6 +192,7 @@ export default class UIContainer extends Component {
         }
         id={id}
         ref={ref => (this.player = ref)}
+        data-length={playList.length}
       >
         <Cover cover={cover} id={id} />
         <Progress
