@@ -350,17 +350,21 @@ Y8P 888  888  888  "Y88888  88888P'  "Y8888          "Y88888 888    "Y888888  "Y
       user-select: none;
     }
     .muse-lyric__text {
+      font-size: 15px;
       color: darken(#fff, 25%);
-      transition(.1s font-weight);
+      transition(.7s color linear);
     }
     .muse-lyric__translation {
       color: darken(#fff, 25%);
-      font-size: 13px;
+      font-size: 12px;
     }
     .muse-lyric__state-active {
-      color: #fff;
-
-      .muse-lyric__text, .muse-lyric__translation {
+      .muse-lyric__text {
+        font-size: 16px;
+        color: #fff;
+      }
+      .muse-lyric__translation {
+        font-size: 14px;
         color: #fff;
       }
     }
