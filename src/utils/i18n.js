@@ -87,6 +87,9 @@ export const i18n = (key) => {
     case 'zh-TW':
       return i18nTexts.chineseTraditional[key];
 
+    case 'ja':
+      return i18nTexts.japanese[key];
+
     case 'en-US':
     case 'en-GB':
     case 'en-CA':
