@@ -47,18 +47,7 @@ let config = Object.assign({}, baseConfig, {
         warnings: false
       }
     }),
-    new webpack.optimize.AggressiveMergingPlugin(),
-    new BundleAnalyzerPlugin({
-      analyzerMode: 'server',
-      analyzerHost: '127.0.0.1',
-      analyzerPort: 8888,
-      defaultSizes: 'parsed',
-      openAnalyzer: true,
-      generateStatsFile: false,
-      statsFilename: 'stats.json',
-      statsOptions: null,
-      logLevel: 'info'
-    })
+    new webpack.optimize.AggressiveMergingPlugin()
   ],
   module: defaultSettings.getDefaultModules()
 });

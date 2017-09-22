@@ -1,6 +1,6 @@
 {
   "name": "muse-player",
-  "version": "5.4.0",
+  "version": "5.4.1",
   "description": "Just a simple and dilligent HTML5 Audio Player written in React.",
   "main": "dist/assets/muse-player.js",
   "scripts": {
@@ -11,8 +11,11 @@
     "serve": "node server.js --env=dev",
     "serve:dist": "node server.js --env=dist",
     "serve:react-lite": "node server.js --env=react-lite",
+    "serve:preact": "node server.js --env=preact",
     "dist": "npm run copy & webpack --env=dist",
     "dist:react-lite": "webpack --env=react-lite",
+    "dist:preact": "webpack --env=preact",
+    "dist:all": "npm run dist:react-lite & npm run dist:preact & npm run dist",
     "lint": "eslint ./src",
     "copy": "copyfiles -f ./src/index.html ./src/favicon.ico ./src/example.js ./dist",
     "clean": "rimraf dist/*",
@@ -83,6 +86,8 @@
     "mobx": "^3.2.2",
     "mobx-react": "^4.2.2",
     "normalize.css": "^7.0.0",
+    "preact": "^8.2.5",
+    "preact-compat": "^3.17.0",
     "react": "^15.0.0",
     "react-dom": "^15.0.0",
     "react-lite": "^0.15.38",
