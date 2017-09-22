@@ -111,7 +111,7 @@ $ npm install -g muse-json-generator
 $ muse 2333666 id1 id2 ...
 ```
 
-Then you will find a ```playlist.json``` on your workspace, which contains the detials(title, artist, lyric, cover, src, translation) of your target.
+Then you will find a ```playlist.json``` on your workspace, which contains the details(title, artist, lyric, cover, src, translation) of your target.
 
 For more detail, see https://github.com/moefront/muse-json-generator .
 
