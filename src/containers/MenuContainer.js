@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { observer } from 'mobx-react';
 // Utils
-import { getRect } from '../utils';
+import { getRect, i18n } from '../utils';
 // config
 import config from '../config/base';
 
@@ -119,12 +119,7 @@ export default class MenuContainer extends Component {
 
   onDebugModeTogglerClick = () => {
     const { parent } = this.props;
-    if (
-      confirm(
-        '将会开启开发者模式，此模式下会显示更多调试信息并注销右键菜单以方便检查元素，若要重新激活右键菜单只能重新加载页面。\n\n' +
-          '确定要进入开发者模式吗？'
-      )
-    ) {
+    if (confirm(i18n('devModeAlert'))) {
       parent.player.removeEventListener(
         'contextmenu',
         parent.onPlayerContextMenu
@@ -152,10 +147,10 @@ export default class MenuContainer extends Component {
           name={'stop'}
           onClick={this.onStopClick}
         >
-          <span>停止播放</span>
+          <span>{i18n('stop')}</span>
         </div>
         <div className={'muse-menu__item'} name={'slide-volume'}>
-          <div>音量调整</div>
+          <div>{i18n('modulation')}</div>
           <div className={'muse-volume'}>
             <div
               className={'muse-volume__container'}
@@ -177,20 +172,22 @@ export default class MenuContainer extends Component {
         </div>
 
         <div className={'muse-menu__item'} name={'fix-lyric-offset'}>
-          <div>校正歌词(当前偏移:{offset}s)</div>
+          <div>
+            {i18n('setLyricOffset')}({i18n('currentLyricOffset')}:{offset}s)
+          </div>
           <div className={'muse-menu__offset'}>
             <span ref={ref => (this.increaseOffset = ref)}>
-              + 提前 0.5s
+              + {i18n('forward')} 0.5s
             </span>
 
             <span ref={ref => (this.decreaseOffset = ref)}>
-              - 延后 0.5s
+              - {i18n('backward')} 0.5s
             </span>
           </div>
         </div>
 
         <div className={'muse-menu__item'} name={'set-play-rate'}>
-          <span>播放速度({playRate} 倍)</span>
+          <span>{i18n('playRate')}(x {playRate})</span>
           <span className={'muse-menu__playrate-container'}>
             <a
               href={'#'}
@@ -217,7 +214,7 @@ export default class MenuContainer extends Component {
           onClick={this.onLoopTogglerClick}
         >
           <span>
-            单曲循环：{isLoop ? '开启' : '关闭'}
+            {i18n('looping')}：{isLoop ? i18n('enabled') : i18n('disabled')}
           </span>
         </div>
 
@@ -227,8 +224,8 @@ export default class MenuContainer extends Component {
           onClick={this.onFullscreenTogglerClick}
         >
           <span>
-            {isFullscreen ? '退出' : ''}
-            全屏模式
+            {isFullscreen ? i18n('exit') : ''}
+            {i18n('fullscreenMode')}
           </span>
         </div>
 
@@ -237,7 +234,7 @@ export default class MenuContainer extends Component {
           name={'toggle-debug-mode'}
           onClick={this.onDebugModeTogglerClick}
         >
-          <span>开发者模式</span>
+          <span>{i18n('devMode')}</span>
         </div>
 
         <div
@@ -248,7 +245,7 @@ export default class MenuContainer extends Component {
         >
           <span>
             {config.MUSE_VERSION != parent.latest
-              ? '发现新版本：MUSE ' + parent.latest
+              ? i18n('updateAvailable') + '：MUSE ' + parent.latest
               : 'MUSE Player ver.' + config.MUSE_VERSION}
           </span>
         </div>
