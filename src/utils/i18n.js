@@ -54,8 +54,24 @@ export const i18nTexts = {
     stop: 'Stop',
     updateAvailable: 'Update available'
   },
-  // 我不会啊QAQ
-  japanese: {}
+  japanese: {
+    backward: '延ばす',
+    currentLyricOffset: '当面のオフセット',
+    disabled: '無効にする',
+    devMode: '開発者モード',
+    devModeAlert: '開発者モードが開くと、このモードでより多くの調整情報が表示されるそして右ボタンメニューをログオフして要素検査に便利です。ページを再ロードして右ボタンメニューを復活します\n\n' +
+          '開発者モードに入りますか？',
+    enabled: '有効にする',
+    exit: '退出する',
+    forward: '繰り上げる',
+    fullscreenMode: '全画面モード',
+    looping: '一曲リピート',
+    modulation: '音量調整',
+    playRate: '再生速度',
+    setLyricOffset: '歌詞を校正する',
+    stop: '再生の停止',
+    updateAvailable: '新しいバージョンを発見'
+  }
 };
 
 export const i18n = (key) => {
