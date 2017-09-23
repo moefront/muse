@@ -22,9 +22,9 @@ export default class ControlContainer extends Component {
 
   /* store subscribers */
   subscriber = () => {
-    const { store } = this.props,
+    const { store, parent } = this.props,
       { audio } = this,
-      { currentTime, volume, playRate } = store;
+      { currentTime, timeSlider, volume, playRate } = store;
     // toggle play
     if (!audio.paused != store.isPlaying) {
       if (store.isPlaying) {
@@ -35,9 +35,21 @@ export default class ControlContainer extends Component {
       return;
     }
     // slide progress
+    if (timeSlider != undefined) {
+      // remove listener
+      this.audio.removeEventListener('timeupdate', this.onAudioTimeUpdate);
+      // update parent state with a virtual ptime
+      parent.setState({
+        ...parent.state,
+        currentTime: timeSlider
+      });
+      store.slideTimeOnly(undefined);
+    }
     if (currentTime != undefined) {
       audio.currentTime = currentTime;
       store.slideProgress(undefined); // reset state
+      // rebind listener
+      this.audio.addEventListener('timeupdate', this.onAudioTimeUpdate);
     }
     // change volume
     audio.volume = volume;

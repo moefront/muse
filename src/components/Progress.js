@@ -17,6 +17,7 @@ class Progress extends Component {
   };
 
   id = undefined;
+  finalProgress = undefined;
 
   constructor(props) {
     super(props);
@@ -56,9 +57,13 @@ class Progress extends Component {
     const rect = getRect(this.progress),
       target = event.clientX,
       width = this.progress.offsetWidth;
-    this.props.store.slideProgress(Number((target - rect.left) / width * duration));
+
+    this.finalProgress = Math.max(Number((target - rect.left) / width * duration), 0);
+    this.props.store.slideTimeOnly(this.finalProgress);
   };
   onHandlerMouseUp = () => {
+    this.props.store.slideProgress(this.finalProgress);
+
     document.body.removeEventListener('mousemove', this.onHandlerDrag);
     document.body.removeEventListener('mouseup', this.onHandlerMouseUp);
   };
@@ -72,9 +77,12 @@ class Progress extends Component {
     const rect = getRect(this.progress),
       target = event.touches[0].clientX,
       width = this.progress.offsetWidth;
-    this.props.store.slideProgress(Number((target - rect.left) / width * duration));
+      
+    this.finalProgress = Math.max(Number((target - rect.left) / width * duration), 0);
+    this.props.store.slideTimeOnly(this.finalProgress);
   };
   onHandlerTouchEnd = () => {
+    this.props.store.slideProgress(this.finalProgress);
     document.body.removeEventListener('touchmove', this.onHandlerTouchMove);
     document.body.removeEventListener('touchend', this.onHandlerMouseUp);
   };

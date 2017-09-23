@@ -15,6 +15,7 @@ export default class PlayerModel {
 	@observable playRate = 1;
 	@observable duration = undefined;
 	@observable currentTime = 0;
+	@observable timeSlider = undefined;
 	@observable currentPanel = 'lyric';
 
 	@observable currentMusicIndex = 0;
@@ -107,6 +108,11 @@ export default class PlayerModel {
 	@action
 	slideProgress(progress) {
 		return (this.currentTime = progress);
+	}
+
+	@action
+	slideTimeOnly(progress) {
+		return (this.timeSlider = progress);
 	}
 
 	@action
