@@ -1,4 +1,5 @@
 const webpackCfg = require('./webpack.config'),
+  fs = require('fs'),
   path = require('path');
 
 // Set node environment to testing
@@ -15,7 +16,7 @@ module.exports = function(config) {
           '--no-sandbox',
           '--headless',
           '--disable-gpu',
-          ' --remote-debugging-port=23366'
+          '--remote-debugging-port=23366'
         ]
       }
     },

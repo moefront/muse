@@ -25,8 +25,10 @@ const playList = [
 // Player instance test
 describe('Player', function() {
   beforeEach(function() {
-    const player = MUSE.render(playList, undefined);
+    const div = document.createElement('div'),
+          player = MUSE.render(playList, div);
     this.player = player.component;
+    this.playerDOM = div;
   });
 
   it('should have the playlist to be an Array', function() {
@@ -35,6 +37,11 @@ describe('Player', function() {
 
   it('should have the layout to be default.', function() {
     expect(this.player.props.layout).to.equal('muse-layout-default');
+  });
+
+  it('should have UI language to be other language when navigator.language[0] != "zh-CN"', function() {
+    const text = this.playerDOM.querySelector('.muse-menu__item[name="stop"] > span').innerHTML;
+    expect(text).to.equal('Stop');
   });
 
 });

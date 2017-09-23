@@ -75,7 +75,7 @@ export const i18nTexts = {
 };
 
 export const i18n = (key) => {
-  const lang = window.navigator.languages[0] || 'zh-CN';
+  const lang = window.navigator.languages[0] || window.navigator.language || 'zh-CN';
   switch (lang)
   {
     case 'zh-CN':
@@ -88,6 +88,7 @@ export const i18n = (key) => {
       return i18nTexts.chineseTraditional[key];
 
     case 'ja':
+    case 'ja-JP':
       return i18nTexts.japanese[key];
 
     case 'en-US':
