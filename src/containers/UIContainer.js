@@ -4,7 +4,7 @@ import { observable, autorun } from 'mobx';
 import { observer } from 'mobx-react';
 
 // Containers
-import ControlContainer from './ControlContainer';
+import ControllerContainer from './ControllerContainer';
 import SelectorContainer from './SelectorContainer';
 import DrawerContainer from './DrawerContainer';
 import MenuContainer from './MenuContainer';
@@ -204,7 +204,7 @@ export default class UIContainer extends Component {
 
         <SelectorContainer parent={this} id={id} store={this.props.store} />
         <MenuContainer store={store} parent={this} id={id} />
-        <ControlContainer
+        <ControllerContainer
           parent={this}
           store={store}
           id={id}
