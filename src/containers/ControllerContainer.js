@@ -137,7 +137,7 @@ export default class ControlContainer extends Component {
     return (
       <div className={'muse-controller'} onClick={this.onControllerClick}>
         <audio
-          preload={'no'}
+          preload={'none'}
           ref={ref => (this.audio = ref)}
           src={current.src}
           onError={this.onAudioError}
