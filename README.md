@@ -1,5 +1,5 @@
 <h1 align="center">
-	<img src="favicon.png" alt="MUSE" />
+  <img src="favicon.png" alt="MUSE" />
 </h1>
 
 [![Build Status](https://travis-ci.org/moefront/muse.svg?branch=master)](https://travis-ci.org/moefront/muse)
@@ -14,6 +14,34 @@
 MUSE is a simple and diligent HTML5 audio player made with ❤ :)
 
 [中文文档](https://github.com/moefront/muse/wiki/MUSE-5:-Getting-Start) / [Redux build](https://github.com/moefront/muse/tree/v5-redux) / [Old version](https://github.com/moefront/muse/tree/v4-legacy)
+
+Table of Contents
+=================
+
+  * [Demo](#demo)
+  * [Tech Stack](#tech-stack)
+  * [Installation](#installation)
+    * [Install via Package Manager](#install-via-package-manager)
+    * [Install via Git](#install-via-git)
+    * [Download ZIP directly](#download-zip-directly)
+  * [Usage](#usage)
+    * [Easily render player for single page](#easily-render-player-for-single-page)
+      * [Generating music JSON from Netease Cloud Music automatically](#generating-music-json-from-netease-cloud-music-automatically)
+    * [Using MUSE in your own project](#using-muse-in-your-own-project)
+      * [in React Project with webpack bundling](#in-reactjs-project-with-webpack-bundling)
+      * [RequireJS or other AMD module loader](#requirejs-or-other-amd-module-loader)
+      * [Others](#others)
+  * [Features](#features)
+  * [Commands](#commands)
+  * [Related Projects](#related-projects)
+  * [Troubleshooting](#troubleshooting)
+  * [Contributing](#contributing)
+  * [Docs](#developing-docs)
+  * [Browser Supports](#browser-supports)
+  * [Todo](#todo-list)
+  * [License](#license)
+  * [Contributors](#contributors)
+
 
 ## Demo
 
@@ -89,14 +117,14 @@ Secondly, use ```MUSE.render()``` method to render player to your page.
  */
 
 MUSE.render([{
-	title: '',
-	artist: '',
-	cover: '',
-	src: '',
-	lyric: '',
-	translation: ''			// if you do not need translation, delete this row.
+  title: '',
+  artist: '',
+  cover: '',
+  src: '',
+  lyric: '',
+  translation: ''     // if you do not need translation, delete this row.
 }, {
-	// ......
+  // ......
 }], document.getElementById('player'));
 ```
 
@@ -132,18 +160,18 @@ import { render } from 'react-dom';
 import { MuseDOM as MUSE } from 'muse-player';
 
 const playList = [{
-	// ...
+  // ...
 }];
 
 // MUSE.render() will returns a object with React Component and Player ID wrapped
 // player { component: ReactComponent, ref: undefined, id }
 const player = MUSE.render(playList); 
 
-const node = document.getElementById('app');		// DOM
+const node = document.getElementById('app');    // DOM
 
 render(
-	<player.component />,
-	node
+  <player.component />,
+  node
 );
 
 ```
@@ -152,7 +180,7 @@ render(
 
 ```javascript
 require(['muse-player'], function(MuseDOM) {
-	MuseDOM.render(...);
+  MuseDOM.render(...);
 });
 ```
 
@@ -208,8 +236,7 @@ IE 10+ ✔ | Chrome 24.0+ ✔ | Firefox 24.0+ ✔ | Opera 15.0+ ✔ | Safari 7.0
 
 ## License
 
-&copy; 2017 MoeFront Studio | The MIT License (MIT).
-
+&copy; 2017 MoeFront Studio, MUSE Player is MIT licensed.
 
 ## Contributors
 
