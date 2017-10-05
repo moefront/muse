@@ -210,3 +210,14 @@ IE 10+ ✔ | Chrome 24.0+ ✔ | Firefox 24.0+ ✔ | Opera 15.0+ ✔ | Safari 7.0
 
 &copy; 2017 MoeFront Studio | The MIT License (MIT).
 
+
+## Contributors
+
+Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds/all-contributors#emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+| [<img src="https://avatars0.githubusercontent.com/u/12712012?v=4" width="80px;"/><br /><sub>吟夢ちゃん</sub>](https://kirainmoe.com/)<br />[💻](https://github.com/kirainmoe/muse/commits?author=kirainmoe "Code") [🎨](#design-kirainmoe "Design") [📖](https://github.com/kirainmoe/muse/commits?author=kirainmoe "Documentation") [💡](#example-kirainmoe "Examples") [🤔](#ideas-kirainmoe "Ideas, Planning, & Feedback") [👀](#review-kirainmoe "Reviewed Pull Requests") [⚠️](https://github.com/kirainmoe/muse/commits?author=kirainmoe "Tests") |
+| :---: |
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!
