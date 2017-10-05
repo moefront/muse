@@ -34,6 +34,17 @@
         "plugin",
         "translation"
       ]
+    },
+    {
+      "login": "frank-deng",
+      "name": "Frank Deng",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/8265668?v=4",
+      "profile": "http://frank-deng.github.io",
+      "contributions": [
+        "bug",
+        "code",
+        "ideas"
+      ]
     }
   ]
 }
