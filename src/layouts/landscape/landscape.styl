@@ -140,6 +140,11 @@ fullscreen() {
 		}
 	}
 	
+	// conflict wth default layout
+	.muse-drawer .muse-drawer__state-playlist-active {
+		transform(translateX(0px));
+	}	
+	
 	/* Responsive */
 	&[responsive='650px'] {
 		.muse-drawer {
@@ -153,7 +158,7 @@ fullscreen() {
 		.muse-drawer__playList, .muse-drawer__lyric {
 			width: 50%;
 		}
-	}
+	}	
 }
 
 /* fullscreen related */

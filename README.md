@@ -100,6 +100,11 @@ Firstly, import **./dist/assets/muse-player.js** to your own page (Stylesheet ha
 <script type="text/javascript" src="./dist/assets/muse-player.js"></script>
 ```
 
+We recommend that you import ```muse-player.js``` from unpkg, where you can get the latest version of MUSE:
+```javascript
+<script src="https://unpkg.com/muse-player@5.4.6/dist/assets/muse-player.js" type="text/javascript"></script>
+```
+
 Secondly, use ```MUSE.render()``` method to render player to your page.
 
 > PS: If you are migrating from YMPlayer 4 to MUSE, pay attention that the method of using custom tag to render player has been removed. But you can still use ```MUSE.render()``` or ```YMPlayer.render()``` to render a player:

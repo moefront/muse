@@ -263,7 +263,7 @@ export default class DrawerContainer extends Component {
         this.setTransform(transf);
       }
       // respond API
-      if (index != -1) {
+      if (index != -1 && refs[index]) {
         applyMiddleware('onLyricUpdate', instance, {
           timeline: refs[index].props.timeline,
           text: refs[index].props.text,

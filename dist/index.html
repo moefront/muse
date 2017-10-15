@@ -44,6 +44,9 @@
     }
 
     #header h1 {
+      height: 100%;
+      text-overflow: ellipsis;
+      overflow: hidden;
       text-align: center;
       margin: 0px;
       font-size: 30px;
@@ -61,6 +64,10 @@
       margin-top: 20px;
       font-size: 14px;
       text-align: center;
+    }
+
+    @media screen and (max-width: 640px) {
+      .github { display: none;  }
     }
   </style>
 </head>
