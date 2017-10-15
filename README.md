@@ -102,7 +102,7 @@ Firstly, import **./dist/assets/muse-player.js** to your own page (Stylesheet ha
 
 We recommend that you import ```muse-player.js``` from unpkg, where you can get the latest version of MUSE:
 ```javascript
-<script src="https://unpkg.com/muse-player@5.4.6/dist/assets/muse-player.js" type="text/javascript"></script>
+<script src="https://unpkg.com/muse-player/dist/assets/muse-player.js" type="text/javascript"></script>
 ```
 
 Secondly, use ```MUSE.render()``` method to render player to your page.
