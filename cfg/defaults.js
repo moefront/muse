@@ -27,7 +27,7 @@ function getDefaultModules() {
       {
         test: /\.(ts|tsx)$/,
         include: srcPath,
-        loader: 'ts-loader',
+        loader: 'awesome-typescript-loader',
         exclude: '/node_modules/'
       },      
       {

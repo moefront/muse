@@ -21,18 +21,21 @@ module.exports = {
 				loader: 'null-loader'
 			},
 			{
+				test: /\.(ts|tsx)$/,
+				loader: 'awesome-typescript-loader',
+				include: [
+					path.join(__dirname, '/../src')
+				],
+				options: {
+					useBabel: true
+				}
+			},			
+			{
 				test: /\.(js|jsx)$/,
 				loader: 'babel-loader',
 				include: [
 					path.join(__dirname, '/../src'),
 					path.join(__dirname, '/../test')
-				]
-			},
-			{
-				test: /\.(ts|tsx)$/,
-				loader: 'ts-loader',
-				include: [
-					path.join(__dirname, '/../src')
 				]
 			}
 		]

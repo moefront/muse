@@ -71,6 +71,8 @@
         "rimraf": "^2.6.2",
         "style-loader": "^0.19.0",
         "stylus-loader": "^3.0.1",
+        "tslint": "^5.7.0",
+        "tslint-loader": "^3.5.3",        
         "url-loader": "^0.6.2",
         "webpack": "^3.7.1",
         "webpack-bundle-analyzer": "^2.8.2",
@@ -79,6 +81,7 @@
     "dependencies": {
         "@types/react": "^16.0.10",
         "@types/react-dom": "^16.0.1",
+        "awesome-typescript-loader": "^3.2.3",
         "core-js": "^2.0.0",
         "istanbul-instrumenter-loader": "^3.0.0",
         "mobx": "^3.3.1",
@@ -90,9 +93,6 @@
         "react-dom": "^16.0.0",
         "react-lite": "^0.15.39",
         "stylus": "^0.54.5",
-        "ts-loader": "^2.3.7",
-        "tslint": "^5.7.0",
-        "tslint-loader": "^3.5.3",
         "typescript": "^2.5.3"
     }
 }
