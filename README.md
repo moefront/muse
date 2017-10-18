@@ -49,11 +49,11 @@ Have a look at [here](https://moefront.github.io/muse/dist).
 
 ## Tech Stack
 
- - react
- - react-dom
- - mobx
+ - React 16
+ - TypeScript
+ - MobX
  - mobx-react
- - stylus
+ - Stylus
 
 ## Installation
 

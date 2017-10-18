@@ -41,8 +41,7 @@ module.exports = function(config) {
       dir: path.join(__dirname, 'coverage'),
       reporters: [
         { type: 'html', subdir: 'report-html' },
-        { type: 'lcovonly', subdir: '.', file: 'report-lcovonly.txt' },
-        { type: 'text' }
+        { type: 'lcovonly', subdir: '.', file: 'report-lcovonly.txt' }
       ]
     }
   });
