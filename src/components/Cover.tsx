@@ -1,7 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
 
-const Cover = ({ cover }) => {
+interface CoverProps {
+  cover: string;
+  id: string | number;
+  parent?: React.Component;
+}
+
+export const Cover: React.SFC<CoverProps> = ({ cover }) => {
   return (
     <div
       className={ 'muse-cover' }
@@ -10,10 +15,6 @@ const Cover = ({ cover }) => {
       }}>
     </div>
   );
-};
-
-Cover.propTypes = {
-  cover: PropTypes.string.isRequired
 };
 
 export default Cover;

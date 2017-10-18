@@ -1,21 +1,16 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
 import { observer } from 'mobx-react';
 
-@observer
-export default class LyricItemContainer extends Component
-{
-  static propTypes = {
-    timeline: PropTypes.number.isRequired,
-    text: PropTypes.string.isRequired,
-    translation: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.object
-    ]),
-    index: PropTypes.number.isRequired
-  }
+interface LyricItemContainerProps {
+  timeline: number;
+  text: string;
+  translation: string | object;
+  index: number;
+}
 
-  constructor(props) {
+@observer
+export default class LyricItemContainer extends React.Component<LyricItemContainerProps> {
+  constructor(props: LyricItemContainerProps) {
     super(props);
   }
 

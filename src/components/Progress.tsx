@@ -1,25 +1,27 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
 
 import { observer } from 'mobx-react';
 
 // Utils
 import { getRect } from '../utils';
 
+interface ProgressProps {
+  currentTime: any;
+  duration: any;
+  store: any;
+  id: number | string;
+}
+
 @observer
-class Progress extends Component {
-  static propTypes = {
-    currentTime: PropTypes.oneOfType([PropTypes.number, PropTypes.object])
-      .isRequired,
-    duration: PropTypes.oneOfType([PropTypes.number, PropTypes.object])
-      .isRequired,
-    store: PropTypes.object.isRequired
-  };
+export class Progress extends React.Component<ProgressProps> {
 
-  id = undefined;
-  finalProgress = undefined;
+  id: any = undefined;
+  finalProgress: any = undefined;
 
-  constructor(props) {
+  progress: HTMLElement;
+  handler: HTMLElement;
+
+  constructor(props: ProgressProps) {
     super(props);
     this.id = props.id;
   }
@@ -33,7 +35,7 @@ class Progress extends Component {
   }
 
   /* event listeners */
-  onProgressBarClick = event => {
+  onProgressBarClick = (event: any) => {
     const { duration } = this.props;
     const rect = getRect(this.progress),
       target = event.clientX,
@@ -52,7 +54,7 @@ class Progress extends Component {
     document.body.addEventListener('mousemove', this.onHandlerDrag);
     document.body.addEventListener('mouseup', this.onHandlerMouseUp);
   };
-  onHandlerDrag = event => {
+  onHandlerDrag = (event: any) => {
     const { duration } = this.props;
     const rect = getRect(this.progress),
       target = event.clientX,
@@ -72,12 +74,12 @@ class Progress extends Component {
     document.body.addEventListener('touchmove', this.onHandlerTouchMove);
     document.body.addEventListener('touchend', this.onHandlerTouchEnd);
   };
-  onHandlerTouchMove = () => {
+  onHandlerTouchMove = (event: any) => {
     const { duration } = this.props;
     const rect = getRect(this.progress),
       target = event.touches[0].clientX,
       width = this.progress.offsetWidth;
-      
+
     this.finalProgress = Math.max(Number((target - rect.left) / width * duration), 0);
     this.props.store.slideTimeOnly(this.finalProgress);
   };
@@ -96,7 +98,7 @@ class Progress extends Component {
           <div
             className={'muse-progress__played'}
             style={{
-              width: duration == 0 ? '0%' : 100 * currentTime / duration + '%'
+              width: duration === 0 ? '0%' : 100 * currentTime / duration + '%'
             }}
           >
             <span

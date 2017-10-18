@@ -20,7 +20,7 @@ module.exports = function(config) {
         ]
       }
     },
-    files: ['test/loadtests.js'],
+    files: ['test/loadtests.js', './src/index.tsx'],
     port: 8000,
     captureTimeout: 60000,
     frameworks: ['mocha', 'chai'],

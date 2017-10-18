@@ -1,20 +1,27 @@
-import React, { Component } from 'react';
-import { PropTypes } from 'prop-types';
+import * as React from 'react';
 import { observer } from 'mobx-react';
 // Utils
 import { getRect, i18n } from '../utils';
 // config
 import config from '../config/base';
 
+interface MenuContainerProps {
+  id?: string | number;
+  store: any;
+  parent: React.Component | any;
+}
+
 @observer
-export default class MenuContainer extends Component {
-  id = undefined;
+export default class MenuContainer extends React.Component<MenuContainerProps> {
+  id: string | number = undefined;
 
-  static propTypes = {
-    store: PropTypes.object.isRequired
-  };
+  volume: HTMLElement;
+  increaseOffset: HTMLElement;
+  decreaseOffset: HTMLElement;
+  increasePlayRate: HTMLElement;
+  decreasePlayRate: HTMLElement;
 
-  constructor(props) {
+  constructor(props: MenuContainerProps) {
     super(props);
     this.id = props.id;
   }
@@ -57,27 +64,27 @@ export default class MenuContainer extends Component {
   }
 
   /* event listeners */
-  onLoopTogglerClick = e => {
+  onLoopTogglerClick = (e: any) => {
     e.stopPropagation();
     const { store } = this.props;
     store.toggleLoop();
   };
 
-  onFullscreenTogglerClick = e => {
+  onFullscreenTogglerClick = (e: any) => {
     e.stopPropagation();
     const { store, parent } = this.props;
 
     // firefox compatibility
     if (parent.player.mozRequestFullScreen) {
       parent.getFullscreenState()
-        ? document.mozCancelFullScreen()
+        ? (document as any).mozCancelFullScreen()
         : parent.player.mozRequestFullScreen();
     }
 
     store.toggleFullscreen();
   };
 
-  onVolumeContainerClick = e => {
+  onVolumeContainerClick = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
     const rect = getRect(this.volume),
@@ -86,31 +93,31 @@ export default class MenuContainer extends Component {
     store.slideVolume(vol > 1 ? 1 : vol);
   };
 
-  onIncreaseOffsetClick = e => {
+  onIncreaseOffsetClick = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
     this.props.store.setLyricOffset(0.5);
   };
 
-  onDecreaseOffsetClick = e => {
+  onDecreaseOffsetClick = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
     this.props.store.setLyricOffset(-0.5);
   };
 
-  onIncreasePlayRateClick = e => {
+  onIncreasePlayRateClick = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
     this.props.store.setPlayRate(0.1);
   };
 
-  onDecreasePlayRateClick = e => {
+  onDecreasePlayRateClick = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
     this.props.store.setPlayRate(-0.1);
   };
 
-  onStopClick = e => {
+  onStopClick = (e: any) => {
     const { store } = this.props;
     e.preventDefault();
     e.stopPropagation();
@@ -144,12 +151,12 @@ export default class MenuContainer extends Component {
       >
         <div
           className={'muse-menu__item'}
-          name={'stop'}
+          data-name={'stop'}
           onClick={this.onStopClick}
         >
           <span>{i18n('stop')}</span>
         </div>
-        <div className={'muse-menu__item'} name={'slide-volume'}>
+        <div className={'muse-menu__item'} data-name={'slide-volume'}>
           <div>{i18n('modulation')}</div>
           <div className={'muse-volume'}>
             <div
@@ -162,16 +169,13 @@ export default class MenuContainer extends Component {
                   width: Number(volume / 1 * 100) + '%'
                 }}
               >
-                <span
-                  className="muse-volume__handle"
-                  ref={ref => (this.volumeHanler = ref)}
-                />
+                <span className="muse-volume__handle" />
               </div>
             </div>
           </div>
         </div>
 
-        <div className={'muse-menu__item'} name={'fix-lyric-offset'}>
+        <div className={'muse-menu__item'} data-name={'fix-lyric-offset'}>
           <div>
             {i18n('setLyricOffset')}({i18n('currentLyricOffset')}:{offset}s)
           </div>
@@ -186,12 +190,12 @@ export default class MenuContainer extends Component {
           </div>
         </div>
 
-        <div className={'muse-menu__item'} name={'set-play-rate'}>
+        <div className={'muse-menu__item'} data-name={'set-play-rate'}>
           <span>{i18n('playRate')}(x {playRate})</span>
           <span className={'muse-menu__playrate-container'}>
             <a
               href={'#'}
-              name={'increasePlayRate'}
+              data-name={'increasePlayRate'}
               ref={ref => (this.increasePlayRate = ref)}
               className={playRate >= 3.9 ? 'muse-menu__playrate-disabled' : ''}
             >
@@ -199,7 +203,7 @@ export default class MenuContainer extends Component {
             </a>
             <a
               href={'#'}
-              name={'decreasePlayRate'}
+              data-name={'decreasePlayRate'}
               ref={ref => (this.decreasePlayRate = ref)}
               className={playRate <= 0.1 ? 'muse-menu__playrate-disabled' : ''}
             >
@@ -210,7 +214,7 @@ export default class MenuContainer extends Component {
 
         <div
           className={'muse-menu__item'}
-          name={'toggle-loop'}
+          data-name={'toggle-loop'}
           onClick={this.onLoopTogglerClick}
         >
           <span>
@@ -220,7 +224,7 @@ export default class MenuContainer extends Component {
 
         <div
           className={'muse-menu__item'}
-          name={'toggle-fullscreen'}
+          data-name={'toggle-fullscreen'}
           onClick={this.onFullscreenTogglerClick}
         >
           <span>
@@ -231,7 +235,7 @@ export default class MenuContainer extends Component {
 
         <div
           className={'muse-menu__item'}
-          name={'toggle-debug-mode'}
+          data-name={'toggle-debug-mode'}
           onClick={this.onDebugModeTogglerClick}
         >
           <span>{i18n('devMode')}</span>
@@ -244,7 +248,7 @@ export default class MenuContainer extends Component {
           }}
         >
           <span>
-            {config.MUSE_VERSION != parent.latest
+            {config.MUSE_VERSION !== parent.latest
               ? i18n('updateAvailable') + '：MUSE ' + parent.latest
               : 'MUSE Player ver.' + config.MUSE_VERSION}
           </span>

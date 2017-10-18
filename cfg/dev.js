@@ -6,15 +6,12 @@ const baseConfig = require('./base');
 const defaultSettings = require('./defaults');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-// Add needed plugins here
-const BowerWebpackPlugin = require('bower-webpack-plugin');
 
 const config = Object.assign({}, baseConfig, {
   entry: [
-    'react-hot-loader/patch',
     'webpack-dev-server/client?http://127.0.0.1:' + defaultSettings.port,
     'webpack/hot/only-dev-server',
-    './src/index'
+    './src/index.tsx'
   ],
   cache: true,
   devtool: 'eval-source-map',

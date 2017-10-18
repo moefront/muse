@@ -6,11 +6,9 @@ let webpack = require('webpack');
 let baseConfig = require('./base');
 let defaultSettings = require('./defaults');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-// Add needed plugins here
-let BowerWebpackPlugin = require('bower-webpack-plugin');
 
-let config = Object.assign({}, baseConfig, {
-  entry: path.join(__dirname, '../src/index'),
+const config = Object.assign({}, baseConfig, {
+  entry: path.join(__dirname, '../src/index.tsx'),
   cache: false,
   devtool: 'sourcemap',
   plugins: [
@@ -19,7 +17,7 @@ let config = Object.assign({}, baseConfig, {
     }),
     new webpack.optimize.UglifyJsPlugin({
       output: {
-        comments: false,
+        comments: false
       },
       compress: {
         warnings: false

@@ -1,21 +1,25 @@
-import React, { Component } from 'react';
-import { PropTypes } from 'prop-types';
+import * as React from 'react';
 
 import { autorun } from 'mobx';
 import { observer } from 'mobx-react';
 // icons
 import { PlayButton, PauseButton } from '../sources/icons';
 
+interface ControlContainerProps {
+  id: string | number;
+  store: any;
+  parent?: React.Component;
+  accuracy?: boolean | number;
+}
+
 @observer
-export default class ControlContainer extends Component {
-  static propTypes = {
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    store: PropTypes.object.isRequired
-  };
+export class ControlContainer extends React.Component<ControlContainerProps> {
+  id: string | number = undefined;
+  audio: HTMLAudioElement;
+  unsubscriber: any = undefined;
+  intervaler: any;
 
-  id = undefined;
-
-  constructor(props) {
+  constructor(props: ControlContainerProps) {
     super(props);
     this.id = props.id;
   }
@@ -26,7 +30,7 @@ export default class ControlContainer extends Component {
       { audio } = this,
       { currentTime, timeSlider, volume, playRate } = store;
     // toggle play
-    if (!audio.paused != store.isPlaying) {
+    if (!audio.paused !== store.isPlaying) {
       if (store.isPlaying) {
         audio.play();
       } else {
@@ -35,7 +39,7 @@ export default class ControlContainer extends Component {
       return;
     }
     // slide progress
-    if (timeSlider != undefined) {
+    if (timeSlider !== undefined) {
       // remove listener
       this.audio.removeEventListener('timeupdate', this.onAudioTimeUpdate);
       // update parent state with a virtual ptime
@@ -45,7 +49,7 @@ export default class ControlContainer extends Component {
       });
       store.slideTimeOnly(undefined);
     }
-    if (currentTime != undefined) {
+    if (currentTime !== undefined) {
       audio.currentTime = currentTime;
       store.slideProgress(undefined); // reset state
       // rebind listener
@@ -54,11 +58,10 @@ export default class ControlContainer extends Component {
     // change volume
     audio.volume = volume;
     // switch playBack rate
-    if (audio.playbackRate != playRate) {
+    if (audio.playbackRate !== playRate) {
       audio.playbackRate = playRate;
     }
   };
-  unsubscriber = undefined;
 
   /* component life cycles */
   componentDidMount() {
@@ -89,7 +92,7 @@ export default class ControlContainer extends Component {
   onControllerClick = () => {
     const { playerLayout } = this.props.store,
       { store } = this.props;
-    if (playerLayout == 'muse-layout-landscape') {
+    if (playerLayout === 'muse-layout-landscape') {
       store.toggleDrawer();
     }
   };
@@ -105,12 +108,12 @@ export default class ControlContainer extends Component {
       { parent } = this.props;
     parent.setState({
       ...parent.state,
-      currentTime: currentTime,
-      duration: duration
+      currentTime,
+      duration
     });
   };
 
-  onAudioEnded = (proxy, e, specialCheck = false) => {
+  onAudioEnded = (proxy: any, e: any, specialCheck: boolean = false) => {
     const { store } = this.props,
       { isLoop, currentMusicIndex, playList } = store;
 
@@ -140,8 +143,8 @@ export default class ControlContainer extends Component {
           preload={'none'}
           ref={ref => (this.audio = ref)}
           src={current.src}
-          onError={this.onAudioError}
-          onEnded={this.onAudioEnded}
+          onError={(this.onAudioError as any)}
+          onEnded={(this.onAudioEnded as any)}
         />
 
         <div className={'muse-controller__container'}>
@@ -168,3 +171,5 @@ export default class ControlContainer extends Component {
     );
   }
 }
+
+export default ControlContainer;

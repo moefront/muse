@@ -2,11 +2,11 @@
 
 import 'core-js/fn/object/assign';
 
-import React from 'react';
+import * as React from 'react';
 import { render as reactDOMRender, unmountComponentAtNode } from 'react-dom';
 
 import PlayerContainer from './containers';
-import { PlayerInstancesModel } from './models';
+import { PlayerInstancesModel, Item } from './models';
 import config from './config/base';
 
 // This is an example for custom layouts inside the project.
@@ -17,12 +17,12 @@ import { construct as landscapeLayoutConstructor } from './layouts/landscape/con
 
 const store = new PlayerInstancesModel();
 
-const render = (Component, node) => {
+const render = (Component: React.ReactElement<any>, node: Element) => {
   // Render the main component into the dom
   reactDOMRender(Component, node);
 };
 
-export const MuseDOM = {
+export const MuseDOM: any = {
   // Do not modify them directly.
   _instances: [],
 
@@ -46,80 +46,82 @@ export const MuseDOM = {
   /* MUSE Player API start */
   // high-level APIs: getInstance(), getState(), changeState()
   // Warning: these APIs are directly related to Component, you'd better not use them unless you need.
-  getInstance(id) {
+  getInstance(id: string | number) {
     return this._instances[id] ? this._instances[id] : null;
   },
-  getState(id, key) {
+  getState(id: string | number, key: string) {
     return store.getInstance(id)[key];
   },
-  changeState(id, key, val) {
+  changeState(id: string | number, key: string, val: any) {
     return (store.getInstance(id)[key] = val);
   },
 
   // Player action APIs
   // These APIs are connected to PlayerActions. Dispatching all of them should have an ID of player instance.
-  play(id) {
-    store.getInstance(id).togglePlay(true);
+  play(id: string | number) {
+    (store.getInstance(id) as any).togglePlay(true);
   },
-  pause(id) {
+  pause(id: string | number) {
     store.getInstance(id).togglePlay(false);
   },
-  stop(id) {
+  stop(id: string | number) {
     store.getInstance(id).playerStop();
   },
 
-  togglePlay(id) {
+  togglePlay(id: string | number) {
     store.getInstance(id).togglePlay();
   },
-  toggleLoop(id) {
+  toggleLoop(id: string | number) {
     store.getInstance(id).toggleLoop();
   },
-  toggleDrawer(id) {
+  toggleDrawer(id: string | number) {
     store.getInstance(id).toggleDrawer();
   },
-  togglePanel(id, panel) {
+  togglePanel(id: string | number, panel: string) {
     store.getInstance(id).togglePanel(panel);
   },
 
-  setCurrentMusic(id, index) {
+  setCurrentMusic(id: string | number, index: number) {
     setTimeout(() => store.getInstance(id).togglePlay(false), 0);
     store.getInstance(id).setCurrentMusic(index);
     setTimeout(() => store.getInstance(id).togglePlay(true), 10);
   },
-  setLyricOffset(id, offset) {
+  setLyricOffset(id: string | number, offset: number) {
     store.getInstance(id).setLyricOffset(offset);
   },
 
-  addMusicToList(id, item) {
+  addMusicToList(id: string | number, item: Item) {
     store.getInstance(id).addMusicToList(item);
   },
 
-  removeMusicFromList(id, index) {
+  removeMusicFromList(id: string | number, index: number) {
     store.getInstance(id).removeMusicFromList(index);
   },
-  changePlayerLayout(id, layout) {
+  changePlayerLayout(id: string | number, layout: string) {
     store.getInstance(id).changePlayerLayout(layout);
   },
   /* MUSE Player API end */
 
   /* Middleware related */
-  registerLayout(name, construct) {
+  registerLayout(name: string, construct: (...args: any[]) => any) {
     this._layouts.push(name);
     construct();
   },
-  registerMiddleware(hook, func) {
-    if (!this._middlewares[hook]) return;
+  registerMiddleware(hook: string, func: (...args: any[]) => any) {
+    if (!this._middlewares[hook]) {
+      return;
+    }
     this._middlewares[hook].push(func);
   },
-  destroyMiddleware(hook, func) {
-    const cmp = (ele) => ele == func;
+  destroyMiddleware(hook: string, func: (...args: any[]) => any) {
+    const cmp = (ele: any) => ele === func;
     this._middlewares[hook].splice(this._middlewares[hook].find(cmp));
   },
 
   /* MUSE Player life cycle */
-  destroy(id, par = undefined) {
-    const parent = par == undefined
-      ? document.getElementById(id).parentNode
+  destroy(id: string | number, par: any) {
+    const parent = par === undefined
+      ? document.getElementById(id as string).parentNode
       : par;
     let listLength = this.getState(id, 'playList').length;
     unmountComponentAtNode(parent);
@@ -128,7 +130,7 @@ export const MuseDOM = {
     }
   },
 
-  render(playList, node, options) {
+  render(playList: Item[], node: Element, options: any) {
     if (options === undefined) {
       options = {};
     }
@@ -139,17 +141,24 @@ export const MuseDOM = {
 
     const playerID =
       'muse-player-' +
-      Date.parse(new Date()) +
+      Date.parse(new Date() as any) +
       '-' +
       Math.ceil(Math.random() * 233);
 
-    const props = {
+    const componentProps = {
       id: playerID,
       playList,
       ...options
     },
-      Component = <PlayerContainer store={store} {...props} />;
-    let muse = {
+      Component = <PlayerContainer store={store} {...componentProps} />;
+
+    interface MUSEPlayerInstance {
+      component: React.ReactElement<any>;
+      ref: Element;
+      id: string | number;
+    }
+
+    const muse: MUSEPlayerInstance = {
       component: Component,
       ref: undefined,
       id: playerID
@@ -183,7 +192,7 @@ export const MuseDOM = {
   }
 };
 
-window.MUSE = window.YMPlayer = MuseDOM;
+(window as any).MUSE = (window as any).YMPlayer = MuseDOM;
 
 // layout register
 MuseDOM.registerLayout('muse-layout-landscape', landscapeLayoutConstructor);
@@ -193,5 +202,6 @@ if (window && window.fetch) {
   MuseDOM.checkMUSEUpdate();
 }
 
-export PlayerContainer from './containers';
+// export { PlayerContainer } from './containers';
 export default MuseDOM;
+export { PlayerContainer } from './containers';

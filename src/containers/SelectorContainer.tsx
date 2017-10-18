@@ -1,22 +1,20 @@
-import React, { Component } from 'react';
-import { PropTypes } from 'prop-types';
+import * as React from 'react';
 import { observer } from 'mobx-react';
 
 // Icons
 import { PrevButton, NextButton } from '../sources/icons';
 
+interface SelectorContainerProps {
+  id: string | number;
+  store: any;
+  parent: React.Component;
+}
+
 @observer
-export default class SelectorContainer extends Component
-{
-  static propTypes = {
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
-      .isRequired,
-    store: PropTypes.object.isRequired
-  };
+export class SelectorContainer extends React.Component<SelectorContainerProps> {
+  id: string | number = undefined;
 
-  id = undefined;
-
-  constructor(props) {
+  constructor(props: SelectorContainerProps) {
     super(props);
     this.id = props.id;
   }
@@ -73,3 +71,5 @@ export default class SelectorContainer extends Component
     );
   }
 }
+
+export default SelectorContainer;

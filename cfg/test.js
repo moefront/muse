@@ -3,18 +3,18 @@
 let path = require('path');
 let srcPath = path.join(__dirname, '/../src/');
 
-let baseConfig = require('./base');
-
 module.exports = {
 	devtool: 'eval',
 	module: {
 		rules: [
 			{
-				test: /\.(js|jsx)$/,
-				loader: 'isparta-instrumenter-loader',
+				test: /\.(ts|tsx|js|jsx)$/,
+				loader: 'istanbul-instrumenter-loader',
 				include: [path.join(__dirname, '/../src')],
-				enforce: 'pre',
-				exclude: '/node_modules/'
+				exclude: '/node_modules/',
+				options: {
+					esModules: true
+				}				
 			},
 			{
 				test: /\.(png|jpg|gif|woff|woff2|css|sass|scss|less|styl)$/,
@@ -27,11 +27,18 @@ module.exports = {
 					path.join(__dirname, '/../src'),
 					path.join(__dirname, '/../test')
 				]
+			},
+			{
+				test: /\.(ts|tsx)$/,
+				loader: 'ts-loader',
+				include: [
+					path.join(__dirname, '/../src')
+				]
 			}
 		]
 	},
 	resolve: {
-		extensions: ['.js', '.jsx'],
+		extensions: ['.ts', '.tsx', '.js', '.jsx'],
 		alias: {
 			actions: srcPath + 'actions/',
 			helpers: path.join(__dirname, '/../test/helpers'),

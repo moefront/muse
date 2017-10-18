@@ -1,18 +1,8 @@
-/*
-8888888b.                                                  .d8888b.                    888             d8b
-888  "Y88b                                                d88P  Y88b                   888             Y8P
-888    888                                                888    888                   888
-888    888 888d888 8888b.  888  888  888  .d88b.  888d888 888         .d88b.  88888b.  888888  8888b.  888 88888b.   .d88b.  888d888
-888    888 888P"      "88b 888  888  888 d8P  Y8b 888P"   888        d88""88b 888 "88b 888        "88b 888 888 "88b d8P  Y8b 888P"
-888    888 888    .d888888 888  888  888 88888888 888     888    888 888  888 888  888 888    .d888888 888 888  888 88888888 888
-888  .d88P 888    888  888 Y88b 888 d88P Y8b.     888     Y88b  d88P Y88..88P 888  888 Y88b.  888  888 888 888  888 Y8b.     888
-8888888P"  888    "Y888888  "Y8888888P"   "Y8888  888      "Y8888P"   "Y88P"  888  888  "Y888 "Y888888 888 888  888  "Y8888  888 */
-
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
 import { autorun } from 'mobx';
 import { observer } from 'mobx-react';
-
+// interface
+import { Item } from '../models/PlayerModel';
 // Container
 import LyricItemContainer from './LyricItemContainer';
 // Utils
@@ -20,16 +10,27 @@ import { lyricParser, classifier, applyMiddleware } from '../utils';
 // icons
 import { LyricToggler, PlayListToggler } from '../sources/icons';
 
+interface DrawerContainerProps {
+  id: string | number;
+  store: any;
+  parent?: React.Component;
+  currentTime: any;
+}
+
+interface DrawerContainerState {
+  current?: object;
+  lrcComponents?: any;
+}
+
 @observer
-export default class DrawerContainer extends Component {
-  id = undefined;
+export default class DrawerContainer extends React.Component<DrawerContainerProps, DrawerContainerState> {
+  id: string | number = undefined;
+  unsubscriber: any = undefined;
+  lrcRefs: any = [];
+  lrcContainer: HTMLElement;
+  lrcHold: HTMLElement;
 
-  static propTypes = {
-    store: PropTypes.object.isRequired,
-    id: PropTypes.string.isRequired
-  };
-
-  constructor(props) {
+  constructor(props: DrawerContainerProps) {
     super(props);
     this.id = props.id;
     this.state = {
@@ -61,7 +62,7 @@ export default class DrawerContainer extends Component {
   componentWillUnmount() {
     this.unsubscriber();
   }
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: DrawerContainerProps) {
     this.synchronizeLyric(nextProps);
   }
 
@@ -79,12 +80,11 @@ export default class DrawerContainer extends Component {
     const { store } = this.props,
       newState = store;
     const current = newState.playList[newState.currentMusicIndex];
-    if (current != this.state.current) {
+    if (current !== this.state.current) {
       this.parseLyric(current);
       this.updateLyricContainerDOMState(0);
     }
   };
-  unsubscriber = undefined;
 
   /*
                                       888         888 d8b          888
@@ -96,7 +96,7 @@ export default class DrawerContainer extends Component {
   Y8b.      Y8bd8P  Y8b.     888  888 Y88b.       888 888      X88 Y88b. Y8b.     888  888 Y8b.     888          X88
    "Y8888    Y88P    "Y8888  888  888  "Y888      888 888  88888P'  "Y888 "Y8888  888  888  "Y8888  888      88888P'
    */
-  toggleDrawerState = e => {
+  toggleDrawerState = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -105,7 +105,7 @@ export default class DrawerContainer extends Component {
     store.toggleDrawer();
   };
 
-  togglePanel = (panel, e) => {
+  togglePanel = (panel: string, e: any) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -125,8 +125,8 @@ export default class DrawerContainer extends Component {
            888
       Y8b d88P
       "Y88P"   */
-  parseLyric = current => {
-    if (current.lyric == undefined && current.lrc == undefined) {
+  parseLyric = (current: any) => {
+    if (current.lyric === undefined && current.lrc === undefined) {
       this.setState({
         current,
         lrcComponents: null
@@ -134,23 +134,23 @@ export default class DrawerContainer extends Component {
       return;
     }
 
-    const lyrics = lyricParser(
+    const lyrics: any = lyricParser(
       current.lyric || current.lrc,
       current.translation
     );
-    let lrcComponents = [],
-      key = 0;
+    const lrcComponents: any = [];
+    let key = 0;
     this.lrcRefs = []; // reset
 
     // set lyric offset automatically
-    const offset = Number(parseFloat(lyrics.offset / 1000).toFixed(1)),
+    const offset = Number(parseFloat((lyrics.offset / 1000) as any).toFixed(1)),
       curOffset = this.props.store.offset;
     this.props.store.setLyricOffset(Number(offset - curOffset));
 
-    lyrics.lyric.forEach(lyric => {
+    lyrics.lyric.forEach((lyric: any) => {
       lrcComponents.push(
         <LyricItemContainer
-          key={this.id + key}
+          key={(this.id as string) + key}
           index={key++}
           timeline={lyric.timeline}
           text={lyric.text}
@@ -160,22 +160,22 @@ export default class DrawerContainer extends Component {
     });
 
     this.setState({
-      current: current,
-      lrcComponents: lrcComponents
+      current,
+      lrcComponents
     });
   };
 
   /**
-    * synchronize lyric when time update
-    * @param  {Object} obj
-    * @return {void}
-    */
-  synchronizeLyric(obj) {
+  * synchronize lyric when time update
+  * @param  {Object} obj
+  * @return {void}
+  */
+  synchronizeLyric(obj: any) {
     const { currentTime } = obj,
       { offset, instance } = this.props.store,
       refs = this.state.lrcComponents;
-    let current = currentTime + offset, // fix timeline offset
-      index = Number(this.lrcContainer.getAttribute('data-current-index'));
+    const current = currentTime + offset; // fix timeline offset
+    let index = Number(this.lrcContainer.getAttribute('data-current-index'));
     if (index >= refs.length) {
       index = 0; // reset index
     }
@@ -183,8 +183,8 @@ export default class DrawerContainer extends Component {
     const prevIndex = index;
 
     if (
-      this.state.lrcComponents == null ||
-      this.state.lrcComponents.length == 0
+      this.state.lrcComponents === null ||
+      this.state.lrcComponents.length === 0
     ) {
       return;
     }
@@ -197,15 +197,15 @@ export default class DrawerContainer extends Component {
       current < refs[index + 2].props.timeline
     ) {
       this.updateLyricContainerDOMState(++index);
-    } else if (index == -1 && current > refs[0].props.timeline) {
+    } else if (index === -1 && current > refs[0].props.timeline) {
       this.updateLyricContainerDOMState(0);
-    } else if (index == refs.length - 1) {
+    } else if (index === refs.length - 1) {
       return;
-    } else if (index != -1) {
+    } else if (index !== -1) {
       if (current < refs[index].props.timeline) {
         // find prev
         for (let i = index; i >= 0; i--) {
-          if (i == 0) {
+          if (i === 0) {
             index = -1;
             break;
           } else if (
@@ -219,7 +219,7 @@ export default class DrawerContainer extends Component {
         this.updateLyricContainerDOMState(index);
       } else if (current > refs[index + 1].props.timeline) {
         for (let i = index; i < refs.length; i++) {
-          if (i == refs.length) {
+          if (i === refs.length) {
             index = refs.length;
             break;
           } else if (
@@ -237,33 +237,34 @@ export default class DrawerContainer extends Component {
 
     index = Number(this.lrcContainer.getAttribute('data-current-index'));
 
-    if (prevIndex != index) {
+    if (prevIndex !== index) {
       // remove active element class
-      let currentActive = this.lrcContainer.querySelector(
+      const currentActive = (this.lrcContainer.querySelector(
         '.muse-lyric__item.muse-lyric__state-active'
-      ),
-        nextActive = this.lrcContainer.querySelector(
+      ) as HTMLElement),
+        nextActive = (this.lrcContainer.querySelector(
           '.muse-lyric__item[data-lyric-item-id="' + index + '"]'
-        );
-      if (currentActive)
+        ) as HTMLElement);
+      if (currentActive) {
         classifier.remove(currentActive, 'muse-lyric__state-active');
+      }
 
-      if (index != -1 && nextActive != null) {
+      if (index !== -1 && nextActive !== null) {
         classifier.add(nextActive, 'muse-lyric__state-active');
         // change container position
-        let boxHeight = this.lrcContainer.offsetHeight,
-          targetOffset =
+        const boxHeight = this.lrcContainer.offsetHeight;
+        let targetOffset =
             nextActive.offsetTop -
             Math.abs(boxHeight - nextActive.offsetHeight) / 2;
         if (targetOffset < 0) {
           targetOffset = 0;
         }
 
-        let transf = String(targetOffset + 'px');
+        const transf = String(targetOffset + 'px');
         this.setTransform(transf);
       }
       // respond API
-      if (index != -1 && refs[index]) {
+      if (index !== -1 && refs[index]) {
         applyMiddleware('onLyricUpdate', instance, {
           timeline: refs[index].props.timeline,
           text: refs[index].props.text,
@@ -273,12 +274,12 @@ export default class DrawerContainer extends Component {
     }
   }
 
-  updateLyricContainerDOMState(index) {
+  updateLyricContainerDOMState(index: any) {
     this.setTransform('0px');
     this.lrcContainer.setAttribute('data-current-index', index);
   }
 
-  setTransform(transf) {
+  setTransform(transf: string) {
     this.lrcHold.setAttribute(
       'style',
       'transform: translateY(-' +
@@ -308,25 +309,25 @@ export default class DrawerContainer extends Component {
   */
   renderPlayList() {
     const { playList, currentMusicIndex } = this.props.store;
-    let list = [],
-      key = 0;
+    const list: any = [];
+    let key = 0;
 
-    const setCurrentMusic = (key, e) => {
+    const setCurrentMusic = (idx: number, e: any) => {
       e.preventDefault();
       e.stopPropagation();
 
       this.props.store.togglePlay(false, this.id);
-      this.props.store.setCurrentMusic(key, this.id);
+      this.props.store.setCurrentMusic(idx, this.id);
       setTimeout(() => this.props.store.togglePlay(true), 0);
     };
 
-    playList.forEach(single => {
+    playList.forEach((single: Item) => {
       const current = key;
       list.push(
         <div
           className={
             'muse-playList__item' +
-            (key == currentMusicIndex
+            (key === currentMusicIndex
               ? ' muse-playList__item-state-playing'
               : '')
           }

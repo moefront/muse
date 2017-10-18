@@ -18,6 +18,19 @@ function getDefaultModules() {
   return {
     rules: [
       {
+        test: /\.(ts|tsx)$/,
+        include: srcPath,
+        loader: 'tslint-loader',
+        enforce: 'pre',
+        exclude: '/node_modules/'
+      },
+      {
+        test: /\.(ts|tsx)$/,
+        include: srcPath,
+        loader: 'ts-loader',
+        exclude: '/node_modules/'
+      },      
+      {
         test: /\.(js|jsx)$/,
         include: srcPath,
         loader: 'eslint-loader',

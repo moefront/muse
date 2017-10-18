@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
-import { PropTypes } from 'prop-types';
+import * as React from 'react';
 import { observable, autorun } from 'mobx';
 import { observer } from 'mobx-react';
 
 // Containers
-import ControllerContainer from './ControllerContainer';
+import ControlContainer from './ControlContainer';
 import SelectorContainer from './SelectorContainer';
 import DrawerContainer from './DrawerContainer';
 import MenuContainer from './MenuContainer';
@@ -18,17 +17,27 @@ import '../styles/MUSE.styl';
 // Utils
 import { applyMiddleware } from '../utils';
 
+interface UIContainerProps {
+  id: any;
+  store: any;
+  accuracy: any;
+}
+
+interface UIContainerState {
+  currentTime: number;
+  duration: number;
+}
+
 @observer
-export default class UIContainer extends Component {
-  static propTypes = {
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    store: PropTypes.object.isRequired
-  };
+export class UIContainer extends React.Component<UIContainerProps, UIContainerState> {
 
-  @observable touchTimer = undefined;
-  id = undefined;
+  @observable touchTimer: any = undefined;
+  id: string | number = undefined;
+  player: HTMLElement;
 
-  constructor(props) {
+  unsubscriber: any = undefined;
+
+  constructor(props: UIContainerProps) {
     super(props);
     this.id = props.id;
     this.state = {
@@ -89,7 +98,7 @@ export default class UIContainer extends Component {
       ? true
       : document.webkitFullscreenElement
         ? true
-        : document.mozFullScreenElement ? true : false;
+        : (document as any).mozFullScreenElement ? true : false;
   };
 
   /* fullscreen related store subscribers */
@@ -98,32 +107,30 @@ export default class UIContainer extends Component {
       { isFullscreen } = this.props.store,
       { player } = this;
 
-    if (eleFSState != isFullscreen && isFullscreen) {
+    if (eleFSState !== isFullscreen && isFullscreen) {
       setTimeout(() => {
         const state = player.requestFullscreen
           ? player.requestFullscreen() || true
           : player.webkitRequestFullscreen
             ? player.webkitRequestFullscreen() || true
             : false;
-        if (!state && !player.mozRequestFullScreen) {
-          throw 'It seems that your browser does not support HTML5 Fullscreen feature.';
+        if (!state && !(player as any).mozRequestFullScreen) {
+          console.error('It seems that your browser does not support HTML5 Fullscreen feature.');
         }
       }, 10);
-    } else if (eleFSState != isFullscreen && !isFullscreen) {
+    } else if (eleFSState !== isFullscreen && !isFullscreen) {
       document.exitFullscreen
         ? document.exitFullscreen()
         : document.webkitExitFullscreen
           ? document.webkitExitFullscreen()
-          : document.mozCancelFullScreen ? document.mozCancelFullScreen() : '';
+          : (document as any).mozCancelFullScreen ? (document as any).mozCancelFullScreen() : () => false;
     } else {
       return;
     }
   };
 
-  unsubscriber = undefined;
-
   /* event listeners */
-  onMobileTouchStart = e => {
+  onMobileTouchStart = (e: any) => {
     const state = this.props.store;
     if (state.isMenuOpen) {
       return;
@@ -136,13 +143,13 @@ export default class UIContainer extends Component {
     clearTimeout(this.touchTimer);
   };
 
-  onPlayerContextMenu = e => {
+  onPlayerContextMenu = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
     this.props.store.toggleMenu(true);
 
     // set position
-    const menuElement = this.player.querySelector('.muse-menu');
+    const menuElement: any = this.player.querySelector('.muse-menu');
     if (!e.touches) {
       menuElement.style.top = e.clientY + 'px';
       menuElement.style.left = e.clientX + 'px';
@@ -155,25 +162,25 @@ export default class UIContainer extends Component {
     document.body.addEventListener('click', this.destroyPlayerMenu);
   };
 
-  onWindowResize = e => {
+  onWindowResize = (e: any) => {
     applyMiddleware('onPlayerResize', this.props.store.playerInstance, e);
   };
 
   onFullscreenChange = () => {
     const currentState = this.getFullscreenState(),
       storedState = this.props.store.isFullscreen;
-    if (currentState != storedState) {
+    if (currentState !== storedState) {
       this.props.store.toggleFullscreen(currentState);
     }
   };
 
-  destroyPlayerMenu = e => {
+  destroyPlayerMenu = (e: any) => {
     e.preventDefault();
     this.props.store.toggleMenu(false);
     document.body.removeEventListener('click', this.destroyPlayerMenu);
   };
 
-  render() {
+  render(): JSX.Element {
     const {
       playList,
       currentMusicIndex,
@@ -183,14 +190,13 @@ export default class UIContainer extends Component {
       { id, store } = this.props,
       cover = playList[currentMusicIndex].cover;
 
+    const className: string =  'muse-player ' + playerLayout +
+      (isDrawerOpen ? ' muse-root__state-drawer-open' : '');
+
     return (
       <div
-        className={
-          'muse-player ' +
-          playerLayout +
-          (isDrawerOpen ? ' muse-root__state-drawer-open' : '')
-        }
         id={id}
+        className={className}
         ref={ref => (this.player = ref)}
         data-length={playList.length}
       >
@@ -204,7 +210,7 @@ export default class UIContainer extends Component {
 
         <SelectorContainer parent={this} id={id} store={this.props.store} />
         <MenuContainer store={store} parent={this} id={id} />
-        <ControllerContainer
+        <ControlContainer
           parent={this}
           store={store}
           id={id}
@@ -219,3 +225,5 @@ export default class UIContainer extends Component {
     );
   }
 }
+
+export default UIContainer;
