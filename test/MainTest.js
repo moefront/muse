@@ -39,11 +39,6 @@ describe('Player', function() {
     expect(this.player.props.layout).to.equal('muse-layout-default');
   });
 
-  it('should have UI language to be other language when navigator.language[0] != "zh-CN"', function() {
-    const text = this.playerDOM.querySelector('.muse-menu__item[name="stop"] > span').innerHTML;
-    expect(text).to.equal('Stop');
-  });
-
 });
 
 // API test
