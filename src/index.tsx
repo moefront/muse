@@ -3,7 +3,7 @@ import 'core-js/fn/object/assign';
 import * as React from 'react';
 import { render as reactDOMRender, unmountComponentAtNode } from 'react-dom';
 /* honoka library for fetch() polyfill */
-import * as honoka from './dependencies/honoka';
+import honoka from 'honoka';
 /* Player core */
 import PlayerContainer from './containers';
 import { PlayerInstancesModel, Item } from './models';
@@ -182,8 +182,8 @@ export const MuseDOM: any = {
 
   checkMUSEUpdate() {
     console.log(honoka);
-    honoka('https://raw.githubusercontent.com/moefront/muse/master/package.json')
-      .then((data: any) => {
+    honoka.get('https://raw.githubusercontent.com/moefront/muse/master/package.json')
+      .then(data => {
         data = JSON.parse(data);
         store.setLatestVersion(data.version);
         if (Number(parseFloat(data.version) - parseFloat(MuseDOM._version)) >= 0.1) {
