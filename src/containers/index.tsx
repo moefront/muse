@@ -11,13 +11,14 @@ interface PlayerContainerProps extends React.Props<any> {
   layout: string;
   store: any;
   accuracy?: any;
+  lang?: string;
 }
 
 @observer
 export class PlayerContainer extends React.Component<PlayerContainerProps> {
   store: object = undefined;
 
-  constructor(props: PlayerContainerProps) {
+  public constructor(props: PlayerContainerProps) {
     super(props);
 
     this.store = props.store;
@@ -26,16 +27,17 @@ export class PlayerContainer extends React.Component<PlayerContainerProps> {
     }
   }
 
-  componentWillMount() {
-    const { layout, playList, id, store } = this.props;
+  public componentWillMount(): void {
+    const { layout, playList, id, store, lang } = this.props;
     // register instance
     store.createPlayerInstance({
       playerLayout: layout,
-      playList
+      playList,
+      lang
     }, id);
   }
 
-  render() {
+  public render(): React.ReactElement<any> {
     const { accuracy, store } = this.props;
     return (
       <UIContainer

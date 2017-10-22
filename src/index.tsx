@@ -1,10 +1,10 @@
-/*eslint no-console:0 */
-
 import 'core-js/fn/object/assign';
-
+/* React */
 import * as React from 'react';
 import { render as reactDOMRender, unmountComponentAtNode } from 'react-dom';
-
+/* honoka library for fetch() polyfill */
+import * as honoka from './dependencies/honoka';
+/* Player core */
 import PlayerContainer from './containers';
 import { PlayerInstancesModel, Item } from './models';
 import config from './config/base';
@@ -17,7 +17,7 @@ import { construct as landscapeLayoutConstructor } from './layouts/landscape/con
 
 const store = new PlayerInstancesModel();
 
-const render = (Component: React.ReactElement<any>, node: Element) => {
+const render = (Component: React.ReactElement<any>, node: Element): void => {
   // Render the main component into the dom
   reactDOMRender(Component, node);
 };
@@ -42,6 +42,10 @@ export const MuseDOM: any = {
   },
 
   _version: config.MUSE_VERSION,
+  _publicInterface: {
+    React,
+    honoka
+  },
 
   /* MUSE Player API start */
   // high-level APIs: getInstance(), getState(), changeState()
@@ -99,6 +103,10 @@ export const MuseDOM: any = {
   },
   changePlayerLayout(id: string | number, layout: string) {
     store.getInstance(id).changePlayerLayout(layout);
+  },
+
+  setPlayerLanguage(id: string | number, target: string) {
+    store.getInstance(id).setPlayerLanguage(target);
   },
   /* MUSE Player API end */
 
@@ -173,20 +181,18 @@ export const MuseDOM: any = {
   },
 
   checkMUSEUpdate() {
-    fetch('https://raw.githubusercontent.com/moefront/muse/master/package.json')
-      .then(res => res.json())
-      .then(data => {
-        if (data.version > MuseDOM._version) {
-          // outdated
-          if (Number(parseFloat(data.version) - parseFloat(MuseDOM._version)) >= 0.1) {
-            console.warn(
-              'Tips: You are using an outdated version of MUSE.\n' +
-              'The latest version of MUSE is ' + data.version + ', ' +
-              'while you are using ' + MuseDOM._version + '.\n' +
-              'Please consider upgrading your player: https://github.com/moefront/muse'
-            );
-          }
-          store.setLatestVersion(data.version);
+    console.log(honoka);
+    honoka('https://raw.githubusercontent.com/moefront/muse/master/package.json')
+      .then((data: any) => {
+        data = JSON.parse(data);
+        store.setLatestVersion(data.version);
+        if (Number(parseFloat(data.version) - parseFloat(MuseDOM._version)) >= 0.1) {
+          console.warn(
+            'Tips: You are using an outdated version of MUSE.\n' +
+            'The latest version of MUSE is ' + data.version + ', ' +
+            'while you are using ' + MuseDOM._version + '.\n' +
+            'Please consider upgrading your player: https://github.com/moefront/muse'
+          );
         }
       });
   }
@@ -198,10 +204,7 @@ export const MuseDOM: any = {
 MuseDOM.registerLayout('muse-layout-landscape', landscapeLayoutConstructor);
 
 // check update
-if (window && window.fetch) {
-  MuseDOM.checkMUSEUpdate();
-}
+MuseDOM.checkMUSEUpdate();
 
-// export { PlayerContainer } from './containers';
 export default MuseDOM;
 export { PlayerContainer } from './containers';

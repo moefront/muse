@@ -14,18 +14,81 @@ interface ControlContainerProps {
 
 @observer
 export class ControlContainer extends React.Component<ControlContainerProps> {
-  id: string | number = undefined;
-  audio: HTMLAudioElement;
-  unsubscriber: any = undefined;
-  intervaler: any;
+  public id: string | number = undefined;
+  public audio: HTMLAudioElement;
+  public unsubscriber: any = undefined;
+  public intervaler: any;
 
-  constructor(props: ControlContainerProps) {
+  public constructor(props: ControlContainerProps) {
     super(props);
     this.id = props.id;
   }
 
+  public render(): JSX.Element {
+    const { isPlaying, playList, currentMusicIndex } = this.props.store;
+    const current = playList[currentMusicIndex];
+
+    return (
+      <div className={'muse-controller'} onClick={this.onControllerClick}>
+        <audio
+          preload={'none'}
+          ref={ref => (this.audio = ref)}
+          src={current.src}
+          onError={(this.onAudioError as any)}
+          onEnded={(this.onAudioEnded as any)}
+        />
+
+        <div className={'muse-controller__container'}>
+          <div className={'muse-musicDetail'}>
+            <h1 className={'muse-musicDetail__title'} title={current.title}>
+              {current.title}
+
+              <small
+                className={'muse-musicDetail__artist'}
+                title={current.artist}
+              >
+                {current.artist}
+              </small>
+            </h1>
+          </div>
+
+          <div className={'muse-playControl'}>
+            <button className={'muse-btn__play'} onClick={this.onPlayBtnClick}>
+              {isPlaying ? <PauseButton /> : <PlayButton />}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* component life cycles */
+  public componentDidMount(): void {
+    const { accuracy } = this.props;
+    this.unsubscriber = autorun(this.subscriber);
+
+    // bind audio timeupdate handler
+    if (accuracy) {
+      this.intervaler = window.setInterval(
+        this.onAudioTimeUpdate,
+        accuracy === true ? 80 : accuracy
+      );
+    } else {
+      this.audio.addEventListener('timeupdate', this.onAudioTimeUpdate);
+    }
+  }
+
+  public componentWillUnmount(): void {
+    this.unsubscriber();
+    if (this.intervaler) {
+      window.clearInterval(this.intervaler);
+    } else {
+      this.audio.removeEventListener('timeupdate', this.onAudioTimeUpdate);
+    }
+  }
+
   /* store subscribers */
-  subscriber = () => {
+  protected subscriber = (): void => {
     const { store, parent } = this.props,
       { audio } = this,
       { currentTime, timeSlider, volume, playRate } = store;
@@ -63,33 +126,8 @@ export class ControlContainer extends React.Component<ControlContainerProps> {
     }
   };
 
-  /* component life cycles */
-  componentDidMount() {
-    const { accuracy } = this.props;
-    this.unsubscriber = autorun(this.subscriber);
-
-    // bind audio timeupdate handler
-    if (accuracy) {
-      this.intervaler = window.setInterval(
-        this.onAudioTimeUpdate,
-        accuracy === true ? 80 : accuracy
-      );
-    } else {
-      this.audio.addEventListener('timeupdate', this.onAudioTimeUpdate);
-    }
-  }
-
-  componentWillUnmount() {
-    this.unsubscriber();
-    if (this.intervaler) {
-      window.clearInterval(this.intervaler);
-    } else {
-      this.audio.removeEventListener('timeupdate', this.onAudioTimeUpdate);
-    }
-  }
-
   /* event listeners */
-  onControllerClick = () => {
+  protected onControllerClick = (): void => {
     const { playerLayout } = this.props.store,
       { store } = this.props;
     if (playerLayout === 'muse-layout-landscape') {
@@ -97,12 +135,12 @@ export class ControlContainer extends React.Component<ControlContainerProps> {
     }
   };
 
-  onPlayBtnClick = () => {
+  protected onPlayBtnClick = (): void => {
     const { store } = this.props;
     store.togglePlay();
   };
 
-  onAudioTimeUpdate = () => {
+  protected onAudioTimeUpdate = (): void => {
     // synchronize play progress
     const { currentTime, duration } = this.audio,
       { parent } = this.props;
@@ -113,7 +151,7 @@ export class ControlContainer extends React.Component<ControlContainerProps> {
     });
   };
 
-  onAudioEnded = (proxy: any, e: any, specialCheck: boolean = false) => {
+  protected onAudioEnded = (proxy: any, e: any, specialCheck: boolean = false): void => {
     const { store } = this.props,
       { isLoop, currentMusicIndex, playList } = store;
 
@@ -129,47 +167,10 @@ export class ControlContainer extends React.Component<ControlContainerProps> {
     }
   };
 
-  onAudioError = () => {
+  protected onAudioError = (): void => {
     this.onAudioEnded(false, false, true);
   };
 
-  render() {
-    const { isPlaying, playList, currentMusicIndex } = this.props.store;
-    const current = playList[currentMusicIndex];
-
-    return (
-      <div className={'muse-controller'} onClick={this.onControllerClick}>
-        <audio
-          preload={'none'}
-          ref={ref => (this.audio = ref)}
-          src={current.src}
-          onError={(this.onAudioError as any)}
-          onEnded={(this.onAudioEnded as any)}
-        />
-
-        <div className={'muse-controller__container'}>
-          <div className={'muse-musicDetail'}>
-            <h1 className={'muse-musicDetail__title'} title={current.title}>
-              {current.title}
-
-              <small
-                className={'muse-musicDetail__artist'}
-                title={current.artist}
-              >
-                {current.artist}
-              </small>
-            </h1>
-          </div>
-
-          <div className={'muse-playControl'}>
-            <button className={'muse-btn__play'} onClick={this.onPlayBtnClick}>
-              {isPlaying ? <PauseButton /> : <PlayButton />}
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
 }
 
 export default ControlContainer;

@@ -74,8 +74,8 @@ export const i18nTexts = {
   }
 };
 
-export const i18n = (key) => {
-  const lang = window.navigator.languages[0] || window.navigator.language || 'zh-CN';
+export const i18n = (key, lang = undefined) => {
+  lang = lang ? lang : window.navigator.languages[0] || window.navigator.language || 'zh-CN';
   switch (lang)
   {
     case 'zh-CN':

@@ -34,6 +34,7 @@ export class PlayerModel {
   @observable playerInstance: object = undefined;
 
   @observable parent: object = undefined;
+  @observable lang: string = undefined;
 
   [key: string]: any;
 
@@ -165,6 +166,11 @@ export class PlayerModel {
   @action
   pushPlayerInstance(instance: object) {
     return (this.playerInstance = instance);
+  }
+
+  @action
+  setPlayerLanguage(target: string) {
+    return (this.lang = target);
   }
 }
 

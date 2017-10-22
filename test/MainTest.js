@@ -3,8 +3,6 @@
 /*eslint no-console: 0*/
 'use strict';
 
-import createComponent from 'helpers/shallowRenderHelper';
-
 import { MuseDOM as MUSE } from '../src';
 
 // testcase
@@ -97,5 +95,12 @@ describe('API', function() {
     expect(
       this.dom.querySelector('#' + this.id)
     ).to.equal(null);
+  });
+
+  it('i18n API test', function() {
+    MUSE.setPlayerLanguage(this.id, 'zh-CN');
+    MUSE.setPlayerLanguage(this.id, 'ja-JP');
+    MUSE.setPlayerLanguage(this.id, 'en-US');
+    MUSE.setPlayerLanguage(this.id, 'zh-TW');
   });
 });

@@ -37,7 +37,7 @@ export class UIContainer extends React.Component<UIContainerProps, UIContainerSt
 
   unsubscriber: any = undefined;
 
-  constructor(props: UIContainerProps) {
+  public constructor(props: UIContainerProps) {
     super(props);
     this.id = props.id;
     this.state = {
@@ -45,140 +45,6 @@ export class UIContainer extends React.Component<UIContainerProps, UIContainerSt
       duration: 0
     };
   }
-
-  /* life cycles */
-  componentDidMount() {
-    const { store } = this.props,
-      instance = {
-        component: this,
-        ref: this.player,
-        id: this.id
-      };
-    store.pushPlayerInstance(instance, this.id);
-
-    window.addEventListener('resize', this.onWindowResize);
-
-    this.player.addEventListener('contextmenu', this.onPlayerContextMenu);
-    this.player.addEventListener('touchstart', this.onMobileTouchStart);
-    this.player.addEventListener('touchend', this.onMobileTouchEnd);
-    this.player.addEventListener(
-      'webkitfullscreenchange',
-      this.onFullscreenChange
-    );
-    this.player.addEventListener(
-      'mozfullscreenchange',
-      this.onFullscreenChange
-    );
-
-    this.unsubscriber = autorun(this.subscriber);
-    applyMiddleware('afterRender', instance);
-    applyMiddleware('onPlayerResize', instance);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.onWindowResize);
-
-    this.player.removeEventListener('contextmenu', this.onPlayerContextMenu);
-    this.player.removeEventListener('touchstart', this.onMobileTouchStart);
-    this.player.removeEventListener('touchend', this.onMobileTouchEnd);
-    this.player.removeEventListener(
-      'webkitfullscreenchange',
-      this.onFullscreenChange
-    );
-    this.player.removeEventListener(
-      'mozfullscreenchange',
-      this.onFullscreenChange
-    );
-
-    this.unsubscriber();
-  }
-
-  getFullscreenState = () => {
-    return document.fullscreenElement
-      ? true
-      : document.webkitFullscreenElement
-        ? true
-        : (document as any).mozFullScreenElement ? true : false;
-  };
-
-  /* fullscreen related store subscribers */
-  subscriber = () => {
-    const eleFSState = this.getFullscreenState(),
-      { isFullscreen } = this.props.store,
-      { player } = this;
-
-    if (eleFSState !== isFullscreen && isFullscreen) {
-      setTimeout(() => {
-        const state = player.requestFullscreen
-          ? player.requestFullscreen() || true
-          : player.webkitRequestFullscreen
-            ? player.webkitRequestFullscreen() || true
-            : false;
-        if (!state && !(player as any).mozRequestFullScreen) {
-          console.error('It seems that your browser does not support HTML5 Fullscreen feature.');
-        }
-      }, 10);
-    } else if (eleFSState !== isFullscreen && !isFullscreen) {
-      document.exitFullscreen
-        ? document.exitFullscreen()
-        : document.webkitExitFullscreen
-          ? document.webkitExitFullscreen()
-          : (document as any).mozCancelFullScreen ? (document as any).mozCancelFullScreen() : () => false;
-    } else {
-      return;
-    }
-  };
-
-  /* event listeners */
-  onMobileTouchStart = (e: any) => {
-    const state = this.props.store;
-    if (state.isMenuOpen) {
-      return;
-    }
-
-    this.touchTimer = setTimeout(() => this.onPlayerContextMenu(e), 1000);
-  };
-
-  onMobileTouchEnd = () => {
-    clearTimeout(this.touchTimer);
-  };
-
-  onPlayerContextMenu = (e: any) => {
-    e.preventDefault();
-    e.stopPropagation();
-    this.props.store.toggleMenu(true);
-
-    // set position
-    const menuElement: any = this.player.querySelector('.muse-menu');
-    if (!e.touches) {
-      menuElement.style.top = e.clientY + 'px';
-      menuElement.style.left = e.clientX + 'px';
-    } else {
-      menuElement.style.top = e.touches[0].clientY + 'px';
-      menuElement.style.left = e.touches[0].clientX + 'px';
-    }
-
-    // register destroy events
-    document.body.addEventListener('click', this.destroyPlayerMenu);
-  };
-
-  onWindowResize = (e: any) => {
-    applyMiddleware('onPlayerResize', this.props.store.playerInstance, e);
-  };
-
-  onFullscreenChange = () => {
-    const currentState = this.getFullscreenState(),
-      storedState = this.props.store.isFullscreen;
-    if (currentState !== storedState) {
-      this.props.store.toggleFullscreen(currentState);
-    }
-  };
-
-  destroyPlayerMenu = (e: any) => {
-    e.preventDefault();
-    this.props.store.toggleMenu(false);
-    document.body.removeEventListener('click', this.destroyPlayerMenu);
-  };
 
   render(): JSX.Element {
     const {
@@ -224,6 +90,140 @@ export class UIContainer extends React.Component<UIContainerProps, UIContainerSt
       </div>
     );
   }
+
+  /* life cycles */
+  public componentDidMount(): void {
+    const { store } = this.props,
+      instance = {
+        component: this,
+        ref: this.player,
+        id: this.id
+      };
+    store.pushPlayerInstance(instance, this.id);
+
+    window.addEventListener('resize', this.onWindowResize);
+
+    this.player.addEventListener('contextmenu', this.onPlayerContextMenu);
+    this.player.addEventListener('touchstart', this.onMobileTouchStart);
+    this.player.addEventListener('touchend', this.onMobileTouchEnd);
+    this.player.addEventListener(
+      'webkitfullscreenchange',
+      this.onFullscreenChange
+    );
+    this.player.addEventListener(
+      'mozfullscreenchange',
+      this.onFullscreenChange
+    );
+
+    this.unsubscriber = autorun(this.subscriber);
+    applyMiddleware('afterRender', instance);
+    applyMiddleware('onPlayerResize', instance);
+  }
+
+  public componentWillUnmount(): void {
+    window.removeEventListener('resize', this.onWindowResize);
+
+    this.player.removeEventListener('contextmenu', this.onPlayerContextMenu);
+    this.player.removeEventListener('touchstart', this.onMobileTouchStart);
+    this.player.removeEventListener('touchend', this.onMobileTouchEnd);
+    this.player.removeEventListener(
+      'webkitfullscreenchange',
+      this.onFullscreenChange
+    );
+    this.player.removeEventListener(
+      'mozfullscreenchange',
+      this.onFullscreenChange
+    );
+
+    this.unsubscriber();
+  }
+
+  protected getFullscreenState = (): boolean => {
+    return document.fullscreenElement
+      ? true
+      : document.webkitFullscreenElement
+        ? true
+        : (document as any).mozFullScreenElement ? true : false;
+  };
+
+  /* fullscreen related store subscribers */
+  protected subscriber = (): void => {
+    const eleFSState = this.getFullscreenState(),
+      { isFullscreen } = this.props.store,
+      { player } = this;
+
+    if (eleFSState !== isFullscreen && isFullscreen) {
+      setTimeout(() => {
+        const state = player.requestFullscreen
+          ? player.requestFullscreen() || true
+          : player.webkitRequestFullscreen
+            ? player.webkitRequestFullscreen() || true
+            : false;
+        if (!state && !(player as any).mozRequestFullScreen) {
+          console.error('It seems that your browser does not support HTML5 Fullscreen feature.');
+        }
+      }, 10);
+    } else if (eleFSState !== isFullscreen && !isFullscreen) {
+      document.exitFullscreen
+        ? document.exitFullscreen()
+        : document.webkitExitFullscreen
+          ? document.webkitExitFullscreen()
+          : (document as any).mozCancelFullScreen ? (document as any).mozCancelFullScreen() : () => false;
+    } else {
+      return;
+    }
+  };
+
+  /* event listeners */
+  protected onMobileTouchStart = (e: any): void => {
+    const state = this.props.store;
+    if (state.isMenuOpen) {
+      return;
+    }
+
+    this.touchTimer = setTimeout(() => this.onPlayerContextMenu(e), 1000);
+  };
+
+  protected onMobileTouchEnd = (): void => {
+    clearTimeout(this.touchTimer);
+  };
+
+  protected onPlayerContextMenu = (e: any): void => {
+    e.preventDefault();
+    e.stopPropagation();
+    this.props.store.toggleMenu(true);
+
+    // set position
+    const menuElement: any = this.player.querySelector('.muse-menu');
+    if (!e.touches) {
+      menuElement.style.top = e.clientY + 'px';
+      menuElement.style.left = e.clientX + 'px';
+    } else {
+      menuElement.style.top = e.touches[0].clientY + 'px';
+      menuElement.style.left = e.touches[0].clientX + 'px';
+    }
+
+    // register destroy events
+    document.body.addEventListener('click', this.destroyPlayerMenu);
+  };
+
+  protected onWindowResize = (e: any): void => {
+    applyMiddleware('onPlayerResize', this.props.store.playerInstance, e);
+  };
+
+  protected onFullscreenChange = (): void => {
+    const currentState = this.getFullscreenState(),
+      storedState = this.props.store.isFullscreen;
+    if (currentState !== storedState) {
+      this.props.store.toggleFullscreen(currentState);
+    }
+  };
+
+  protected destroyPlayerMenu = (e: any): any => {
+    e.preventDefault();
+    this.props.store.toggleMenu(false);
+    document.body.removeEventListener('click', this.destroyPlayerMenu);
+  };
 }
 
 export default UIContainer;

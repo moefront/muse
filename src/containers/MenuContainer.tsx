@@ -125,8 +125,9 @@ export default class MenuContainer extends React.Component<MenuContainerProps> {
   };
 
   onDebugModeTogglerClick = () => {
-    const { parent } = this.props;
-    if (confirm(i18n('devModeAlert'))) {
+    const { parent } = this.props,
+      { lang } = this.props.store;
+    if (confirm(i18n('devModeAlert', lang))) {
       parent.player.removeEventListener(
         'contextmenu',
         parent.onPlayerContextMenu
@@ -142,7 +143,8 @@ export default class MenuContainer extends React.Component<MenuContainerProps> {
       volume,
       playRate,
       offset,
-      parent
+      parent,
+      lang
     } = this.props.store;
 
     return (
@@ -154,10 +156,10 @@ export default class MenuContainer extends React.Component<MenuContainerProps> {
           data-name={'stop'}
           onClick={this.onStopClick}
         >
-          <span>{i18n('stop')}</span>
+          <span>{i18n('stop', lang)}</span>
         </div>
         <div className={'muse-menu__item'} data-name={'slide-volume'}>
-          <div>{i18n('modulation')}</div>
+          <div>{i18n('modulation', lang)}</div>
           <div className={'muse-volume'}>
             <div
               className={'muse-volume__container'}
@@ -177,21 +179,21 @@ export default class MenuContainer extends React.Component<MenuContainerProps> {
 
         <div className={'muse-menu__item'} data-name={'fix-lyric-offset'}>
           <div>
-            {i18n('setLyricOffset')}({i18n('currentLyricOffset')}:{offset}s)
+            {i18n('setLyricOffset', lang)}({i18n('currentLyricOffset', lang)}:{offset}s)
           </div>
           <div className={'muse-menu__offset'}>
             <span ref={ref => (this.increaseOffset = ref)}>
-              + {i18n('forward')} 0.5s
+              + {i18n('forward', lang)} 0.5s
             </span>
 
             <span ref={ref => (this.decreaseOffset = ref)}>
-              - {i18n('backward')} 0.5s
+              - {i18n('backward', lang)} 0.5s
             </span>
           </div>
         </div>
 
         <div className={'muse-menu__item'} data-name={'set-play-rate'}>
-          <span>{i18n('playRate')}(x {playRate})</span>
+          <span>{i18n('playRate', lang)}(x {playRate})</span>
           <span className={'muse-menu__playrate-container'}>
             <a
               href={'#'}
@@ -218,7 +220,7 @@ export default class MenuContainer extends React.Component<MenuContainerProps> {
           onClick={this.onLoopTogglerClick}
         >
           <span>
-            {i18n('looping')}：{isLoop ? i18n('enabled') : i18n('disabled')}
+            {i18n('looping', lang)}：{isLoop ? i18n('enabled', lang) : i18n('disabled', lang)}
           </span>
         </div>
 
@@ -228,8 +230,8 @@ export default class MenuContainer extends React.Component<MenuContainerProps> {
           onClick={this.onFullscreenTogglerClick}
         >
           <span>
-            {isFullscreen ? i18n('exit') : ''}
-            {i18n('fullscreenMode')}
+            {isFullscreen ? i18n('exit', lang) : ''}
+            {i18n('fullscreenMode', lang)}
           </span>
         </div>
 
@@ -238,7 +240,7 @@ export default class MenuContainer extends React.Component<MenuContainerProps> {
           data-name={'toggle-debug-mode'}
           onClick={this.onDebugModeTogglerClick}
         >
-          <span>{i18n('devMode')}</span>
+          <span>{i18n('devMode', lang)}</span>
         </div>
 
         <div
@@ -249,7 +251,7 @@ export default class MenuContainer extends React.Component<MenuContainerProps> {
         >
           <span>
             {config.MUSE_VERSION !== parent.latest
-              ? i18n('updateAvailable') + '：MUSE ' + parent.latest
+              ? i18n('updateAvailable', lang) + '：MUSE ' + parent.latest
               : 'MUSE Player ver.' + config.MUSE_VERSION}
           </span>
         </div>
