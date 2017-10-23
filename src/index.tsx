@@ -181,7 +181,6 @@ export const MuseDOM: any = {
   },
 
   checkMUSEUpdate() {
-    console.log(honoka);
     honoka.get('https://raw.githubusercontent.com/moefront/muse/master/package.json')
       .then(data => {
         data = JSON.parse(data);
