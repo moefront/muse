@@ -132,6 +132,14 @@ export default class MenuContainer extends React.Component<MenuContainerProps> {
         'contextmenu',
         parent.onPlayerContextMenu
       );
+      parent.player.removeEventListener(
+        'touchstart',
+        parent.onMobileTouchStart
+      );
+      parent.player.removeEventListener(
+        'touchend',
+        parent.onMobileTouchEnd
+      );
     }
   };
 

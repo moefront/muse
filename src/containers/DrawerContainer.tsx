@@ -191,6 +191,7 @@ export default class DrawerContainer extends React.Component<DrawerContainerProp
 
     /* Todo: optimize the complexity */
     if (
+      (index === refs.length - 2 && current > refs[index + 1].props.timeline) ||
       index + 1 < refs.length &&
       current > refs[index + 1].props.timeline &&
       index + 2 < refs.length &&

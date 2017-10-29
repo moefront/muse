@@ -1,6 +1,6 @@
 {
     "name": "muse-player",
-    "version": "5.5.2",
+    "version": "5.5.3",
     "description": "Just a simple and dilligent HTML5 Audio Player written in React.",
     "main": "dist/assets/muse-player.js",
     "scripts": {
