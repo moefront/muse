@@ -63,6 +63,19 @@ export default class MenuContainer extends React.Component<MenuContainerProps> {
     );
   }
 
+  isDesktop(): boolean {
+    const userAgentInfo = navigator.userAgent,
+      agents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod'];
+    let flag = true;
+    agents.forEach(agent => {
+      if (userAgentInfo.indexOf(agent) > 0) {
+        flag = false;
+        return;
+      }
+    });
+    return flag;
+  }
+
   /* event listeners */
   onLoopTogglerClick = (e: any) => {
     e.stopPropagation();
@@ -140,6 +153,24 @@ export default class MenuContainer extends React.Component<MenuContainerProps> {
         'touchend',
         parent.onMobileTouchEnd
       );
+
+      // inject eruda console for mobile devices
+      const win: any = window as any;
+      if (win.eruda || this.isDesktop()) {
+        return;
+      }
+
+      const scriptTag: HTMLElement =  document.createElement('script');
+      scriptTag.setAttribute('src', 'https://unpkg.com/eruda/eruda.min.js');
+      document.body.appendChild(scriptTag);
+
+      win.intv = setInterval(() => {
+        if (win.eruda) {
+          window.clearInterval(win.intv);
+          win.eruda.init();
+          console.log('Eruda console has been injected successfully: https://github.com/liriliri/eruda');
+        }
+      }, 500);
     }
   };
 
