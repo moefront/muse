@@ -1,7 +1,7 @@
 // React
 import * as React from 'react';
 // Mobx
-import { observer } from 'mobx-react';
+import { observer, Provider } from 'mobx-react';
 // Container
 import UIContainer from './UIContainer';
 
@@ -30,21 +30,25 @@ export class PlayerContainer extends React.Component<PlayerContainerProps> {
   public componentWillMount(): void {
     const { layout, playList, id, store, lang } = this.props;
     // register instance
-    store.createPlayerInstance({
-      playerLayout: layout,
-      playList,
-      lang
-    }, id);
+    store.createPlayerInstance(
+      {
+        playerLayout: layout,
+        playList,
+        lang
+      },
+      id
+    );
   }
 
   public render(): React.ReactElement<any> {
     const { accuracy, store } = this.props;
     return (
-      <UIContainer
-        store={ store.getInstance(this.props.id) }
-        id={ this.props.id }
-        accuracy={ accuracy ? accuracy : false }
-      />
+      <Provider store={store.getInstance(this.props.id)}>
+        <UIContainer
+          id={this.props.id}
+          accuracy={accuracy ? accuracy : false}
+        />
+      </Provider>
     );
   }
 }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { observer } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 
 // Utils
 import { getRect } from '../utils';
@@ -8,11 +8,11 @@ import { getRect } from '../utils';
 interface ProgressProps {
   currentTime: any;
   duration: any;
-  store: any;
+  store?: any;
   id: number | string;
 }
 
-@observer
+@inject('store') @observer
 export class Progress extends React.Component<ProgressProps> {
 
   id: any = undefined;
@@ -53,11 +53,13 @@ export class Progress extends React.Component<ProgressProps> {
   onHandlerMouseDown = () => {
     document.body.addEventListener('mousemove', this.onHandlerDrag);
     document.body.addEventListener('mouseup', this.onHandlerMouseUp);
+    document.body.addEventListener('touchmove', this.onHandlerDrag);
+    document.body.addEventListener('touchend', this.onHandlerMouseUp);
   };
   onHandlerDrag = (event: any) => {
     const { duration } = this.props;
     const rect = getRect(this.progress),
-      target = event.clientX,
+      target = (event.touches ? event.touches[0].clientX : event.clientX),
       width = this.progress.offsetWidth;
 
     this.finalProgress = Math.max(Number((target - rect.left) / width * duration), 0);
@@ -68,24 +70,7 @@ export class Progress extends React.Component<ProgressProps> {
 
     document.body.removeEventListener('mousemove', this.onHandlerDrag);
     document.body.removeEventListener('mouseup', this.onHandlerMouseUp);
-  };
-
-  onHandlerTouchStart = () => {
-    document.body.addEventListener('touchmove', this.onHandlerTouchMove);
-    document.body.addEventListener('touchend', this.onHandlerTouchEnd);
-  };
-  onHandlerTouchMove = (event: any) => {
-    const { duration } = this.props;
-    const rect = getRect(this.progress),
-      target = event.touches[0].clientX,
-      width = this.progress.offsetWidth;
-
-    this.finalProgress = Math.max(Number((target - rect.left) / width * duration), 0);
-    this.props.store.slideTimeOnly(this.finalProgress);
-  };
-  onHandlerTouchEnd = () => {
-    this.props.store.slideProgress(this.finalProgress);
-    document.body.removeEventListener('touchmove', this.onHandlerTouchMove);
+    document.body.removeEventListener('touchmove', this.onHandlerDrag);
     document.body.removeEventListener('touchend', this.onHandlerMouseUp);
   };
 
@@ -105,7 +90,7 @@ export class Progress extends React.Component<ProgressProps> {
               className={'muse-progress__handle'}
               ref={ref => (this.handler = ref)}
               onMouseDown={this.onHandlerMouseDown}
-              onTouchStart={this.onHandlerTouchStart}
+              onTouchStart={this.onHandlerMouseDown}
             />
           </div>
         </div>

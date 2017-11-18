@@ -1,18 +1,18 @@
 import * as React from 'react';
 
 import { autorun } from 'mobx';
-import { observer } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 // icons
 import { PlayButton, PauseButton } from '../sources/icons';
 
 interface ControlContainerProps {
   id: string | number;
-  store: any;
+  store?: any;
   parent?: React.Component;
   accuracy?: boolean | number;
 }
 
-@observer
+@inject('store') @observer
 export class ControlContainer extends React.Component<ControlContainerProps> {
   public id: string | number = undefined;
   public audio: HTMLAudioElement;

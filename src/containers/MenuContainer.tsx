@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { observer } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 // Utils
 import { getRect, i18n } from '../utils';
 // config
@@ -7,11 +7,11 @@ import config from '../config/base';
 
 interface MenuContainerProps {
   id?: string | number;
-  store: any;
+  store?: any;
   parent: React.Component | any;
 }
 
-@observer
+@inject('store') @observer
 export default class MenuContainer extends React.Component<MenuContainerProps> {
   id: string | number = undefined;
 

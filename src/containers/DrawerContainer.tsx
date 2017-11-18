@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { autorun } from 'mobx';
-import { observer } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 // interface
 import { Item } from '../models/PlayerModel';
 // Container
@@ -12,7 +12,7 @@ import { LyricToggler, PlayListToggler } from '../sources/icons';
 
 interface DrawerContainerProps {
   id: string | number;
-  store: any;
+  store?: any;
   parent?: React.Component;
   currentTime: any;
 }
@@ -22,7 +22,7 @@ interface DrawerContainerState {
   lrcComponents?: any;
 }
 
-@observer
+@inject('store') @observer
 export default class DrawerContainer extends React.Component<DrawerContainerProps, DrawerContainerState> {
   id: string | number = undefined;
   unsubscriber: any = undefined;
@@ -39,19 +39,6 @@ export default class DrawerContainer extends React.Component<DrawerContainerProp
     };
   }
 
-  /*
-  888 d8b  .d888                                         888
-  888 Y8P d88P"                                          888
-  888     888                                            888
-  888 888 888888 .d88b.        .d8888b 888  888  .d8888b 888  .d88b.
-  888 888 888   d8P  Y8b      d88P"    888  888 d88P"    888 d8P  Y8b
-  888 888 888   88888888      888      888  888 888      888 88888888
-  888 888 888   Y8b.          Y88b.    Y88b 888 Y88b.    888 Y8b.
-  888 888 888    "Y8888        "Y8888P  "Y88888  "Y8888P 888  "Y8888
-                                            888
-                                       Y8b d88P
-                                        "Y88P"
-                                        */
   componentWillMount() {
     const state = this.props.store;
     this.parseLyric(state.playList[state.currentMusicIndex]);
@@ -66,16 +53,10 @@ export default class DrawerContainer extends React.Component<DrawerContainerProp
     this.synchronizeLyric(nextProps);
   }
 
-  /*
-           888                                                   888                                d8b 888
-           888                                                   888                                Y8P 888
-           888                                                   888                                    888
-  .d8888b  888888 .d88b.  888d888 .d88b.       .d8888b  888  888 88888b.  .d8888b   .d8888b 888d888 888 88888b.   .d88b.  888d888
-  88K      888   d88""88b 888P"  d8P  Y8b      88K      888  888 888 "88b 88K      d88P"    888P"   888 888 "88b d8P  Y8b 888P"
-  "Y8888b. 888   888  888 888    88888888      "Y8888b. 888  888 888  888 "Y8888b. 888      888     888 888  888 88888888 888
-       X88 Y88b. Y88..88P 888    Y8b.               X88 Y88b 888 888 d88P      X88 Y88b.    888     888 888 d88P Y8b.     888
-   88888P'  "Y888 "Y88P"  888     "Y8888        88888P'  "Y88888 88888P"   88888P'  "Y8888P 888     888 88888P"   "Y8888  888
-   */
+
+
+
+
   subscriber = () => {
     const { store } = this.props,
       newState = store;
@@ -86,16 +67,6 @@ export default class DrawerContainer extends React.Component<DrawerContainerProp
     }
   };
 
-  /*
-                                      888         888 d8b          888
-                                      888         888 Y8P          888
-                                      888         888              888
-   .d88b.  888  888  .d88b.  88888b.  888888      888 888 .d8888b  888888 .d88b.  88888b.   .d88b.  888d888 .d8888b
-  d8P  Y8b 888  888 d8P  Y8b 888 "88b 888         888 888 88K      888   d8P  Y8b 888 "88b d8P  Y8b 888P"   88K
-  88888888 Y88  88P 88888888 888  888 888         888 888 "Y8888b. 888   88888888 888  888 88888888 888     "Y8888b.
-  Y8b.      Y8bd8P  Y8b.     888  888 Y88b.       888 888      X88 Y88b. Y8b.     888  888 Y8b.     888          X88
-   "Y8888    Y88P    "Y8888  888  888  "Y888      888 888  88888P'  "Y888 "Y8888  888  888  "Y8888  888      88888P'
-   */
   toggleDrawerState = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
@@ -113,18 +84,12 @@ export default class DrawerContainer extends React.Component<DrawerContainerProp
     store.togglePanel(panel);
   };
 
-  /*
-  888                  d8b               888                             888 888
-  888                  Y8P               888                             888 888
-  888                                    888                             888 888
-  888 888  888 888d888 888  .d8888b      88888b.   8888b.  88888b.   .d88888 888  .d88b.  888d888
-  888 888  888 888P"   888 d88P"         888 "88b     "88b 888 "88b d88" 888 888 d8P  Y8b 888P"
-  888 888  888 888     888 888           888  888 .d888888 888  888 888  888 888 88888888 888
-  888 Y88b 888 888     888 Y88b.         888  888 888  888 888  888 Y88b 888 888 Y8b.     888
-  888  "Y88888 888     888  "Y8888P      888  888 "Y888888 888  888  "Y88888 888  "Y8888  888
-           888
-      Y8b d88P
-      "Y88P"   */
+
+
+
+
+
+
   parseLyric = (current: any) => {
     if (current.lyric === undefined && current.lrc === undefined) {
       this.setState({
@@ -255,8 +220,8 @@ export default class DrawerContainer extends React.Component<DrawerContainerProp
         // change container position
         const boxHeight = this.lrcContainer.offsetHeight;
         let targetOffset =
-            nextActive.offsetTop -
-            Math.abs(boxHeight - nextActive.offsetHeight) / 2;
+          nextActive.offsetTop -
+          Math.abs(boxHeight - nextActive.offsetHeight) / 2;
         if (targetOffset < 0) {
           targetOffset = 0;
         }
@@ -284,30 +249,25 @@ export default class DrawerContainer extends React.Component<DrawerContainerProp
     this.lrcHold.setAttribute(
       'style',
       'transform: translateY(-' +
-        transf +
-        ');' +
-        '-webkit-transform: translateY(-' +
-        transf +
-        ');' +
-        '-moz-transform: translateY(-' +
-        transf +
-        ');' +
-        '-ms-transform: translateY(-' +
-        transf +
-        ');'
+      transf +
+      ');' +
+      '-webkit-transform: translateY(-' +
+      transf +
+      ');' +
+      '-moz-transform: translateY(-' +
+      transf +
+      ');' +
+      '-ms-transform: translateY(-' +
+      transf +
+      ');'
     );
   }
 
-  /*
-                                888
-                                888
-                                888
-  888d888 .d88b.  88888b.   .d88888  .d88b.  888d888
-  888P"  d8P  Y8b 888 "88b d88" 888 d8P  Y8b 888P"
-  888    88888888 888  888 888  888 88888888 888
-  888    Y8b.     888  888 Y88b 888 Y8b.     888
-  888     "Y8888  888  888  "Y88888  "Y8888  888
-  */
+
+
+
+
+
   renderPlayList() {
     const { playList, currentMusicIndex } = this.props.store;
     const list: any = [];

@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { observer } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 
 // Icons
 import { PrevButton, NextButton } from '../sources/icons';
 
 interface SelectorContainerProps {
   id: string | number;
-  store: any;
+  store?: any;
   parent: React.Component;
 }
 
-@observer
+@inject('store') @observer
 export class SelectorContainer extends React.Component<SelectorContainerProps> {
   id: string | number = undefined;
 

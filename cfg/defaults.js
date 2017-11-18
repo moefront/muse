@@ -29,7 +29,7 @@ function getDefaultModules() {
         include: srcPath,
         loader: 'awesome-typescript-loader',
         exclude: '/node_modules/'
-      },      
+      },
       {
         test: /\.(js|jsx)$/,
         include: srcPath,
@@ -41,7 +41,12 @@ function getDefaultModules() {
         test: /\.css$/,
         use: [
           'style-loader',
-          'css-loader'
+          {
+            loader: 'css-loader',
+            options: {
+              minimize: true
+            }
+          }
         ]
       },
       {
@@ -53,7 +58,7 @@ function getDefaultModules() {
             loader: 'sass-loader',
             options: {
               outputStyle: 'expanded',
-              indentedSyntax: true              
+              indentedSyntax: true
             }
           }
         ]
@@ -77,15 +82,20 @@ function getDefaultModules() {
           'style-loader',
           'css-loader',
           'less-loader'
-        ]        
+        ]
       },
       {
         test: /\.styl/,
         use: [
           'style-loader',
-          'css-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              minimize: true
+            }
+          },
           'stylus-loader'
-        ]        
+        ]
       },
       {
         test: /\.(png|jpg|gif|woff|woff2)$/,

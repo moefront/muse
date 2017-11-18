@@ -22,7 +22,8 @@
         "one-variable-per-declaration": false,
         "semicolon": [true, "always", "ignore-interfaces", "ignore-bound-class-methods"],
         "no-unused-expression": false,
-        "jsdoc-format": false
+        "jsdoc-format": false,
+        "no-consecutive-blank-lines": false        
     },
     "rulesDirectory": []
 }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observable, autorun } from 'mobx';
-import { observer } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 
 // Containers
 import ControlContainer from './ControlContainer';
@@ -19,7 +19,7 @@ import { applyMiddleware } from '../utils';
 
 interface UIContainerProps {
   id: any;
-  store: any;
+  store?: any;
   accuracy: any;
 }
 
@@ -28,9 +28,12 @@ interface UIContainerState {
   duration: number;
 }
 
+@inject('store')
 @observer
-export class UIContainer extends React.Component<UIContainerProps, UIContainerState> {
-
+export class UIContainer extends React.Component<
+  UIContainerProps,
+  UIContainerState
+> {
   @observable touchTimer: any = undefined;
   id: string | number = undefined;
   player: HTMLElement;
@@ -48,15 +51,17 @@ export class UIContainer extends React.Component<UIContainerProps, UIContainerSt
 
   render(): JSX.Element {
     const {
-      playList,
-      currentMusicIndex,
-      playerLayout,
-      isDrawerOpen
-    } = this.props.store,
+        playList,
+        currentMusicIndex,
+        playerLayout,
+        isDrawerOpen
+      } = this.props.store,
       { id, store } = this.props,
       cover = playList[currentMusicIndex].cover;
 
-    const className: string =  'muse-player ' + playerLayout +
+    const className: string =
+      'muse-player ' +
+      playerLayout +
       (isDrawerOpen ? ' muse-root__state-drawer-open' : '');
 
     return (
@@ -70,23 +75,17 @@ export class UIContainer extends React.Component<UIContainerProps, UIContainerSt
         <Progress
           currentTime={this.state.currentTime}
           duration={this.state.duration}
-          store={store}
           id={id}
         />
 
-        <SelectorContainer parent={this} id={id} store={this.props.store} />
-        <MenuContainer store={store} parent={this} id={id} />
+        <SelectorContainer parent={this} id={id} />
+        <MenuContainer parent={this} id={id} />
         <ControlContainer
           parent={this}
-          store={store}
           id={id}
           accuracy={this.props.accuracy}
         />
-        <DrawerContainer
-          store={store}
-          currentTime={this.state.currentTime}
-          id={id}
-        />
+        <DrawerContainer currentTime={this.state.currentTime} id={id} />
       </div>
     );
   }
@@ -160,7 +159,9 @@ export class UIContainer extends React.Component<UIContainerProps, UIContainerSt
             ? player.webkitRequestFullscreen() || true
             : false;
         if (!state && !(player as any).mozRequestFullScreen) {
-          console.error('It seems that your browser does not support HTML5 Fullscreen feature.');
+          console.error(
+            'It seems that your browser does not support HTML5 Fullscreen feature.'
+          );
         }
       }, 10);
     } else if (eleFSState !== isFullscreen && !isFullscreen) {
@@ -168,7 +169,9 @@ export class UIContainer extends React.Component<UIContainerProps, UIContainerSt
         ? document.exitFullscreen()
         : document.webkitExitFullscreen
           ? document.webkitExitFullscreen()
-          : (document as any).mozCancelFullScreen ? (document as any).mozCancelFullScreen() : () => false;
+          : (document as any).mozCancelFullScreen
+            ? (document as any).mozCancelFullScreen()
+            : () => false;
     } else {
       return;
     }

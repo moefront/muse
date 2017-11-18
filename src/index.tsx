@@ -42,7 +42,7 @@ export const MuseDOM: any = {
   },
 
   _version: config.MUSE_VERSION,
-  _publicInterface: {
+  _public: {
     React,
     honoka
   },
