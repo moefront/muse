@@ -91,12 +91,8 @@ export default class DrawerContainer extends React.Component<DrawerContainerProp
 
 
   parseLyric = (current: any) => {
-    if (current.lyric === undefined && current.lrc === undefined) {
-      this.setState({
-        current,
-        lrcComponents: null
-      });
-      return;
+    if (!current.lyric && !current.lrc) {
+      current.lyric = '[00:00.00]这首歌没有歌词~';
     }
 
     const lyrics: any = lyricParser(
@@ -139,6 +135,10 @@ export default class DrawerContainer extends React.Component<DrawerContainerProp
     const { currentTime } = obj,
       { offset, instance } = this.props.store,
       refs = this.state.lrcComponents;
+    if (!refs) {
+      return;
+    }
+
     const current = currentTime + offset; // fix timeline offset
     let index = Number(this.lrcContainer.getAttribute('data-current-index'));
     if (index >= refs.length) {
