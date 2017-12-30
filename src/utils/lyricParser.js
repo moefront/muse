@@ -1,8 +1,3 @@
-/**
- * muse player lyric parser
- * @param  {String} rawLyric
- * @return {Object}
- */
 const calcTime = match => {
   return (
     Number(Number(match[1]) * 60) +
@@ -11,13 +6,18 @@ const calcTime = match => {
   );
 };
 
+/**
+ * muse player lyric parser
+ * @param  {String} rawLyric
+ * @return {Object}
+ */
 export const lyricParser = (rawLyric, rawTranslation) => {
   let res = {
-    author: undefined,
-    transAuthor: undefined,
-    offset: 0,
-    lyric: []
-  },
+      author: undefined,
+      transAuthor: undefined,
+      offset: 0,
+      lyric: []
+    },
     raw = rawLyric,
     version = 0, // specify lyric version
     transVersion = 0, // 0: lines, 1: timelines
@@ -133,8 +133,10 @@ export const lyricParser = (rawLyric, rawTranslation) => {
 
   // sort lyrics
   const cmp = (a, b) => a.timeline - b.timeline;
-  if (version == 1) lyricArr = lyricArr.sort(cmp);
-  if (transVersion == 1) transArr = transArr.sort(cmp);
+  lyricArr = lyricArr.sort(cmp);
+  if (transVersion == 1) {
+    transArr = transArr.sort(cmp);
+  }
   // merge lyrics and translations
   let itor = 0,
     transLength = transArr.length;
@@ -151,10 +153,10 @@ export const lyricParser = (rawLyric, rawTranslation) => {
       res.lyric.push({
         timeline: index.timeline,
         text: index.text,
-        translation: itor < transLength &&
-          index.timeline == transArr[itor].timeline
-          ? transArr[itor++].text
-          : ''
+        translation:
+          itor < transLength && index.timeline == transArr[itor].timeline
+            ? transArr[itor++].text
+            : ''
       });
     });
   }
