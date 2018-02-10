@@ -1,6 +1,6 @@
 {
     "name": "muse-player",
-    "version": "5.6.0",
+    "version": "5.6.1",
     "description": "Just a simple and dilligent HTML5 Audio Player written in React.",
     "main": "dist/assets/muse-player.js",
     "scripts": {
@@ -34,6 +34,7 @@
     "organization": "MoeFront Studio",
     "license": "MIT",
     "devDependencies": {
+        "awesome-typescript-loader": "^3.2.3",
         "babel-core": "^6.0.0",
         "babel-eslint": "^8.0.1",
         "babel-loader": "^7.1.2",
@@ -53,6 +54,7 @@
         "eslint-plugin-react": "^7.4.0",
         "file-loader": "^1.1.5",
         "glob": "^7.0.0",
+        "istanbul-instrumenter-loader": "^3.0.0",
         "isparta-instrumenter-loader": "^1.0.0",
         "karma": "^1.0.0",
         "karma-chai": "^0.1.0",
@@ -63,6 +65,8 @@
         "karma-sourcemap-loader": "^0.3.5",
         "karma-webpack": "^2.0.5",
         "minimist": "^1.2.0",
+        "mobx": "^3.3.1",
+        "mobx-react": "^4.3.3",
         "mocha": "^4.0.1",
         "null-loader": "^0.1.1",
         "open": "0.0.5",
@@ -70,9 +74,11 @@
         "react-hot-loader": "^3.0.0",
         "rimraf": "^2.6.2",
         "style-loader": "^0.19.0",
+        "stylus": "^0.54.5",
         "stylus-loader": "^3.0.1",
         "tslint": "^5.7.0",
         "tslint-loader": "^3.5.3",
+        "typescript": "^2.5.3",
         "url-loader": "^0.6.2",
         "webpack": "^3.7.1",
         "webpack-bundle-analyzer": "^2.8.2",
@@ -81,19 +87,10 @@
     "dependencies": {
         "@types/react": "^16.0.10",
         "@types/react-dom": "^16.0.1",
-        "awesome-typescript-loader": "^3.2.3",
         "core-js": "^2.0.0",
         "honoka": "^0.4.6",
-        "istanbul-instrumenter-loader": "^3.0.0",
-        "mobx": "^3.3.1",
-        "mobx-react": "^4.3.3",
         "normalize.css": "^7.0.0",
-        "preact": "^8.2.5",
-        "preact-compat": "^3.17.0",
         "react": "^16.0.0",
-        "react-dom": "^16.0.0",
-        "react-lite": "^0.15.39",
-        "stylus": "^0.54.5",
-        "typescript": "^2.5.3"
+        "react-dom": "^16.0.0"
     }
 }

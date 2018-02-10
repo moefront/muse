@@ -163,7 +163,10 @@ export default class DrawerContainer extends React.Component<DrawerContainerProp
       current < refs[index + 2].props.timeline
     ) {
       this.updateLyricContainerDOMState(++index);
-    } else if (index === -1 && current > refs[0].props.timeline) {
+    } else if (
+      (index === -1 && current > refs[0].props.timeline) ||
+      (index === refs.length - 1 && current < refs[index].props.timeline)
+    ) {
       this.updateLyricContainerDOMState(0);
     } else if (index === refs.length - 1) {
       return;
