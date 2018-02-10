@@ -32,6 +32,7 @@ export class PlayerModel {
   @observable playList: Array<object> = [];
   @observable playerLayout: string = 'muse-layout-default';
   @observable playerInstance: object = undefined;
+  @observable coverImage: string = undefined;
 
   @observable parent: object = undefined;
   @observable lang: string = undefined;
@@ -130,6 +131,7 @@ export class PlayerModel {
   @action
   setCurrentMusic(index: number) {
     this.currentMusicIndex = index;
+    this.coverImage = undefined;
     applyMiddleware('onMusicChange', this, {
       index,
       detail: this.playList[index]
@@ -171,6 +173,11 @@ export class PlayerModel {
   @action
   setPlayerLanguage(target: string) {
     return (this.lang = target);
+  }
+
+  @action
+  setCoverImage(target: string) {
+    return (this.coverImage = target);
   }
 }
 

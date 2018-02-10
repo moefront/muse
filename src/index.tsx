@@ -108,6 +108,9 @@ export const MuseDOM: any = {
   setPlayerLanguage(id: string | number, target: string) {
     store.getInstance(id).setPlayerLanguage(target);
   },
+  setCoverImage(id: string | number, target: string) {
+    store.getInstance(id).setCoverImage(target);
+  },
   /* MUSE Player API end */
 
   /* Middleware related */

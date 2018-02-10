@@ -54,7 +54,8 @@ export class UIContainer extends React.Component<
         playList,
         currentMusicIndex,
         playerLayout,
-        isDrawerOpen
+        isDrawerOpen,
+        coverImage
       } = this.props.store,
       { id, store } = this.props,
       cover = playList[currentMusicIndex].cover;
@@ -71,7 +72,7 @@ export class UIContainer extends React.Component<
         ref={ref => (this.player = ref)}
         data-length={playList.length}
       >
-        <Cover cover={cover} id={id} />
+        <Cover cover={coverImage ? coverImage : cover} id={id} />
         <Progress
           currentTime={this.state.currentTime}
           duration={this.state.duration}
