@@ -231,9 +231,10 @@ export default class DrawerContainer extends React.Component<DrawerContainerProp
       }
       // respond API
       if (index !== -1 && refs[index]) {
-        applyMiddleware('onLyricUpdate', instance, {
+        applyMiddleware('onLyricUpdate', this, {
           timeline: refs[index].props.timeline,
           text: refs[index].props.text,
+          index,
           translation: refs[index].props.translation
         });
       }
