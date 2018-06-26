@@ -1,6 +1,6 @@
 {
     "name": "muse-player",
-    "version": "5.6.6",
+    "version": "5.6.7",
     "description": "Just a simple and dilligent HTML5 Audio Player written in React.",
     "main": "dist/assets/muse-player.js",
     "scripts": {
@@ -34,7 +34,6 @@
     "organization": "MoeFront Studio",
     "license": "MIT",
     "devDependencies": {
-        "awesome-typescript-loader": "^3.2.3",
         "babel-core": "^6.0.0",
         "babel-eslint": "^8.0.1",
         "babel-loader": "^7.1.2",
@@ -63,7 +62,7 @@
         "karma-sourcemap-loader": "^0.3.5",
         "karma-webpack": "^2.0.5",
         "minimist": "^1.2.0",
-        "mobx": "^4",
+        "mobx": "^5.0.3",
         "mobx-react": "^5.2.3",
         "mocha": "^4.0.1",
         "null-loader": "^0.1.1",
@@ -76,8 +75,10 @@
         "stylus-loader": "^3.0.1",
         "tslint": "^5.7.0",
         "tslint-loader": "^3.5.3",
+        "ts-loader": "^4.4.1",
         "typescript": "^2.5.3",
         "url-loader": "^0.6.2",
+        "webpack-cli": "^3.0.8",
         "webpack": "^4.12.1",
         "webpack-bundle-analyzer": "^2.8.2",
         "webpack-dev-server": "^3.1.4"
@@ -90,7 +91,6 @@
         "honoka": "^0.4.6",
         "normalize.css": "^7.0.0",
         "react": "^16.0.0",
-        "react-dom": "^16.0.0",
-        "webpack-cli": "^3.0.8"
+        "react-dom": "^16.0.0"
     }
 }

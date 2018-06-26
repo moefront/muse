@@ -4,7 +4,7 @@ import PlayerModel from './PlayerModel';
 import config from '../config/base';
 
 export class PlayerInstancesModel {
-  @observable players: object[] = [];
+  players: object[] = [];
   @observable latest: string = config.MUSE_VERSION;
 
   @computed
