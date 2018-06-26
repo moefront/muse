@@ -25,10 +25,7 @@ module.exports = {
 				loader: 'ts-loader',
 				include: [
 					path.join(__dirname, '/../src')
-				],
-				options: {
-					useBabel: true
-				}
+				]
 			},
 			{
 				test: /\.(js|jsx)$/,
