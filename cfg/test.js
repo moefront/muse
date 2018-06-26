@@ -14,7 +14,7 @@ module.exports = {
 				exclude: '/node_modules/',
 				options: {
 					esModules: true
-				}				
+				}
 			},
 			{
 				test: /\.(png|jpg|gif|woff|woff2|css|sass|scss|less|styl)$/,
@@ -22,14 +22,14 @@ module.exports = {
 			},
 			{
 				test: /\.(ts|tsx)$/,
-				loader: 'awesome-typescript-loader',
+				loader: 'ts-loader',
 				include: [
 					path.join(__dirname, '/../src')
 				],
 				options: {
 					useBabel: true
 				}
-			},			
+			},
 			{
 				test: /\.(js|jsx)$/,
 				loader: 'babel-loader',
