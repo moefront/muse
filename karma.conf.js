@@ -1,5 +1,4 @@
 const webpackCfg = require('./webpack.config'),
-  fs = require('fs'),
   path = require('path');
 
 // Set node environment to testing

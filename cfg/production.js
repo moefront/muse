@@ -13,15 +13,8 @@ const config = Object.assign({}, baseConfig, {
   devtool: 'sourcemap',
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': '"production"'
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      output: {
-        comments: false
-      },
-      compress: {
-        warnings: false
-      }
+      'process.env.NODE_ENV': '"production"',
+      'process.env.REACT_DIRSTO': '"anujs"'
     }),
     new webpack.optimize.AggressiveMergingPlugin(),
     new BundleAnalyzerPlugin({

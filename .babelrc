@@ -1,7 +1,18 @@
 {
   "presets": [
-    "es2015",
-    "stage-0",
+    [
+      "env",
+      {
+        "targets": {
+          "browsers": [
+            "ie >= 9",
+            "Firefox > 25",
+            "Chrome > 30",
+            "Safari >= 8"
+          ]
+        }
+      }
+    ],
     "react"
   ],
   "env": {

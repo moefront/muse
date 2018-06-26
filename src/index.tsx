@@ -15,6 +15,11 @@ import config from './config/base';
 import './layouts/landscape/landscape.styl';
 import { construct as landscapeLayoutConstructor } from './layouts/landscape/construct';
 
+// import React devtools when in anujs env
+if (process.env.REACT_DISTRO === 'anujs') {
+  require('anujs/lib/devtools');
+}
+
 const store = new PlayerInstancesModel();
 
 const render = (Component: React.ReactElement<any>, node: Element): void => {
