@@ -34,8 +34,6 @@ export class ControlContainer extends React.Component<ControlContainerProps> {
           preload={'none'}
           ref={ref => (this.audio = ref)}
           src={current.src}
-          onError={(this.onAudioError as any)}
-          onEnded={(this.onAudioEnded as any)}
         />
 
         <div className={'muse-controller__container'}>
@@ -75,6 +73,9 @@ export class ControlContainer extends React.Component<ControlContainerProps> {
       );
     } else {
       this.audio.addEventListener('timeupdate', this.onAudioTimeUpdate);
+      // the following event should not be in render function when using anujs
+      this.audio.addEventListener('error', this.onAudioError as any);
+      this.audio.addEventListener('ended', this.onAudioEnded as any);
     }
   }
 
@@ -84,6 +85,8 @@ export class ControlContainer extends React.Component<ControlContainerProps> {
       window.clearInterval(this.intervaler);
     } else {
       this.audio.removeEventListener('timeupdate', this.onAudioTimeUpdate);
+      this.audio.removeEventListener('error', this.onAudioError as any);
+      this.audio.removeEventListener('ended', this.onAudioEnded as any);
     }
   }
 

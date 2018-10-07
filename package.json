@@ -1,6 +1,6 @@
 {
     "name": "muse-player",
-    "version": "5.6.7",
+    "version": "5.7.0",
     "description": "Just a simple and dilligent HTML5 Audio Player written in React.",
     "main": "dist/assets/muse-player.js",
     "scripts": {
@@ -8,8 +8,8 @@
         "test": "karma start",
         "test:watch": "karma start --autoWatch=true --singleRun=false",
         "posttest": "npm run lint",
-        "serve": "webpack-dev-server --mode=development --config=webpack.config.js --progress",
-        "serve:dist": "webpack-dev-server --mode=production --config=webpack.config.js --progress",
+        "serve": "webpack-dev-server --mode=development --config=webpack.config.js --progress --host 0.0.0.0",
+        "serve:dist": "webpack-dev-server --mode=production --config=webpack.config.js --progress --host 0.0.0.0",
         "dist": "npm run copy & webpack --mode=production --progress",
         "lint": "eslint ./src",
         "copy": "copyfiles -f ./src/index.html ./src/favicon.ico ./src/example.js ./dist",
@@ -66,7 +66,7 @@
         "mobx-react": "^5.2.3",
         "mocha": "^4.0.1",
         "null-loader": "^0.1.1",
-        "open": "0.0.5",
+        "open": "^0.0.5",
         "react-addons-test-utils": "^15.6.2",
         "react-hot-loader": "^3.0.0",
         "rimraf": "^2.6.2",

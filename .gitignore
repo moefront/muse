@@ -36,3 +36,6 @@ bower_components/
 
 # yarn logs
 yarn-errors.log
+
+# macOS
+.DS_Store
