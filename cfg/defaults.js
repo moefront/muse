@@ -42,10 +42,7 @@ function getDefaultModules() {
         use: [
           'style-loader',
           {
-            loader: 'css-loader',
-            options: {
-              minimize: true
-            }
+            loader: 'css-loader'
           }
         ]
       },
@@ -89,10 +86,7 @@ function getDefaultModules() {
         use: [
           'style-loader',
           {
-            loader: 'css-loader',
-            options: {
-              minimize: true
-            }
+            loader: 'css-loader'
           },
           'stylus-loader'
         ]

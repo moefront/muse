@@ -28,6 +28,16 @@ interface UIContainerState {
   duration: number;
 }
 
+interface Document {
+  exitFullscreen: () => void;
+  mozCancelFullScreen: () => void;
+  webkitExitFullscreen: () => void;
+  fullscreenElement: () => void;
+  mozFullScreenElement: () => void;
+  webkitFullscreenElement: () => void;
+}
+
+
 @inject('store')
 @observer
 export class UIContainer extends React.Component<
@@ -139,9 +149,9 @@ export class UIContainer extends React.Component<
   }
 
   protected getFullscreenState = (): boolean => {
-    return document.fullscreenElement
+    return (document as any).fullscreenElement
       ? true
-      : document.webkitFullscreenElement
+      : (document as any).webkitFullscreenElement
         ? true
         : (document as any).mozFullScreenElement ? true : false;
   };
@@ -156,8 +166,8 @@ export class UIContainer extends React.Component<
       setTimeout(() => {
         const state = player.requestFullscreen
           ? player.requestFullscreen() || true
-          : player.webkitRequestFullscreen
-            ? player.webkitRequestFullscreen() || true
+          : (player as any).webkitRequestFullscreen
+            ? (player as any).webkitRequestFullscreen() || true
             : false;
         if (!state && !(player as any).mozRequestFullScreen) {
           console.error(
@@ -168,8 +178,8 @@ export class UIContainer extends React.Component<
     } else if (eleFSState !== isFullscreen && !isFullscreen) {
       document.exitFullscreen
         ? document.exitFullscreen()
-        : document.webkitExitFullscreen
-          ? document.webkitExitFullscreen()
+        : (document as any).webkitExitFullscreen
+          ? (document as any).webkitExitFullscreen()
           : (document as any).mozCancelFullScreen
             ? (document as any).mozCancelFullScreen()
             : () => false;
