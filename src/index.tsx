@@ -7,6 +7,8 @@ import honoka from 'honoka';
 /* Player core */
 import PlayerContainer from './containers';
 import { PlayerInstancesModel, Item } from './models';
+export {MuseVisual} from './models';
+export {MuseFromRef} './models';
 import config from './config/base';
 
 // This is an example for custom layouts inside the project.

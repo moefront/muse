@@ -8,7 +8,19 @@
         "lib": ["es5", "es6", "es2015", "es7", "es2016", "es2017", "dom"],
         "jsx": "react",
         "experimentalDecorators": true,
-        "allowJs": true
+        "allowJs": true,
+        "strict": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "noImplicitThis": true,
+        "alwaysStrict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitAny": true,
+        "removeComments": true,
+        "target": "es5",
     },
     "files": [
         "./src/index.tsx"
