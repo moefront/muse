@@ -78,10 +78,10 @@
         "webpack-dev-server": "^3.1.4"
     },
     "dependencies": {
-        "@babel/core": "^7.2.2",
-        "@babel/plugin-proposal-decorators": "^7.2.3",
-        "@babel/preset-env": "^7.2.3",
-        "@babel/preset-react": "^7.0.0",
+        "@babel/core": "^7.23.2",
+        "@babel/plugin-proposal-decorators": "^7.14.5",
+        "@babel/preset-env": "^7.22.6",
+        "@babel/preset-react": "^7.12.13",
         "@types/node": "^10.12.18",
         "@types/react": "^16.0.10",
         "@types/react-dom": "^16.0.1",
