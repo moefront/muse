@@ -87,7 +87,7 @@
         "@types/react-dom": "^16.0.1",
         "anujs": "^1.4.4",
         "core-js": "^2.0.0",
-        "honoka": "^0.4.6",
+        "honoka": "^0.4.19",
         "normalize.css": "^8.0.1",
         "react": "^16.0.0",
         "react-dom": "^16.0.0"
